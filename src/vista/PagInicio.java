@@ -1,7 +1,10 @@
 package vista;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -19,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
@@ -44,16 +49,7 @@ public class PagInicio extends JFrame implements ActionListener {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    PagInicio frame = new PagInicio();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    	SwingUtilities.invokeLater(() -> new PagInicio().setVisible(true));
     }
 
     /**
@@ -62,8 +58,16 @@ public class PagInicio extends JFrame implements ActionListener {
     public PagInicio() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 941, 583);
+        
+        // 🔹 Desactivar el fondo del TabbedPane en UIManager
+        UIManager.put("TabbedPane.contentOpaque", false);
+
+        // 🔹 Panel con imagen de fondo
         contentPane = new JPanel() {
-            private Image backgroundImage = new ImageIcon("imagenes/fondoCode.png").getImage();
+
+           
+            private Image backgroundImage = new ImageIcon(getClass().getResource("/imagenes/fondoCode.png")).getImage();
+
 
             @Override
             protected void paintComponent(Graphics g) {
@@ -71,20 +75,18 @@ public class PagInicio extends JFrame implements ActionListener {
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
         contentPane.setLayout(new BorderLayout());
+        setContentPane(contentPane);
 
-        // Inicialización de tabbedPane
-        tabbedPane = new JTabbedPane(); // Inicialización de tabbedPane
-        contentPane.add(tabbedPane, BorderLayout.CENTER);
+        tabbedPane = new JTabbedPane();
+        tabbedPane.setOpaque(false);
+        tabbedPane.setBackground(new Color(0, 0, 0, 0));
 
-        // Primera pestaña con fondo
         JPanel singIn = new JPanel();
-        singIn.setLayout(null);
+        singIn.setOpaque(false);
+        singIn.setLayout(new FlowLayout());
         tabbedPane.addTab("CODE AND DANCE", null, singIn, "Información de la Pestaña 1");
 
-        // Segunda pestaña (Login)
         Password = new JPanel();
         Password.setLayout(null);
         tabbedPane.addTab("Sing In", null, Password, "Información de la Pestaña 2");
@@ -105,13 +107,11 @@ public class PagInicio extends JFrame implements ActionListener {
         textUsuario.setColumns(10);
 
         btnAcceder = new JButton("Acceder");
-        btnAcceder.addActionListener(this);
         btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
         btnAcceder.setBounds(282, 343, 102, 21);
         Password.add(btnAcceder);
 
         btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(this);
         btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
         btnCancelar.setBounds(472, 343, 116, 21);
         Password.add(btnCancelar);
@@ -125,6 +125,7 @@ public class PagInicio extends JFrame implements ActionListener {
         passwordField = new JPasswordField();
         passwordField.setBounds(356, 240, 232, 19);
         Password.add(passwordField);
+
         /*
         JPanel panel3 = new JPanel();
         tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
@@ -184,7 +185,13 @@ public class PagInicio extends JFrame implements ActionListener {
         textField.setColumns(10);
         textField.setBounds(130, 193, 123, 19);
         panel3.add(textField);*/
+
+        contentPane.add(tabbedPane, BorderLayout.CENTER);
+
+        contentPane.revalidate();
+        contentPane.repaint();
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {

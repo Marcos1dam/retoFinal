@@ -20,6 +20,8 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -27,292 +29,298 @@ import javax.swing.UIManager;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import java.awt.Toolkit;
+import javax.swing.SwingConstants;
 
 public class PagInicio extends JFrame implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
-    private JPanel contentPane;
-    private JTextField textUsuario;
-    private JButton btnRecuperarContraseña;
-    private JButton btnAcceder;
-    private JButton btnCancelar;
-    private JPasswordField passwordField;
-    private JPanel Password;
-    private JTabbedPane tabbedPane; // Declaración de tabbedPane como variable de instancia
-    private JTextField textNombre;
-    private JTextField textApellido;
-    private JTextField textEdad;
-    private JTextField textCorreo;
-    private JTextField textTelefono;
-    private JLabel lblNewLabel;
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField textUsuario;
+	private JButton btnRecuperarContraseña;
+	private JButton btnAcceder;
+	private JButton btnCancelar;
+	private JPasswordField passwordField;
+	private JPanel Password;
+	private JTabbedPane tabbedPane; // Declaración de tabbedPane como variable de instancia
+	private JTextField textNombre;
+	private JTextField textApellido;
+	private JTextField textEdad;
+	private JTextField textCorreo;
+	private JTextField textTelefono;
+	private JLabel lblNewLabel;
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-    	SwingUtilities.invokeLater(() -> new PagInicio().setVisible(true));
-    }
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> new PagInicio().setVisible(true));
+	}
 
-    /**
-     * Create the frame.
-     */
-    public PagInicio() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 941, 583);
-        
-        // 🔹 Desactivar el fondo del TabbedPane en UIManager
-        UIManager.put("TabbedPane.contentOpaque", false);
+	/**
+	 * Create the frame.
+	 */
+	public PagInicio() {
+		setTitle("Code & Dance");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(PagInicio.class.getResource(
+				"/imagenes/DALL·E 2025-03-24 11.47.19 - An app icon for 'Code and Dance' featuring a fusion of coding and dance elements. The icon should have a modern, sleek design with a red and pink colo.jpg")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 941, 583);
 
-        // 🔹 Panel con imagen de fondo
-        contentPane = new JPanel() {
+		// Desactivar el fondo del TabbedPane en UIManager
+		UIManager.put("TabbedPane.contentOpaque", false);
 
-           
-            private Image backgroundImage = new ImageIcon(getClass().getResource("/imagenes/CodeAndDanceBienvenido.png")).getImage();
+		// Panel con imagen de fondo
+		contentPane = new JPanel() {
+			private Image backgroundImage = new ImageIcon(
+					getClass().getResource("/imagenes/CodeAndDanceBienvenido.png")).getImage();
 
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // Ajustar imagen al tamaño del panel
+			}
+		};
+		contentPane.setLayout(new BorderLayout());
+		setContentPane(contentPane);
 
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-            }
-        };
-        contentPane.setLayout(new BorderLayout());
-        setContentPane(contentPane);
+		tabbedPane = new JTabbedPane();
+		tabbedPane.setOpaque(false);
+		tabbedPane.setBackground(new Color(0, 0, 0, 0));
 
-        tabbedPane = new JTabbedPane();
-        tabbedPane.setOpaque(false);
-        tabbedPane.setBackground(new Color(0, 0, 0, 0));
+		JPanel singIn = new JPanel();
+		singIn.setOpaque(false);
+		singIn.setLayout(new FlowLayout());
+		tabbedPane.addTab("CODE AND DANCE", null, singIn, "Información de la Pestaña 1");
 
-        JPanel singIn = new JPanel();
-        singIn.setOpaque(false);
-        singIn.setLayout(new FlowLayout());
-        tabbedPane.addTab("CODE AND DANCE", null, singIn, "Información de la Pestaña 1");
+		Password = new JPanel();
+		Password.setBackground(new Color(255, 255, 255));
+		Password.setLayout(null);
+		tabbedPane.addTab("Sing In", null, Password, "Información de la Pestaña 2");
+		tabbedPane.setBackgroundAt(1, UIManager.getColor("Button.light"));
 
-        Password = new JPanel();
-        Password.setBackground(new Color(255, 255, 255));
-        Password.setLayout(null);
-        tabbedPane.addTab("Sing In", null, Password, "Información de la Pestaña 2");
-        tabbedPane.setBackgroundAt(1, UIManager.getColor("Button.light"));
+		// Añadir los componentes sobre la imagen de fondo
+		JLabel lbUsuario = new JLabel("Usuario:");
+		lbUsuario.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lbUsuario.setBounds(266, 191, 91, 22);
+		Password.add(lbUsuario);
 
-        JLabel lbUsuario = new JLabel("Usuario:");
-        lbUsuario.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        lbUsuario.setBounds(255, 191, 91, 22);
-        Password.add(lbUsuario);
+		JLabel lbPassword = new JLabel("Password:");
+		lbPassword.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lbPassword.setBounds(266, 236, 91, 22);
+		Password.add(lbPassword);
 
-        JLabel lbPassword = new JLabel("Password:");
-        lbPassword.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        lbPassword.setBounds(255, 236, 91, 22);
-        Password.add(lbPassword);
+		textUsuario = new JTextField();
+		textUsuario.setBounds(356, 195, 232, 19);
+		Password.add(textUsuario);
+		textUsuario.setColumns(10);
 
-        textUsuario = new JTextField();
-        textUsuario.setBounds(356, 195, 232, 19);
-        Password.add(textUsuario);
-        textUsuario.setColumns(10);
+		passwordField = new JPasswordField();
+		passwordField.setBounds(356, 240, 232, 19);
+		Password.add(passwordField);
 
-        btnAcceder = new JButton("Acceder");
-        btnAcceder.addActionListener(this);
-        btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        btnAcceder.setBounds(282, 343, 102, 21);
-        btnAcceder.addActionListener(this);
-        Password.add(btnAcceder);
+		btnAcceder = new JButton("Acceder");
+		btnAcceder.addActionListener(this);
+		btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		btnAcceder.setBounds(282, 343, 102, 21);
+		Password.add(btnAcceder);
 
-        btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(this);
-        btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        btnCancelar.setBounds(472, 343, 116, 21);
-        btnCancelar.addActionListener(this);
-        Password.add(btnCancelar);
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(this);
+		btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		btnCancelar.setBounds(472, 343, 116, 21);
+		Password.add(btnCancelar);
 
-        btnRecuperarContraseña = new JButton("Has olvidado tu contraseña?");
-        btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
-        btnRecuperarContraseña.setBounds(425, 279, 163, 21);
-        btnRecuperarContraseña.addActionListener(this);
-        Password.add(btnRecuperarContraseña);
+		btnRecuperarContraseña = new JButton("Has olvidado tu contraseña?");
+		btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
+		btnRecuperarContraseña.setBounds(425, 279, 163, 21);
+		btnRecuperarContraseña.addActionListener(this);
+		Password.add(btnRecuperarContraseña);
 
-        passwordField = new JPasswordField();
-        passwordField.setBounds(356, 240, 232, 19);
-        Password.add(passwordField);
-        
-        lblNewLabel = new JLabel("");
-        lblNewLabel.setIcon(new ImageIcon(PagInicio.class.getResource("/imagenes/CodeAndDance.png")));
-        lblNewLabel.setBounds(179, 34, 733, 521);
-        Password.add(lblNewLabel);
+		lblNewLabel = new JLabel() {
+			private Image backgroundImage = new ImageIcon(getClass().getResource("/imagenes/CodeAndDance.png"))
+					.getImage();
 
-        /*
-        JPanel panel3 = new JPanel();
-        tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
-        panel3.setLayout(null);
-        
-        textNombre = new JTextField();
-        textNombre.setEditable(false);
-        textNombre.setBounds(130, 33, 123, 19);
-        panel3.add(textNombre);
-        textNombre.setColumns(10);
-        
-        JLabel lblNombre = new JLabel("Nombre:");
-        lblNombre.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        lblNombre.setBounds(42, 36, 78, 16);
-        panel3.add(lblNombre);
-        
-        JLabel lblApellido = new JLabel("Apellido:");
-        lblApellido.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        lblApellido.setBounds(42, 73, 78, 16);
-        panel3.add(lblApellido);
-        
-        JLabel lblEdad = new JLabel("Edad:");
-        lblEdad.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        lblEdad.setBounds(42, 111, 78, 16);
-        panel3.add(lblEdad);
-        
-        JLabel lblCorreo = new JLabel("Correo:");
-        lblCorreo.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        lblCorreo.setBounds(42, 153, 78, 16);
-        panel3.add(lblCorreo);
-        
-        textApellido = new JTextField();
-        textApellido.setEditable(false);
-        textApellido.setColumns(10);
-        textApellido.setBounds(130, 74, 123, 19);
-        panel3.add(textApellido);
-        
-        textEdad = new JTextField();
-        textEdad.setEditable(false);
-        textEdad.setColumns(10);
-        textEdad.setBounds(130, 112, 123, 19);
-        panel3.add(textEdad);
-        
-        textCorreo = new JTextField();
-        textCorreo.setEditable(false);
-        textCorreo.setColumns(10);
-        textCorreo.setBounds(130, 154, 267, 19);
-        panel3.add(textCorreo);
-        
-        JLabel lblTelefono = new JLabel("Telefono:");
-        lblTelefono.setFont(new Font("Arial Black", Font.PLAIN, 14));
-        lblTelefono.setBounds(42, 192, 78, 16);
-        panel3.add(lblTelefono);
-        
-        textTelefono = new JTextField();
-        textTelefono.setEditable(false);
-        textTelefono.setColumns(10);
-        textTelefono.setBounds(130, 193, 123, 19);
-        panel3.add(textTelefono);*/
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this); // Ajuste automático al tamaño
+			}
+		};
+		lblNewLabel.setBounds(0, 0, getWidth(), getHeight()); // Usa getWidth() y getHeight()
+		Password.add(lblNewLabel);
 
-        contentPane.add(tabbedPane, BorderLayout.CENTER);
+		// Escuchar cambios de tamaño
+		addComponentListener(new ComponentAdapter() {
+		    @Override
+		    public void componentResized(ComponentEvent e) {
+		        // Ajustar la imagen de fondo al tamaño de la ventana
+		        lblNewLabel.setBounds(0, 0, getWidth(), getHeight());
+		    }
+		});
 
-        contentPane.revalidate();
-        contentPane.repaint();
-    }
+		/*
+		 * JPanel panel3 = new JPanel(); tabbedPane.addTab("Información de Bailarines",
+		 * null, panel3, "Datos de los Bailarines"); panel3.setLayout(null);
+		 * 
+		 * textNombre = new JTextField(); textNombre.setEditable(false);
+		 * textNombre.setBounds(130, 33, 123, 19); panel3.add(textNombre);
+		 * textNombre.setColumns(10);
+		 * 
+		 * JLabel lblNombre = new JLabel("Nombre:"); lblNombre.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblNombre.setBounds(42, 36, 78, 16);
+		 * panel3.add(lblNombre);
+		 * 
+		 * JLabel lblApellido = new JLabel("Apellido:"); lblApellido.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblApellido.setBounds(42, 73, 78, 16);
+		 * panel3.add(lblApellido);
+		 * 
+		 * JLabel lblEdad = new JLabel("Edad:"); lblEdad.setFont(new Font("Arial Black",
+		 * Font.PLAIN, 14)); lblEdad.setBounds(42, 111, 78, 16); panel3.add(lblEdad);
+		 * 
+		 * JLabel lblCorreo = new JLabel("Correo:"); lblCorreo.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblCorreo.setBounds(42, 153, 78, 16);
+		 * panel3.add(lblCorreo);
+		 * 
+		 * textApellido = new JTextField(); textApellido.setEditable(false);
+		 * textApellido.setColumns(10); textApellido.setBounds(130, 74, 123, 19);
+		 * panel3.add(textApellido);
+		 * 
+		 * textEdad = new JTextField(); textEdad.setEditable(false);
+		 * textEdad.setColumns(10); textEdad.setBounds(130, 112, 123, 19);
+		 * panel3.add(textEdad);
+		 * 
+		 * textCorreo = new JTextField(); textCorreo.setEditable(false);
+		 * textCorreo.setColumns(10); textCorreo.setBounds(130, 154, 267, 19);
+		 * panel3.add(textCorreo);
+		 * 
+		 * JLabel lblTelefono = new JLabel("Telefono:"); lblTelefono.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblTelefono.setBounds(42, 192, 78, 16);
+		 * panel3.add(lblTelefono);
+		 * 
+		 * textTelefono = new JTextField(); textTelefono.setEditable(false);
+		 * textTelefono.setColumns(10); textTelefono.setBounds(130, 193, 123, 19);
+		 * panel3.add(textTelefono);
+		 */
 
+		contentPane.add(tabbedPane, BorderLayout.CENTER);
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(btnAcceder)) {
-            comprobar();
-        } else if (e.getSource().equals(btnCancelar)) {
-            cancelar();
-        }else if(e.getSource().equals(btnRecuperarContraseña)) {
-        	mostrar();
-        }
-    }
+		contentPane.revalidate();
+		contentPane.repaint();
 
-    private void mostrar() {
-    	JOptionPane.showMessageDialog(this, "Tu usuario es tu correo electronico y la contraseña es tu DNI ", "Informacion de SingIN", JOptionPane.INFORMATION_MESSAGE);
-		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(btnAcceder)) {
+			comprobar();
+		} else if (e.getSource().equals(btnCancelar)) {
+			cancelar();
+		} else if (e.getSource().equals(btnRecuperarContraseña)) {
+			mostrar();
+		}
+	}
+
+	private void mostrar() {
+		JOptionPane.showMessageDialog(this, "Tu usuario es tu correo electronico y la contraseña es tu DNI ",
+				"Informacion de SingIN", JOptionPane.INFORMATION_MESSAGE);
+
 	}
 
 	private void cancelar() {
-        textUsuario.setText("");
-        passwordField.setText("");
-    }
-
-	private void comprobar() {
-	    String dni = new String(passwordField.getPassword());
-	    Bailarin bailarin = Principal.leerDni(dni);
-
-	    if (bailarin != null && dni.equalsIgnoreCase(bailarin.getDni()) && textUsuario.getText().equalsIgnoreCase(bailarin.getCorreo())) {
-	        JOptionPane.showMessageDialog(this, "Bienvenido, " + bailarin.getNombre(), "Acceso concedido", JOptionPane.INFORMATION_MESSAGE);
-	        
-	        // Agregar la tercera pestaña si no existe
-	        if (!existePestana("Información de Bailarines")) {
-	        	JPanel panel3 = new JPanel();
-	            tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
-	            panel3.setLayout(null);
-	            
-	            textNombre = new JTextField();
-	            textNombre.setEditable(false);
-	            textNombre.setBounds(130, 33, 123, 19);
-	            textNombre.setText(bailarin.getNombre());
-	            panel3.add(textNombre);
-	            textNombre.setColumns(10);
-	            
-	            JLabel lblNombre = new JLabel("Nombre:");
-	            lblNombre.setFont(new Font("Arial Black", Font.PLAIN, 14));
-	            lblNombre.setBounds(42, 36, 78, 16);
-	            panel3.add(lblNombre);
-	            
-	            JLabel lblApellido = new JLabel("Apellido:");
-	            lblApellido.setFont(new Font("Arial Black", Font.PLAIN, 14));
-	            lblApellido.setBounds(42, 73, 78, 16);
-	            panel3.add(lblApellido);
-	            
-	            JLabel lblEdad = new JLabel("Edad:");
-	            lblEdad.setFont(new Font("Arial Black", Font.PLAIN, 14));
-	            lblEdad.setBounds(42, 111, 78, 16);
-	            panel3.add(lblEdad);
-	            
-	            JLabel lblCorreo = new JLabel("Correo:");
-	            lblCorreo.setFont(new Font("Arial Black", Font.PLAIN, 14));
-	            lblCorreo.setBounds(42, 153, 78, 16);
-	            panel3.add(lblCorreo);
-	            
-	            textApellido = new JTextField();
-	            textApellido.setEditable(false);
-	            textApellido.setColumns(10);
-	            textApellido.setBounds(130, 74, 123, 19);
-	            textApellido.setText(bailarin.getApellido());
-	            panel3.add(textApellido);
-	            
-	            textEdad = new JTextField();
-	            textEdad.setEditable(false);
-	            textEdad.setColumns(10);
-	            textEdad.setBounds(130, 112, 123, 19);
-	            textEdad.setText(String.valueOf(bailarin.getEdad()));
-	            panel3.add(textEdad);
-	            
-	            textCorreo = new JTextField();
-	            textCorreo.setEditable(false);
-	            textCorreo.setColumns(10);
-	            textCorreo.setBounds(130, 154, 267, 19);
-	            textCorreo.setText(bailarin.getCorreo());
-	            panel3.add(textCorreo);
-	            
-	            JLabel lblTelefono = new JLabel("Telefono:");
-	            lblTelefono.setFont(new Font("Arial Black", Font.PLAIN, 14));
-	            lblTelefono.setBounds(42, 192, 78, 16);
-	            panel3.add(lblTelefono);
-	            
-	            textTelefono = new JTextField();
-	            textTelefono.setEditable(false);
-	            textTelefono.setColumns(10);
-	            textTelefono.setBounds(130, 193, 123, 19);
-	            textTelefono.setText(String.valueOf(bailarin.getTelefono()));
-	            panel3.add(textTelefono);
-
-	        }
-
-	        tabbedPane.setSelectedIndex(2); // Cambiar a la tercera pestaña
-	    } else {
-	        JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
-	    }
+		textUsuario.setText("");
+		passwordField.setText("");
 	}
 
-    private boolean existePestana(String titulo) {
-        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-            if (tabbedPane.getTitleAt(i).equalsIgnoreCase(titulo)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	private void comprobar() {
+		String dni = new String(passwordField.getPassword());
+		Bailarin bailarin = Principal.leerDni(dni);
+
+		if (bailarin != null && dni.equalsIgnoreCase(bailarin.getDni())
+				&& textUsuario.getText().equalsIgnoreCase(bailarin.getCorreo())) {
+			JOptionPane.showMessageDialog(this, "Bienvenido, " + bailarin.getNombre(), "Acceso concedido",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			// Agregar la tercera pestaña si no existe
+			if (!existePestana("Información de Bailarines")) {
+				JPanel panel3 = new JPanel();
+				tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
+				panel3.setLayout(null);
+
+				textNombre = new JTextField();
+				textNombre.setEditable(false);
+				textNombre.setBounds(130, 33, 123, 19);
+				textNombre.setText(bailarin.getNombre());
+				panel3.add(textNombre);
+				textNombre.setColumns(10);
+
+				JLabel lblNombre = new JLabel("Nombre:");
+				lblNombre.setFont(new Font("Arial Black", Font.PLAIN, 14));
+				lblNombre.setBounds(42, 36, 78, 16);
+				panel3.add(lblNombre);
+
+				JLabel lblApellido = new JLabel("Apellido:");
+				lblApellido.setFont(new Font("Arial Black", Font.PLAIN, 14));
+				lblApellido.setBounds(42, 73, 78, 16);
+				panel3.add(lblApellido);
+
+				JLabel lblEdad = new JLabel("Edad:");
+				lblEdad.setFont(new Font("Arial Black", Font.PLAIN, 14));
+				lblEdad.setBounds(42, 111, 78, 16);
+				panel3.add(lblEdad);
+
+				JLabel lblCorreo = new JLabel("Correo:");
+				lblCorreo.setFont(new Font("Arial Black", Font.PLAIN, 14));
+				lblCorreo.setBounds(42, 153, 78, 16);
+				panel3.add(lblCorreo);
+
+				textApellido = new JTextField();
+				textApellido.setEditable(false);
+				textApellido.setColumns(10);
+				textApellido.setBounds(130, 74, 123, 19);
+				textApellido.setText(bailarin.getApellido());
+				panel3.add(textApellido);
+
+				textEdad = new JTextField();
+				textEdad.setEditable(false);
+				textEdad.setColumns(10);
+				textEdad.setBounds(130, 112, 123, 19);
+				textEdad.setText(String.valueOf(bailarin.getEdad()));
+				panel3.add(textEdad);
+
+				textCorreo = new JTextField();
+				textCorreo.setEditable(false);
+				textCorreo.setColumns(10);
+				textCorreo.setBounds(130, 154, 267, 19);
+				textCorreo.setText(bailarin.getCorreo());
+				panel3.add(textCorreo);
+
+				JLabel lblTelefono = new JLabel("Telefono:");
+				lblTelefono.setFont(new Font("Arial Black", Font.PLAIN, 14));
+				lblTelefono.setBounds(42, 192, 78, 16);
+				panel3.add(lblTelefono);
+
+				textTelefono = new JTextField();
+				textTelefono.setEditable(false);
+				textTelefono.setColumns(10);
+				textTelefono.setBounds(130, 193, 123, 19);
+				textTelefono.setText(String.valueOf(bailarin.getTelefono()));
+				panel3.add(textTelefono);
+
+			}
+
+			tabbedPane.setSelectedIndex(2); // Cambiar a la tercera pestaña
+		} else {
+			JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private boolean existePestana(String titulo) {
+		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+			if (tabbedPane.getTitleAt(i).equalsIgnoreCase(titulo)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

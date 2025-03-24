@@ -33,6 +33,7 @@ public class PagInicio extends JFrame implements ActionListener {
     private JButton btnCancelar;
     private JPasswordField passwordField;
     private JPanel Password;
+    private JTabbedPane tabbedPane; // Declaración de tabbedPane como variable de instancia
 
     /**
      * Launch the application.
@@ -53,114 +54,113 @@ public class PagInicio extends JFrame implements ActionListener {
     /**
      * Create the frame.
      */
-  
     public PagInicio() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 941, 583);
-        contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(contentPane);
-        contentPane.setLayout(new BorderLayout());
-
-     // Crear un JTabbedPane
-        JTabbedPane tabbedPane = new JTabbedPane();
-        contentPane.add(tabbedPane, BorderLayout.CENTER); // Añadir al centro
-     // Crear el contenido de cada pestaña
-        JPanel singIn = new JPanel() {
-            private Image backgroundImage;
-
-            {
-                // Cargar la imagen de fondo
-                backgroundImage = new ImageIcon("..//imagenes//fondoCode.png").getImage();
-            }
+        contentPane = new JPanel() {
+            private Image backgroundImage = new ImageIcon("..//imagenes//fondoCode.png").getImage();
 
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // Dibujar la imagen de fondo
                 g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        // Crear el contenido de cada pestaña
-        singIn = new JPanel();
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        setContentPane(contentPane);
+        contentPane.setLayout(new BorderLayout());
+
+        // Inicialización de tabbedPane
+        tabbedPane = new JTabbedPane(); // Inicialización de tabbedPane
+        contentPane.add(tabbedPane, BorderLayout.CENTER);
+
+        // Primera pestaña con fondo
+        JPanel singIn = new JPanel();
         singIn.setLayout(null);
         tabbedPane.addTab("CODE AND DANCE", null, singIn, "Información de la Pestaña 1");
-        
-                Password = new JPanel();
-                Password.setLayout(null);
-                tabbedPane.addTab("Sing In", null, Password, "Información de la Pestaña 2");
-                
-                JLabel lbUsuario = new JLabel("Usuario:");
-                lbUsuario.setFont(new Font("Arial Black", Font.PLAIN, 14));
-                lbUsuario.setBounds(255, 191, 91, 22);
-                Password.add(lbUsuario);
-                
-                JLabel lbPassword = new JLabel("Password:");
-                lbPassword.setFont(new Font("Arial Black", Font.PLAIN, 14));
-                lbPassword.setBounds(255, 236, 91, 22);
-                Password.add(lbPassword);
-                
-                textUsuario = new JTextField();
-                textUsuario.setBounds(356, 195, 232, 19);
-                Password.add(textUsuario);
-                textUsuario.setColumns(10);
-                
-                btnAcceder = new JButton("Acceder");
-                btnAcceder.addActionListener(this);
-                btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
-                btnAcceder.setBounds(282, 343, 102, 21);
-                Password.add(btnAcceder);
-                
-                btnCancelar = new JButton("Cancelar");
-                btnCancelar.addActionListener(this);
-                btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
-                btnCancelar.setBounds(472, 343, 116, 21);
-                Password.add(btnCancelar);
-                
-                btnRecuperarContraseña = new JButton("Has olvidado tu contraseña?");
-                btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
-                btnRecuperarContraseña.setBounds(425, 279, 163, 21);
-                Password.add(btnRecuperarContraseña);
-                
-                passwordField = new JPasswordField();
-                passwordField.setBounds(356, 240, 232, 19);
-                Password.add(passwordField);
 
-        
+        // Segunda pestaña (Login)
+        Password = new JPanel();
+        Password.setLayout(null);
+        tabbedPane.addTab("Sing In", null, Password, "Información de la Pestaña 2");
+
+        JLabel lbUsuario = new JLabel("Usuario:");
+        lbUsuario.setFont(new Font("Arial Black", Font.PLAIN, 14));
+        lbUsuario.setBounds(255, 191, 91, 22);
+        Password.add(lbUsuario);
+
+        JLabel lbPassword = new JLabel("Password:");
+        lbPassword.setFont(new Font("Arial Black", Font.PLAIN, 14));
+        lbPassword.setBounds(255, 236, 91, 22);
+        Password.add(lbPassword);
+
+        textUsuario = new JTextField();
+        textUsuario.setBounds(356, 195, 232, 19);
+        Password.add(textUsuario);
+        textUsuario.setColumns(10);
+
+        btnAcceder = new JButton("Acceder");
+        btnAcceder.addActionListener(this);
+        btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
+        btnAcceder.setBounds(282, 343, 102, 21);
+        Password.add(btnAcceder);
+
+        btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener(this);
+        btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
+        btnCancelar.setBounds(472, 343, 116, 21);
+        Password.add(btnCancelar);
+
+        btnRecuperarContraseña = new JButton("Has olvidado tu contraseña?");
+        btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
+        btnRecuperarContraseña.setBounds(425, 279, 163, 21);
+        Password.add(btnRecuperarContraseña);
+
+        passwordField = new JPasswordField();
+        passwordField.setBounds(356, 240, 232, 19);
+        Password.add(passwordField);
     }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource().equals(btnAcceder)) {
-			comprobar();
-		}else if(e.getSource().equals(btnCancelar)) {
-			cancelar();
-		}
-		
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(btnAcceder)) {
+            comprobar();
+        } else if (e.getSource().equals(btnCancelar)) {
+            cancelar();
+        }
+    }
 
-	private void cancelar() {
-		textUsuario.setText("");
-		passwordField.setText("");
-		
-	}
+    private void cancelar() {
+        textUsuario.setText("");
+        passwordField.setText("");
+    }
 
-	private void comprobar() {
-		
-		String dni= new String(passwordField.getPassword());
-		Bailarin bailarin = Principal.leerDni(dni);
-		
-		if(dni.equalsIgnoreCase(Principal.leerDni(dni).getDni()) && textUsuario.getText().equalsIgnoreCase(bailarin.getCorreo())) {
-			JOptionPane.showMessageDialog(this, "Bienvenido, " + bailarin.getNombre(), "Acceso concedido", JOptionPane.INFORMATION_MESSAGE);
-			
-			JTabbedPane tabbedPane = new JTabbedPane();
-			JPanel panel3 = new JPanel();
-	        panel3.add(new JLabel("Contenido de la Pestaña 3"));
-	        tabbedPane.addTab("Pestaña 3", null, panel3, "Información de la Pestaña 3");
-		}else {
-		      JOptionPane.showMessageDialog(this, "DNI no registrado", "Error", JOptionPane.ERROR_MESSAGE);
-		}
-		
-	}
+    private void comprobar() {
+        String dni = new String(passwordField.getPassword());
+        Bailarin bailarin = Principal.leerDni(dni);
+
+        if (bailarin != null && dni.equalsIgnoreCase(bailarin.getDni()) && textUsuario.getText().equalsIgnoreCase(bailarin.getCorreo())) {
+            JOptionPane.showMessageDialog(this, "Bienvenido, " + bailarin.getNombre(), "Acceso concedido", JOptionPane.INFORMATION_MESSAGE);
+            
+            // Agregar la tercera pestaña si no existe
+            if (!existePestana("Información de Bailarines")) {
+                JPanel panel3 = new JPanel();
+                panel3.add(new JLabel("Información de los bailarines aquí"));
+                tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
+            }
+
+            tabbedPane.setSelectedIndex(2); // Cambia a la nueva pestaña
+        } else {
+            JOptionPane.showMessageDialog(this, "DNI no registrado", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean existePestana(String titulo) {
+        for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+            if (tabbedPane.getTitleAt(i).equalsIgnoreCase(titulo)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

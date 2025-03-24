@@ -44,6 +44,12 @@ public class Participa {
 	public void setFechaFin(Date fechaFin) {
 		this.fechaFin = fechaFin;
 	}
+
+	@Override
+	public String toString() {
+		return "Participa [idCurso=" + idCurso + ", dniBailarin=" + dniBailarin + ", fechaInicio=" + fechaInicio
+				+ ", fechaFin=" + fechaFin + "]";
+	}
 	
 	
 	

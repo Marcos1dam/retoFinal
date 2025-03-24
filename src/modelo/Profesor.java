@@ -41,6 +41,11 @@ public class Profesor {
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
+	@Override
+	public String toString() {
+		return "Profesor [id=" + id + ", nombre=" + nombre + ", apellido=" + apellido + ", salario=" + salario
+				+ ", admin=" + admin + "]";
+	}
 	
 	
 }

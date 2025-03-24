@@ -59,6 +59,12 @@ public class Bailarin {
 	public void setCorreo(String correo) {
 		this.correo = correo;
 	}
+
+	@Override
+	public String toString() {
+		return "Bailarin [dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + ", edad=" + edad
+				+ ", telefono=" + telefono + ", correo=" + correo + "]";
+	}
 	
 	
 }

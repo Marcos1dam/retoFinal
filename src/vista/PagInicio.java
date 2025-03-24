@@ -82,6 +82,7 @@ public class PagInicio extends JFrame implements ActionListener {
         Password = new JPanel();
         Password.setLayout(null);
         tabbedPane.addTab("Sing In", null, Password, "Información de la Pestaña 2");
+        tabbedPane.setBackgroundAt(1, UIManager.getColor("Button.light"));
 
         JLabel lbUsuario = new JLabel("Usuario:");
         lbUsuario.setFont(new Font("Arial Black", Font.PLAIN, 14));
@@ -99,11 +100,13 @@ public class PagInicio extends JFrame implements ActionListener {
         textUsuario.setColumns(10);
 
         btnAcceder = new JButton("Acceder");
+        btnAcceder.addActionListener(this);
         btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
         btnAcceder.setBounds(282, 343, 102, 21);
         Password.add(btnAcceder);
 
         btnCancelar = new JButton("Cancelar");
+        btnCancelar.addActionListener(this);
         btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
         btnCancelar.setBounds(472, 343, 116, 21);
         Password.add(btnCancelar);

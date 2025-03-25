@@ -1,10 +1,12 @@
 package modelo;
 
+import java.sql.Date;
+
 public class Bailarin {
 	private String dni;
 	private String nombre;
 	private String apellido;
-	private int edad;
+	private Date fechaNacimiento;
 	private int telefono;
 	private String correo;
 	
@@ -35,13 +37,14 @@ public class Bailarin {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
+	
 
-	public int getEdad() {
-		return edad;
+	public Date getFechaNacimiento() {
+		return fechaNacimiento;
 	}
 
-	public void setEdad(int edad) {
-		this.edad = edad;
+	public void setFechaNacimiento(Date fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
 	}
 
 	public int getTelefono() {
@@ -62,7 +65,7 @@ public class Bailarin {
 
 	@Override
 	public String toString() {
-		return "Bailarin [dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + ", edad=" + edad
+		return "Bailarin [dni=" + dni + ", nombre=" + nombre + ", apellido=" + apellido + ", fecha de nacimiento=" +fechaNacimiento
 				+ ", telefono=" + telefono + ", correo=" + correo + "]";
 	}
 	

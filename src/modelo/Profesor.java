@@ -5,12 +5,31 @@ public class Profesor {
 	private String nombre;
 	private String apellido;
 	private float salario;
+	private String correo;
 	private boolean admin= true;
+	private String imagen;
 	
 	
 	public Profesor() {
 	
 	}
+	
+	public String getCorreo() {
+		return correo;
+	}
+
+	public void setCorreo(String correo) {
+		this.correo = correo;
+	}
+
+	public String getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import javax.security.auth.login.LoginException;
 
 import modelo.Bailarin;
+import modelo.Profesor;
 import vista.PagInicio;
 
 public class Principal {
@@ -30,5 +31,16 @@ public class Principal {
             e.printStackTrace();
             return null;
         }
+    }
+    
+    public static Profesor leerId(String id) {
+		try {
+			return dao.leerProfesor(id);
+		} catch (LoginException e) {
+			
+			e.printStackTrace();
+			return null;
+		}
+    	
     }
 }

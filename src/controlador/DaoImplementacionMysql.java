@@ -31,6 +31,7 @@ public class DaoImplementacionMysql implements Dao {
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
     final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
     final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
+    final String CREARCURSO = "INSERT INTO Curso VALUES (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, IdProfesor) (?, ?, ?, ?, ?, ?, ?);";
 
     public DaoImplementacionMysql() {
         this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -210,6 +211,33 @@ public class DaoImplementacionMysql implements Dao {
                 e.printStackTrace();
             }
         }
+		
+	}
+
+	@Override
+	public void crearCurso(Curso curso) throws LoginException {	
+		try {
+			openConnection();
+			stmt = con.prepareStatement(CREARCURSO);
+			stmt.setInt(1, curso.getIdCurso());
+			stmt.setString(2, curso.getTipo());
+			stmt.setTime(3, curso.getHorario());
+			stmt.setString(4, String.valueOf(curso.getNivel()));
+			stmt.setFloat(5, curso.getPrecio());
+			stmt.setInt(6, curso.getPlazas());
+			stmt.setInt(7, curso.getIdProfesor());
+			
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		} finally {
+			try {
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 

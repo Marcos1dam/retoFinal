@@ -9,12 +9,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.awt.event.*;
 import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controlador.Principal;
@@ -61,6 +59,8 @@ public class PagInicio extends JFrame implements ActionListener {
 	private Component btnEliminarBailarin_1;
 	private JButton btnCrearCurso_1;
 	private JButton btnOcupacion_1;
+	private JPanel panel4;
+	private Profesor p;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
@@ -399,7 +399,7 @@ public class PagInicio extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		} else if (passwordChars.length == 1) {
-			Profesor p = Principal.leerId(String.valueOf(passwordChars));
+			p = Principal.leerId(String.valueOf(passwordChars));
 			if (p != null && String.valueOf(passwordChars).equals(String.valueOf(p.getId()))
 					&& textUsuario.getText().equalsIgnoreCase(p.getCorreo())) {
 
@@ -409,7 +409,7 @@ public class PagInicio extends JFrame implements ActionListener {
 				tabbedPane.setEnabledAt(1, false);
 
 				if (!existePestana("Información de Profesores")) {
-					JPanel panel4 = new JPanel();
+					panel4 = new JPanel();
 					panel4.setLayout(null);
 
 					lbId = new JLabel("ID:");
@@ -577,7 +577,8 @@ public class PagInicio extends JFrame implements ActionListener {
 	}
 
 	private void crear() {
-		CrearCurso crear = new CrearCurso();
+		CrearCurso crear = new CrearCurso(cursoSeleccionado, true, p);
+		System.out.println(cursoSeleccionado);
 		crear.setVisible(true);
 	}
 

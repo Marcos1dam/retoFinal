@@ -5,11 +5,14 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javax.security.auth.login.LoginException;
 
 import modelo.Bailarin;
+import modelo.Curso;
+import modelo.Nivel;
 import modelo.Profesor;
 
 public class DaoImplementacionMysql implements Dao {
@@ -26,6 +29,8 @@ public class DaoImplementacionMysql implements Dao {
     // Sentencias
     final String SIGNIN = "SELECT * FROM Bailarin WHERE DniBailarin = ?";
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
+    final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
+    final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
 
     public DaoImplementacionMysql() {
         this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -130,4 +135,82 @@ public class DaoImplementacionMysql implements Dao {
         }
 		return null;
 	}
+
+	@Override
+	public Curso obtenerCurso(int idCurso) throws LoginException {
+		ResultSet rs= null;
+		Curso c= null;
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(OBTENERCURSO);
+			stmt.setInt(1,idCurso);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				c= new Curso();
+				c.setIdCurso(rs.getInt("IdCurso"));
+				c.setTipo(rs.getString("Tipo"));
+				c.setHorario(rs.getTime("Horario"));
+				c.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
+				c.setPrecio(rs.getFloat("Precio"));
+				c.setPlazas(rs.getInt("Plaza"));
+				c.setIdProfesor(rs.getInt("IdProfesor"));
+				
+				return c;				
+			}else {
+				 throw new LoginException("No se encontró ningún curso con el ID proporcionado.");
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		return null;
+	}
+
+	@Override
+	public void obtenerCursosPorProfesor(int idProfesor,ArrayList<Curso> cursos) throws LoginException {
+		ResultSet rs= null;
+		Curso cu= null;
+		//ArrayList<Curso>cursos= new ArrayList<>();
+		try {
+			openConnection();
+			stmt = con.prepareStatement(CURSOPORPROFESOR);
+			stmt.setInt(1,idProfesor);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				cu= new Curso();
+				cu.setIdCurso(rs.getInt("IdCurso"));
+				cu.setTipo(rs.getString("Tipo"));
+				cu.setHorario(rs.getTime("Horario"));
+				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
+				cu.setPrecio(rs.getFloat("Precio"));
+				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setIdProfesor(rs.getInt("IdProfesor"));
+				cursos.add(cu);
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		
+	}
+
 }

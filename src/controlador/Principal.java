@@ -1,10 +1,12 @@
 package controlador;
 
 import java.awt.EventQueue;
+import java.util.ArrayList;
 
 import javax.security.auth.login.LoginException;
 
 import modelo.Bailarin;
+import modelo.Curso;
 import modelo.Profesor;
 import vista.PagInicio;
 
@@ -38,6 +40,33 @@ public class Principal {
 			return dao.leerProfesor(id);
 		} catch (LoginException e) {
 			
+			e.printStackTrace();
+			return null;
+		}
+    	
+    }
+    
+    public static Curso obtenerCursoPorId(int idCurso) {
+		try {
+			return dao.obtenerCurso(idCurso);
+		} catch (LoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+    	
+    }
+    
+    public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor) {
+    	ArrayList<Curso> cursos= new ArrayList<Curso>();
+		try {
+			dao.obtenerCursosPorProfesor(idProfesor,cursos);
+			for(Curso c: cursos) {
+				System.out.println(c);
+			}
+			return cursos;
+		} catch (LoginException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

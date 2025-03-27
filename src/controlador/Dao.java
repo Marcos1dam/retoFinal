@@ -9,4 +9,5 @@ public interface Dao {
 	
 	public Bailarin leerBailarin(String dni) throws LoginException;
 	public Profesor leerProfesor(String id) throws LoginException;
+	
 }

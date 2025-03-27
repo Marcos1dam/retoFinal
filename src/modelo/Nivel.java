@@ -1,11 +1,12 @@
 package modelo;
 
 public enum Nivel {
+
 	PRINCIPIANTE("principiante"), MEDIO("medio"), AVANZADO("avanzado");
 
 	private String nombre;
 
-	Nivel(String string) {
+	Nivel(String nombre) {
 		this.nombre = nombre;
 	}
 
@@ -23,8 +24,7 @@ public enum Nivel {
 				return n;
 			}
 		}
-
-		throw new IllegalArgumentException("Nivel no válido" + nombre);
+		throw new IllegalArgumentException("Nivel no válido: " + nombre);
 
 	}
 }

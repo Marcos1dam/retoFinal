@@ -39,7 +39,6 @@ public class Principal {
 		try {
 			return dao.leerProfesor(id);
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
 			return null;
 		}
@@ -50,7 +49,6 @@ public class Principal {
 		try {
 			return dao.obtenerCurso(idCurso);
 		} catch (LoginException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
@@ -66,10 +64,17 @@ public class Principal {
 			}
 			return cursos;
 		} catch (LoginException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}
     	
+    }
+    
+    public static void crearCurso(Curso curso) {
+    	try {
+			dao.crearCurso(curso);
+		} catch (LoginException e) {
+			e.printStackTrace();
+		}
     }
 }

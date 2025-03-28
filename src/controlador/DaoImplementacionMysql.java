@@ -31,7 +31,7 @@ public class DaoImplementacionMysql implements Dao {
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
     final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
     final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
-    final String CREARCURSO = "INSERT INTO Curso VALUES (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, IdProfesor) (?, ?, ?, ?, ?, ?, ?);";
+    final String CREARCURSO = "INSERT INTO Curso VALUES (?, ?, ?, ?, ?, ?, ?);";
 
     public DaoImplementacionMysql() {
         this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -216,6 +216,7 @@ public class DaoImplementacionMysql implements Dao {
 
 	@Override
 	public void crearCurso(Curso curso) throws LoginException {	
+		System.out.println(curso);
 		try {
 			openConnection();
 			stmt = con.prepareStatement(CREARCURSO);

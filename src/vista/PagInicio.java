@@ -353,7 +353,7 @@ private class CloseTabButton extends JPanel {
                     lblApellido.setBounds(42, 73, 78, 16);
                     panel3.add(lblApellido);
                     
-                    JLabel lblFechaNacimiento = new JLabel("Edad:");
+                    JLabel lblFechaNacimiento = new JLabel("Fecha Nacimiento:");
                     lblFechaNacimiento.setFont(new Font("Arial Black", Font.PLAIN, 14));
                     lblFechaNacimiento.setBounds(42, 111, 78, 16);
                     panel3.add(lblFechaNacimiento);

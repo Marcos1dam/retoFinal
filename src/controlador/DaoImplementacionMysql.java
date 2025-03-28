@@ -31,6 +31,8 @@ public class DaoImplementacionMysql implements Dao {
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
     final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
     final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
+    final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
+    final String TODOSLOSCURSOS = "SELECT * FROM Curso";
 
     public DaoImplementacionMysql() {
         this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -180,11 +182,85 @@ public class DaoImplementacionMysql implements Dao {
 	public void obtenerCursosPorProfesor(int idProfesor,ArrayList<Curso> cursos) throws LoginException {
 		ResultSet rs= null;
 		Curso cu= null;
-		//ArrayList<Curso>cursos= new ArrayList<>();
+		
 		try {
 			openConnection();
 			stmt = con.prepareStatement(CURSOPORPROFESOR);
 			stmt.setInt(1,idProfesor);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				cu= new Curso();
+				cu.setIdCurso(rs.getInt("IdCurso"));
+				cu.setTipo(rs.getString("Tipo"));
+				cu.setHorario(rs.getTime("Horario"));
+				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
+				cu.setPrecio(rs.getFloat("Precio"));
+				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setIdProfesor(rs.getInt("IdProfesor"));
+				cursos.add(cu);
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		
+	}
+
+	@Override
+	public void obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
+		ResultSet rs= null;
+		Curso cu= null;
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(CURSOPORBAILARIN);
+			stmt.setString(1, idBailarin);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				cu= new Curso();
+				cu.setIdCurso(rs.getInt("IdCurso"));
+				cu.setTipo(rs.getString("Tipo"));
+				cu.setHorario(rs.getTime("Horario"));
+				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
+				cu.setPrecio(rs.getFloat("Precio"));
+				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setIdProfesor(rs.getInt("IdProfesor"));
+				cursos.add(cu);
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		
+	}
+
+	@Override
+	public void obtenerTodosLosCursos(ArrayList<Curso> cursos) {
+		ResultSet rs= null;
+		Curso cu= null;
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(TODOSLOSCURSOS);
+			
 			rs = stmt.executeQuery();
 			while(rs.next()) {
 				cu= new Curso();

@@ -50,7 +50,7 @@ public class Principal {
 		try {
 			return dao.obtenerCurso(idCurso);
 		} catch (LoginException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 			return null;
 		}
@@ -66,10 +66,26 @@ public class Principal {
 			}
 			return cursos;
 		} catch (LoginException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 			return null;
 		}
+    	
+    }
+    
+    public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin){
+    	ArrayList<Curso> cursos= new ArrayList<Curso>();
+    	dao.obtnerCursosPorBailarin(idBailarin, cursos);
+    	for(Curso c: cursos) {
+			System.out.println(c);
+		}
+    	return cursos;
+    }
+    
+    public static ArrayList<Curso> obtenerTodosLosCursos(){
+    	ArrayList<Curso> cursos= new ArrayList<Curso>();
+    	dao.obtenerTodosLosCursos(cursos);
+		return cursos;
     	
     }
 }

@@ -132,7 +132,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private void cargarDatos(int idP, int idC) {
-		textFieldID.setText(String.valueOf(idC + 1));
+		textFieldID.setText(String.valueOf(idC));
 		textFieldIDProfesor.setText(String.valueOf(idP));
 	}
 

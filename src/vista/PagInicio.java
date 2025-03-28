@@ -1,18 +1,15 @@
 package vista;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controlador.Principal;
@@ -21,47 +18,34 @@ import modelo.Curso;
 import modelo.Nivel;
 import modelo.Profesor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPasswordField;
-
 public class PagInicio extends JFrame implements ActionListener {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane;
 	private JPanel contentPane;
 	private JTextField textUsuario;
 	private JPasswordField passwordField;
 	private JButton btnAcceder, btnCancelar, btnRecuperarContraseña;
 
-	// Campos para curso
-	// Variable para almacenar el curso seleccionado
-	private Curso cursoSeleccionado = null;
-	private ArrayList<Curso> cursos = new ArrayList<>();
-
 	// Campos para bailarín
 	private JTextField textNombre, textApellido, textFechaNaciemto, textCorreo, textTelefono;
+
 	// Campos para profesor
 	private JLabel lbId, lblNombre_1, lblApellido, lblSalario, lblEmail, lblFoto;
 	private JTextField textId, textNombreProfesor, textApellidoProfesor, textSalario, textEmailProfesor;
 	private JTable table;
-	private Component btnModificar_1;
-	private Component btnEliminarCurso_1;
-	private Component btnEliminarBailarin_1;
 	private JButton btnCrearCurso_1;
+	private JButton btnModificar_1;
+	private JButton btnEliminarCurso_1;
+	private JButton btnEliminarBailarin_1;
 	private JButton btnOcupacion_1;
-	private JPanel panel4;
 	private Profesor p;
 
+	// Campos para curso
+	// Variable para almacenar el curso seleccionado
+	private Curso cursoSeleccionado = null;
+	private ArrayList<Curso> cursos = new ArrayList<>();
+	private JButton btnBajaCurso;
+	private JButton btnApuntarse;
+	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			try {
@@ -115,7 +99,16 @@ public class PagInicio extends JFrame implements ActionListener {
 		tabbedPane.addTab("CODE AND DANCE", null, singIn, "Información de la Pestaña 1");
 
 		// Pestaña de login
-		JPanel passwordPanel = new JPanel();
+		JPanel passwordPanel = new JPanel() {
+			private Image backgroundImage = new ImageIcon(
+					getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
+
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
 		passwordPanel.setBackground(new Color(255, 255, 255));
 		passwordPanel.setLayout(null);
 		tabbedPane.addTab("Sing In", null, passwordPanel, "Información de la Pestaña 2");
@@ -158,90 +151,109 @@ public class PagInicio extends JFrame implements ActionListener {
 		passwordField.setBounds(356, 240, 253, 19);
 		passwordPanel.add(passwordField);
 		//////////////////////////////////////////////
-		/*
-		 * JPanel panel4 = new JPanel(); panel4.setLayout(null);
-		 * 
-		 * lbId = new JLabel("ID:"); lbId.setFont(new Font("Arial Black", Font.PLAIN,
-		 * 14)); lbId.setBounds(103, 69, 87, 18); panel4.add(lbId);
-		 * 
-		 * lblNombre_1 = new JLabel("Nombre:"); lblNombre_1.setFont(new
-		 * Font("Arial Black", Font.PLAIN, 14)); lblNombre_1.setBounds(103, 110, 87,
-		 * 18); panel4.add(lblNombre_1);
-		 * 
-		 * lblApellido = new JLabel("Apellido:"); lblApellido.setFont(new
-		 * Font("Arial Black", Font.PLAIN, 14)); lblApellido.setBounds(103, 148, 87,
-		 * 18); panel4.add(lblApellido);
-		 * 
-		 * lblSalario = new JLabel("Salario:"); lblSalario.setFont(new
-		 * Font("Arial Black", Font.PLAIN, 14)); lblSalario.setBounds(103, 188, 87, 18);
-		 * panel4.add(lblSalario);
-		 * 
-		 * lblEmail = new JLabel("Correo:"); lblEmail.setFont(new Font("Arial Black",
-		 * Font.PLAIN, 14)); lblEmail.setBounds(103, 228, 87, 18); panel4.add(lblEmail);
-		 * 
-		 * lblFoto = new JLabel(""); lblFoto.setBounds(683, 69, 201, 177); ImageIcon
-		 * icon = new ImageIcon(getClass().getResource(p.getImagen())); Image imagen =
-		 * icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(),
-		 * Image.SCALE_SMOOTH); lblFoto.setIcon(new ImageIcon(imagen));
-		 * panel4.add(lblFoto);
-		 * 
-		 * textId = new JTextField(); textId.setEditable(false); textId.setBounds(177,
-		 * 71, 87, 19); panel4.add(textId); textId.setText(String.valueOf(p.getId()));
-		 * textId.setColumns(10);
-		 * 
-		 * textNombreProfesor = new JTextField(); textNombreProfesor.setEditable(false);
-		 * textNombreProfesor.setColumns(10); textNombreProfesor.setBounds(177, 109, 87,
-		 * 19); textNombreProfesor.setText(p.getNombre());
-		 * panel4.add(textNombreProfesor);
-		 * 
-		 * textApellidoProfesor = new JTextField();
-		 * textApellidoProfesor.setEditable(false); textApellidoProfesor.setColumns(10);
-		 * textApellidoProfesor.setBounds(177, 150, 87, 19);
-		 * textApellidoProfesor.setText(p.getApellido());
-		 * panel4.add(textApellidoProfesor);
-		 * 
-		 * textSalario = new JTextField(); textSalario.setEditable(false);
-		 * textSalario.setColumns(10); textSalario.setBounds(177, 190, 87, 19);
-		 * textSalario.setText(String.valueOf(p.getSalario())); panel4.add(textSalario);
-		 * 
-		 * textEmailProfesor = new JTextField(); textEmailProfesor.setEditable(false);
-		 * textEmailProfesor.setColumns(10); textEmailProfesor.setBounds(177, 230, 224,
-		 * 19); textEmailProfesor.setText(p.getCorreo()); panel4.add(textEmailProfesor);
-		 * 
-		 * table = new JTable(); table.setBounds(103, 305, 576, 161); panel4.add(table);
-		 * 
-		 * JSeparator separator = new JSeparator(); separator.setBounds(10, 268, 902,
-		 * 27); panel4.add(separator);
-		 * 
-		 * JLabel lblTablaCursos = new JLabel("Cursos"); lblTablaCursos.setFont(new
-		 * Font("Arial Black", Font.PLAIN, 14)); lblTablaCursos.setBounds(314, 277, 87,
-		 * 18); panel4.add(lblTablaCursos);
-		 * 
-		 * btnCrearCurso_1 = new JButton("Crear"); btnCrearCurso_1.setFont(new
-		 * Font("Arial Black", Font.PLAIN, 14)); btnCrearCurso_1.setBounds(689, 302,
-		 * 195, 21); panel4.add(btnCrearCurso_1);
-		 * 
-		 * btnModificar_1 = new JButton("Modificar"); btnModificar_1.setFont(new
-		 * Font("Arial Black", Font.PLAIN, 14)); btnModificar_1.setBounds(689, 336, 195,
-		 * 21); panel4.add(btnModificar_1);
-		 * 
-		 * btnEliminarCurso_1 = new JButton("Eliminar"); btnEliminarCurso_1.setFont(new
-		 * Font("Arial Black", Font.PLAIN, 14)); btnEliminarCurso_1.setBounds(689, 367,
-		 * 195, 21); panel4.add(btnEliminarCurso_1);
-		 * 
-		 * btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
-		 * btnEliminarBailarin_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		 * btnEliminarBailarin_1.setBounds(689, 398, 195, 21);
-		 * panel4.add(btnEliminarBailarin_1);
-		 * 
-		 * btnOcupacion_1 = new JButton("Consultar ocupación");
-		 * btnOcupacion_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		 * btnOcupacion_1.setBounds(689, 429, 195, 21); panel4.add(btnOcupacion_1);
-		 * 
-		 * agregarBotonCerrarSesion(panel4);
-		 * tabbedPane.addTab("Información de Profesores", null, panel4,
-		 * "Datos de los Profesores"); } tabbedPane.setSelectedIndex(2);
-		 */
+		/*JPanel panel3 = new JPanel();
+		panel3.setLayout(null);
+
+		textNombre = new JTextField();
+		textNombre.setEditable(false);
+		textNombre.setBounds(130, 33, 123, 19);
+		textNombre.setText(bailarin.getNombre());
+		panel3.add(textNombre);
+		textNombre.setColumns(10);
+
+		JLabel lblNombre = new JLabel("Nombre:");
+		lblNombre.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lblNombre.setBounds(42, 36, 78, 16);
+		panel3.add(lblNombre);
+
+		JLabel lblApellido = new JLabel("Apellido:");
+		lblApellido.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lblApellido.setBounds(42, 73, 78, 16);
+		panel3.add(lblApellido);
+
+		JLabel lblFechaNacimiento = new JLabel("Edad:");
+		lblFechaNacimiento.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lblFechaNacimiento.setBounds(42, 111, 78, 16);
+		panel3.add(lblFechaNacimiento);
+
+		JLabel lblCorreo = new JLabel("Correo:");
+		lblCorreo.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lblCorreo.setBounds(42, 153, 78, 16);
+		panel3.add(lblCorreo);
+
+		textApellido = new JTextField();
+		textApellido.setEditable(false);
+		textApellido.setColumns(10);
+		textApellido.setBounds(130, 74, 123, 19);
+		textApellido.setText(bailarin.getApellido());
+		panel3.add(textApellido);
+
+		textFechaNaciemto = new JTextField();
+		textFechaNaciemto.setEditable(false);
+		textFechaNaciemto.setColumns(10);
+		textFechaNaciemto.setBounds(130, 112, 123, 19);
+		textFechaNaciemto.setText(String.valueOf(bailarin.getFechaNacimiento()));
+		panel3.add(textFechaNaciemto);
+
+		textCorreo = new JTextField();
+		textCorreo.setEditable(false);
+		textCorreo.setColumns(10);
+		textCorreo.setBounds(130, 154, 267, 19);
+		textCorreo.setText(bailarin.getCorreo());
+		panel3.add(textCorreo);
+
+		JLabel lblTelefono = new JLabel("Telefono:");
+		lblTelefono.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lblTelefono.setBounds(42, 192, 78, 16);
+		panel3.add(lblTelefono);
+
+		textTelefono = new JTextField();
+		textTelefono.setEditable(false);
+		textTelefono.setColumns(10);
+		textTelefono.setBounds(130, 193, 123, 19);
+		textTelefono.setText(String.valueOf(bailarin.getTelefono()));
+		panel3.add(textTelefono);
+
+		agregarBotonCerrarSesion(panel3);
+		tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
+
+		JLabel lblMisCursos = new JLabel("Mis cursos");
+		lblMisCursos.setFont(new Font("Arial Black", Font.PLAIN, 16));
+		lblMisCursos.setBounds(639, 75, 123, 26);
+		panel3.add(lblMisCursos);
+
+		JTable table_1 = new JTable();
+		table_1.setBounds(748, 176, 1, 1);
+		panel3.add(table_1);
+
+		JTable table_2 = new JTable();
+		table_2.setBounds(451, 114, 454, 97);
+		panel3.add(table_2);
+
+		JButton btnBajaCurso = new JButton("Darse de baja");
+		btnBajaCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
+		btnBajaCurso.setBounds(598, 229, 190, 21);
+		panel3.add(btnBajaCurso);
+
+		JLabel lblInfoCursos = new JLabel("mas cursos");
+		lblInfoCursos.setFont(new Font("Arial Black", Font.PLAIN, 16));
+		lblInfoCursos.setBounds(423, 289, 136, 13);
+		panel3.add(lblInfoCursos);
+
+		JTable table_3 = new JTable();
+		table_3.setBounds(86, 318, 819, 137);
+		panel3.add(table_3);
+
+		JButton btnApuntarse = new JButton("Apuntarse");
+		btnApuntarse.setFont(new Font("Arial Black", Font.PLAIN, 16));
+		btnApuntarse.setBounds(408, 465, 136, 21);
+		panel3.add(btnApuntarse);
+
+		agregarBotonCerrarSesion(panel3);
+		tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
+
+		tabbedPane.setSelectedIndex(2);
+	}*/
 		//////////////////////////////////////////////
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 	}
@@ -322,13 +334,23 @@ public class PagInicio extends JFrame implements ActionListener {
 			if (bailarin != null && String.valueOf(passwordChars).equalsIgnoreCase(bailarin.getDni())
 					&& textUsuario.getText().equalsIgnoreCase(bailarin.getCorreo())) {
 
+
 				JOptionPane.showMessageDialog(this, "Bienvenido, " + bailarin.getNombre(), "Acceso concedido",
 						JOptionPane.INFORMATION_MESSAGE);
 
 				tabbedPane.setEnabledAt(1, false);
 
 				if (!existePestana("Información de Bailarines")) {
-					JPanel panel3 = new JPanel();
+					JPanel panel3 = new JPanel() {
+						private Image backgroundImage = new ImageIcon(
+								getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
+
+						@Override
+						protected void paintComponent(Graphics g) {
+							super.paintComponent(g);
+							g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+						}
+					};
 					panel3.setLayout(null);
 
 					textNombre = new JTextField();
@@ -393,13 +415,159 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					agregarBotonCerrarSesion(panel3);
 					tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
+
+					JLabel lblMisCursos = new JLabel("Mis cursos");
+					lblMisCursos.setFont(new Font("Arial Black", Font.PLAIN, 16));
+					lblMisCursos.setBounds(639, 75, 123, 26);
+					panel3.add(lblMisCursos);
+
+					// Declarar la tabla correctamente (usando table_1 consistentemente)
+					JTable table_1 = new JTable();
+					JScrollPane scrollPaneTable1 = new JScrollPane(table_1); // ScrollPane para table_1
+					scrollPaneTable1.setBounds(451, 114, 454, 97); // Ajusta estos valores según necesites
+					panel3.add(scrollPaneTable1);
+
+					// Configurar el modelo de tabla para table_1 (no para table)
+					String[] columnNames = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor"};
+					DefaultTableModel model_1 = new DefaultTableModel(columnNames, 0) {
+					    @Override
+					    public boolean isCellEditable(int row, int column) {
+					        return false;
+					    }
+					};
+					table_1.setModel(model_1);
+
+					// Llenar la tabla
+					model_1.setRowCount(0);
+					ArrayList<Curso>cursosBailarin= new ArrayList<>();
+					cursosBailarin = Principal.obtenerCursosPorBailarin(bailarin.getDni());
+					
+					for (Curso curso : cursosBailarin) {
+						System.out.println();
+					    model_1.addRow(new Object[]{
+					        curso.getIdCurso(),
+					        curso.getTipo(),
+					        curso.getHorario(),
+					        curso.getNivel(),
+					        curso.getPrecio(),
+					        curso.getPlazas(),
+					        curso.getIdProfesor()
+					    });
+					}
+
+					// Listener para selección de filas
+					table_1.getSelectionModel().addListSelectionListener(e -> {
+						if (!e.getValueIsAdjusting()) {
+							int selectedRow = table_1.getSelectedRow();
+							if (selectedRow >= 0) {
+								cursoSeleccionado = new Curso();
+								cursoSeleccionado
+										.setIdCurso(Integer.parseInt(table_1.getValueAt(selectedRow, 0).toString()));
+								cursoSeleccionado.setTipo(table_1.getValueAt(selectedRow, 1).toString());
+								cursoSeleccionado.setHorario(Time.valueOf(table_1.getValueAt(selectedRow, 2).toString()));
+								cursoSeleccionado
+										.setNivel(Nivel.obtenerPorNombre(table_1.getValueAt(selectedRow, 3).toString()));
+								cursoSeleccionado
+										.setPrecio(Float.parseFloat(table_1.getValueAt(selectedRow, 4).toString()));
+								cursoSeleccionado
+										.setPlazas(Integer.parseInt(table_1.getValueAt(selectedRow, 5).toString()));
+								cursoSeleccionado
+										.setIdProfesor(Integer.parseInt(table_1.getValueAt(selectedRow, 6).toString()));
+								
+								btnBajaCurso.setVisible(true);
+								
+							}
+						}
+					});
+
+
+					btnBajaCurso = new JButton("Darse de baja");
+					btnBajaCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
+					btnBajaCurso.setBounds(598, 229, 190, 21);
+					panel3.add(btnBajaCurso);
+
+					JLabel lblInfoCursos = new JLabel("mas cursos");
+					lblInfoCursos.setFont(new Font("Arial Black", Font.PLAIN, 16));
+					lblInfoCursos.setBounds(423, 289, 136, 13);
+					panel3.add(lblInfoCursos);
+
+					// Declarar la tabla correctamente 
+					JTable table_3 = new JTable();
+					JScrollPane scrollPaneTable3 = new JScrollPane(table_3); // ScrollPane para table_3
+					scrollPaneTable3.setBounds(86, 318, 819, 137); // Ajusta estos valores según necesites
+					panel3.add(scrollPaneTable3);
+
+					// Configurar el modelo de tabla para table_3
+					String[] columnNames3 = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor"};
+					DefaultTableModel model_3 = new DefaultTableModel(columnNames3, 0) {
+					    @Override
+					    public boolean isCellEditable(int row, int column) {
+					        return false;
+					    }
+					};
+					table_3.setModel(model_3);
+
+					// Llenar la tabla
+					model_3.setRowCount(0);
+					ArrayList<Curso>todosLosCursos= new ArrayList<>();
+					todosLosCursos= Principal.obtenerTodosLosCursos();
+					
+					for (Curso curso : todosLosCursos) {
+						System.out.println();
+					    model_3.addRow(new Object[]{
+					        curso.getIdCurso(),
+					        curso.getTipo(),
+					        curso.getHorario(),
+					        curso.getNivel(),
+					        curso.getPrecio(),
+					        curso.getPlazas(),
+					        curso.getIdProfesor()
+					    });
+					}
+
+					// Listener para selección de filas
+					table_3.getSelectionModel().addListSelectionListener(e -> {
+						if (!e.getValueIsAdjusting()) {
+							int selectedRow = table_3.getSelectedRow();
+							if (selectedRow >= 0) {
+								cursoSeleccionado = new Curso();
+								cursoSeleccionado
+										.setIdCurso(Integer.parseInt(table_3.getValueAt(selectedRow, 0).toString()));
+								cursoSeleccionado.setTipo(table_3.getValueAt(selectedRow, 1).toString());
+								cursoSeleccionado.setHorario(Time.valueOf(table_3.getValueAt(selectedRow, 2).toString()));
+								cursoSeleccionado
+										.setNivel(Nivel.obtenerPorNombre(table_3.getValueAt(selectedRow, 3).toString()));
+								cursoSeleccionado
+										.setPrecio(Float.parseFloat(table_3.getValueAt(selectedRow, 4).toString()));
+								cursoSeleccionado
+										.setPlazas(Integer.parseInt(table_3.getValueAt(selectedRow, 5).toString()));
+								cursoSeleccionado
+										.setIdProfesor(Integer.parseInt(table_3.getValueAt(selectedRow, 6).toString()));
+								
+								btnApuntarse.setVisible(true);
+								
+							}
+						}
+					});
+
+					btnApuntarse = new JButton("Apuntarse");
+					btnApuntarse.setFont(new Font("Arial Black", Font.PLAIN, 16));
+					btnApuntarse.setBounds(408, 465, 136, 21);
+					panel3.add(btnApuntarse);
+
+					agregarBotonCerrarSesion(panel3);
+					tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
+
+					tabbedPane.setSelectedIndex(2);
 				}
-				tabbedPane.setSelectedIndex(2);
 			} else if (bailarin == null) {
 				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
+
 		} else if (passwordChars.length == 1) {
-			p = Principal.leerId(String.valueOf(passwordChars));
+
+			 p = Principal.leerId(String.valueOf(passwordChars));
+
 			if (p != null && String.valueOf(passwordChars).equals(String.valueOf(p.getId()))
 					&& textUsuario.getText().equalsIgnoreCase(p.getCorreo())) {
 
@@ -409,7 +577,16 @@ public class PagInicio extends JFrame implements ActionListener {
 				tabbedPane.setEnabledAt(1, false);
 
 				if (!existePestana("Información de Profesores")) {
-					panel4 = new JPanel();
+					JPanel panel4 = new JPanel() {
+						private Image backgroundImage = new ImageIcon(
+								getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
+
+						@Override
+						protected void paintComponent(Graphics g) {
+							super.paintComponent(g);
+							g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+						}
+					};
 					panel4.setLayout(null);
 
 					lbId = new JLabel("ID:");
@@ -573,6 +750,7 @@ public class PagInicio extends JFrame implements ActionListener {
 			} else if (p == null) {
 				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
+
 		}
 	}
 
@@ -589,6 +767,6 @@ public class PagInicio extends JFrame implements ActionListener {
 			}
 		}
 		return false;
-	}
 
+	}
 }

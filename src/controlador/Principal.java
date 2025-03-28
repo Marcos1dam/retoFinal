@@ -70,11 +70,27 @@ public class Principal {
     	
     }
     
+
     public static void crearCurso(Curso curso) {
     	try {
 			dao.crearCurso(curso);
 		} catch (LoginException e) {
 			e.printStackTrace();
 		}
+
+    }
+    public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin){
+    	ArrayList<Curso> cursos= new ArrayList<Curso>();
+    	dao.obtnerCursosPorBailarin(idBailarin, cursos);
+    	for(Curso c: cursos) {
+			System.out.println(c);
+		}
+    	return cursos;
+    }
+    
+    public static ArrayList<Curso> obtenerTodosLosCursos(){
+    	ArrayList<Curso> cursos= new ArrayList<Curso>();
+    	dao.obtenerTodosLosCursos(cursos);
+		return cursos;
     }
 }

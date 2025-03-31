@@ -39,7 +39,6 @@ public class Principal {
 		try {
 			return dao.leerProfesor(id);
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
 			return null;
 		}
@@ -50,7 +49,6 @@ public class Principal {
 		try {
 			return dao.obtenerCurso(idCurso);
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
 			return null;
 		}
@@ -66,13 +64,21 @@ public class Principal {
 			}
 			return cursos;
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
 			return null;
 		}
     	
     }
     
+
+    public static void crearCurso(Curso curso) {
+    	try {
+			dao.crearCurso(curso);
+		} catch (LoginException e) {
+			e.printStackTrace();
+		}
+
+    }
     public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin){
     	ArrayList<Curso> cursos= new ArrayList<Curso>();
     	dao.obtnerCursosPorBailarin(idBailarin, cursos);
@@ -86,6 +92,5 @@ public class Principal {
     	ArrayList<Curso> cursos= new ArrayList<Curso>();
     	dao.obtenerTodosLosCursos(cursos);
 		return cursos;
-    	
     }
 }

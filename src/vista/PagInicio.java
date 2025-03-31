@@ -37,6 +37,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	private JButton btnEliminarCurso_1;
 	private JButton btnEliminarBailarin_1;
 	private JButton btnOcupacion_1;
+	private Profesor p;
 
 	// Campos para curso
 	// Variable para almacenar el curso seleccionado
@@ -44,7 +45,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	private ArrayList<Curso> cursos = new ArrayList<>();
 	private JButton btnBajaCurso;
 	private JButton btnApuntarse;
-
+	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> {
 			try {
@@ -309,6 +310,9 @@ public class PagInicio extends JFrame implements ActionListener {
 			cancelar();
 		} else if (e.getSource().equals(btnRecuperarContraseña)) {
 			mostrar();
+		} else if (e.getSource().equals(btnCrearCurso_1)) {
+			crear();
+
 		}
 	}
 
@@ -562,7 +566,7 @@ public class PagInicio extends JFrame implements ActionListener {
 
 		} else if (passwordChars.length == 1) {
 
-			Profesor p = Principal.leerId(String.valueOf(passwordChars));
+			 p = Principal.leerId(String.valueOf(passwordChars));
 
 			if (p != null && String.valueOf(passwordChars).equals(String.valueOf(p.getId()))
 					&& textUsuario.getText().equalsIgnoreCase(p.getCorreo())) {
@@ -714,6 +718,7 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					btnCrearCurso_1 = new JButton("Crear");
 					btnCrearCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
+					btnCrearCurso_1.addActionListener(this);
 					btnCrearCurso_1.setBounds(689, 302, 195, 21);
 					panel4.add(btnCrearCurso_1);
 
@@ -747,6 +752,12 @@ public class PagInicio extends JFrame implements ActionListener {
 			}
 
 		}
+	}
+
+	private void crear() {
+		CrearCurso crear = new CrearCurso(cursoSeleccionado, true, p);
+		System.out.println(cursoSeleccionado);
+		crear.setVisible(true);
 	}
 
 	private boolean existePestana(String titulo) {

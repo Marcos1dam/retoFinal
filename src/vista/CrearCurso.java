@@ -2,10 +2,14 @@ package vista;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Time;
+import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -21,7 +25,6 @@ import modelo.Profesor;
 public class CrearCurso extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private final JPanel crearCurso = new JPanel();
 	private JTextField textFieldNivel;
 	private JLabel lblPrecio;
 	private JTextField textFieldPrecio;
@@ -29,7 +32,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 	private JTextField textFieldPlazas;
 	private JLabel lblIdProfesor;
 	private JTextField textFieldIDProfesor;
-	private JTextField textFieldID;
+	private JTextField textFieldIDCurso;
 	private JLabel lblTipo;
 	private JTextField textFieldTipo;
 	private JLabel lblHorario;
@@ -42,6 +45,15 @@ public class CrearCurso extends JDialog implements ActionListener {
 	 */
 	public CrearCurso(Curso c, boolean b, Profesor p) {
 		setModal(b);
+		JPanel crearCurso = new JPanel() {
+			Image backgroundImage = new ImageIcon(
+					getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+			};
+		};
 		getContentPane().add(crearCurso, BorderLayout.NORTH);
 		setBounds(100, 100, 584, 541);
 		getContentPane().setLayout(new BorderLayout());
@@ -49,16 +61,17 @@ public class CrearCurso extends JDialog implements ActionListener {
 		getContentPane().add(crearCurso, BorderLayout.CENTER);
 		crearCurso.setLayout(null);
 
+
 		JLabel lblIDCurso = new JLabel("ID Curso:");
 		lblIDCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
 		lblIDCurso.setBounds(68, 44, 86, 13);
 		crearCurso.add(lblIDCurso);
 
-		textFieldID = new JTextField();
-		textFieldID.setEditable(false);
-		textFieldID.setBounds(181, 30, 148, 27);
-		crearCurso.add(textFieldID);
-		textFieldID.setColumns(10);
+		textFieldIDCurso = new JTextField();
+		textFieldIDCurso.setEditable(false);
+		textFieldIDCurso.setBounds(181, 30, 148, 27);
+		crearCurso.add(textFieldIDCurso);
+		textFieldIDCurso.setColumns(10);
 
 		lblTipo = new JLabel("Tipo:");
 		lblTipo.setFont(new Font("Arial Black", Font.PLAIN, 16));
@@ -128,12 +141,27 @@ public class CrearCurso extends JDialog implements ActionListener {
 		crearCurso.add(btnCrear);
 
 		// Cargar ID's
-		cargarDatos(c.getIdCurso(), p.getId());
+		cargarDatos(p.getId());
 	}
 
-	private void cargarDatos(int idP, int idC) {
-		textFieldID.setText(String.valueOf(idC));
+	private void cargarDatos(int idP) {
+		int idC = obtenerIdCurso();
+		textFieldIDCurso.setText(String.valueOf(idC));
 		textFieldIDProfesor.setText(String.valueOf(idP));
+	}
+
+	private int obtenerIdCurso() {
+		ArrayList<Curso> cursos = Principal.obtenerTodosLosCursos();
+		
+		int id = 0;
+		
+		for (Curso cu : cursos) {
+		if (cu.getIdCurso() > id) {
+			id = cu.getIdCurso();
+		}
+	}
+		
+		return id + 1;
 	}
 
 	@Override
@@ -146,7 +174,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 	private void crearCurso() {
 		Curso c = new Curso();
-		c.setIdCurso(Integer.valueOf(textFieldID.getText()));
+		c.setIdCurso(Integer.valueOf(textFieldIDCurso.getText()));
 		c.setHorario(Time.valueOf(textFieldHorario.getText()));
 		c.setTipo(textFieldTipo.getText());
 		c.setPrecio(Float.valueOf(textFieldPrecio.getText()));

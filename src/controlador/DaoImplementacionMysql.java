@@ -1,6 +1,7 @@
 package controlador;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import javax.security.auth.login.LoginException;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Nivel;
+import modelo.Participa;
 import modelo.Profesor;
 
 public class DaoImplementacionMysql implements Dao {
@@ -31,7 +33,12 @@ public class DaoImplementacionMysql implements Dao {
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
     final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
     final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
-
+    final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
+    final String TODOSLOSCURSOS = "SELECT * FROM Curso";
+    final String PARTICIPA = "SELECT * FROM Participa WHERE IdCurso= ?";
+    final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?, ?, ?) ";
+    final String DARDEBAJACURSO = "DELETE FROM Participa WHERE IdCurso = ? AND DniBailarin = ?";
+    
     public DaoImplementacionMysql() {
         this.configFile = ResourceBundle.getBundle("modelo.configClase");
         this.urlDB = this.configFile.getString("Conn");
@@ -180,7 +187,7 @@ public class DaoImplementacionMysql implements Dao {
 	public void obtenerCursosPorProfesor(int idProfesor,ArrayList<Curso> cursos) throws LoginException {
 		ResultSet rs= null;
 		Curso cu= null;
-		//ArrayList<Curso>cursos= new ArrayList<>();
+		
 		try {
 			openConnection();
 			stmt = con.prepareStatement(CURSOPORPROFESOR);
@@ -212,5 +219,176 @@ public class DaoImplementacionMysql implements Dao {
         }
 		
 	}
+
+	@Override
+	public void obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
+		ResultSet rs= null;
+		Curso cu= null;
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(CURSOPORBAILARIN);
+			stmt.setString(1, idBailarin);
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				cu= new Curso();
+				cu.setIdCurso(rs.getInt("IdCurso"));
+				cu.setTipo(rs.getString("Tipo"));
+				cu.setHorario(rs.getTime("Horario"));
+				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
+				cu.setPrecio(rs.getFloat("Precio"));
+				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setIdProfesor(rs.getInt("IdProfesor"));
+				cursos.add(cu);
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		
+	}
+
+	@Override
+	public void obtenerTodosLosCursos(ArrayList<Curso> cursos) {
+		ResultSet rs= null;
+		Curso cu= null;
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(TODOSLOSCURSOS);
+			
+			rs = stmt.executeQuery();
+			while(rs.next()) {
+				cu= new Curso();
+				cu.setIdCurso(rs.getInt("IdCurso"));
+				cu.setTipo(rs.getString("Tipo"));
+				cu.setHorario(rs.getTime("Horario"));
+				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
+				cu.setPrecio(rs.getFloat("Precio"));
+				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setIdProfesor(rs.getInt("IdProfesor"));
+				cursos.add(cu);
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		
+	}
+
+	@Override
+	public Participa leerPaarticipa(int idCurso) throws LoginException {
+		ResultSet rs= null;
+		Participa p= null;
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(PARTICIPA);
+			stmt.setInt(1, idCurso);
+			rs = stmt.executeQuery();
+			if(rs.next()) {
+				p= new Participa();
+				p.setIdCurso(rs.getInt("IdCurso"));
+				p.setDniBailarin(rs.getNString("DniBailarin"));
+				p.setFechaInicio(rs.getDate("FInicio"));
+				p.setFechaFin(rs.getDate("FFin"));
+				return p;
+			}else {
+				throw new LoginException("No se encontró ningún curso con el ID proporcionado.");
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+			
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		return null;
+	}
+
+	@Override
+	public void inscripcionCurso(int idCurso, String DniBailarin, Date FInicio, Date FFin) {
+		ResultSet rs= null;
+		
+		try {
+			 openConnection();
+		        stmt = con.prepareStatement(INSCRIPCIONCURSO);
+		        stmt.setInt(1, idCurso);
+		        stmt.setString(2, DniBailarin);
+		        stmt.setDate(3, FInicio);
+		        stmt.setDate(4, FFin);
+		        
+		        int affectedRows = stmt.executeUpdate();
+		        
+		        if (affectedRows == 0) {
+		            throw new SQLException("La inserción falló, no se afectaron filas.");
+		        }
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		
+	}
+
+	@Override
+	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException{
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(DARDEBAJACURSO);
+			stmt.setInt(1, idCurso);
+			stmt.setString(2, DniBailarin);
+			int filasAfectadas = stmt.executeUpdate();
+	        
+	        if (filasAfectadas == 0) {
+	            throw new SQLException("No se encontró la inscripción para eliminar.");
+	        }
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		}finally {
+            try {
+                closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+		
+	}
+
 
 }

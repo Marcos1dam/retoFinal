@@ -39,6 +39,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	private JButton btnEliminarCurso_1;
 	private JButton btnEliminarBailarin_1;
 	private JButton btnOcupacion_1;
+	private Profesor p;
 
 	// Campos para curso
 	// Variable para almacenar el curso seleccionado
@@ -46,17 +47,17 @@ public class PagInicio extends JFrame implements ActionListener {
 	private ArrayList<Curso> cursos = new ArrayList<>();
 	private JButton btnBajaCurso;
 	private JButton btnApuntarse;
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			try {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			new PagInicio().setVisible(true);
-		});
-	}
+	
+//	public static void main(String[] args) {
+//		SwingUtilities.invokeLater(() -> {
+//			try {
+//				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			new PagInicio().setVisible(true);
+//		});
+//	}
 
 	public PagInicio() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PagInicio.class.getResource("/imagenes/CodeAndDance.png")));
@@ -324,11 +325,67 @@ public class PagInicio extends JFrame implements ActionListener {
 			      JOptionPane.showMessageDialog(this, "Error al darse de baja: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		            ex.printStackTrace();
 			}
+		} else if (e.getSource().equals(btnCrearCurso_1)) {
+			crear();
+		}else if(e.getSource().equals(btnEliminarCurso_1)) {
+			eliminarCurso(cursoSeleccionado);
 		}
 	}
 
+	private void eliminarCurso(Curso cursoSeleccionado2) {
+		if(cursoSeleccionado2 != null) {
+			Principal.elimiinarCurso(cursoSeleccionado2.getIdCurso());
+			JOptionPane.showMessageDialog(this, "Curso eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			actualizarTablaCursosPorProfesor(cursoSeleccionado2.getIdProfesor());
+		}else {
+			 JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+		}
+		
+	}
+
+	private void actualizarTablaCursosPorProfesor(int idProfesor) {
+		// Obtener el panel de la pestaña actual
+	    Component selectedTab = tabbedPane.getSelectedComponent();
+	    
+	    if(selectedTab instanceof JPanel) {
+	    	JPanel panel = (JPanel) selectedTab;
+	    	
+	    	 for (Component comp : panel.getComponents()) {
+		            if (comp instanceof JScrollPane) {
+		                JScrollPane scrollPane = (JScrollPane) comp;
+		                Component view = scrollPane.getViewport().getView();
+		                
+		                if (view instanceof JTable) {
+		                    JTable tableMisCursos = (JTable) view;
+		                    DefaultTableModel model = (DefaultTableModel) tableMisCursos.getModel();
+		                    model.setRowCount(0); // Limpiar la tabla
+		                    
+		                    // Obtener los cursos actualizados del Profesor
+		                    ArrayList<Curso> cursosProfesor= Principal.obtenerCursosPorProfesor(idProfesor);
+		                    
+		                    // Llenar la tabla con los nuevos datos
+		                    for (Curso curso : cursosProfesor) {
+		                        model.addRow(new Object[]{
+		                            curso.getIdCurso(),
+		                            curso.getTipo(),
+		                            curso.getHorario(),
+		                            curso.getNivel(),
+		                            curso.getPrecio(),
+		                            curso.getPlazas(),
+		                            curso.getIdProfesor()
+		                        });
+		                    }
+		                    return; // Terminar después de actualizar
+		                }
+		            }
+		        }
+		                
+	    }
+	    JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error", JOptionPane.ERROR_MESSAGE);
+	}
+
 	private void bajaCurso(Curso cursoSeleccionado2) throws SQLException {
-	    if (cursoSeleccionado != null) {
+	    if (cursoSeleccionado2 != null) {
 	        String dniBailarin = new String(passwordField.getPassword()); // Obtiene el DNI del bailarín
 	        
 	        Principal.darDeBajaCurso(cursoSeleccionado.getIdCurso(), dniBailarin);
@@ -618,6 +675,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					    });
 					}
 
+					
 					// Listener para selección de filas
 					table_3.getSelectionModel().addListSelectionListener(e -> {
 						if (!e.getValueIsAdjusting()) {
@@ -654,13 +712,14 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					tabbedPane.setSelectedIndex(2);
 				}
-			} else if (bailarin == null) {
-				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				  // Credenciales incorrectas para bailarín
+	            JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
 		} else if (passwordChars.length == 1) {
 
-			Profesor p = Principal.leerId(String.valueOf(passwordChars));
+			 p = Principal.leerId(String.valueOf(passwordChars));
 
 			if (p != null && String.valueOf(passwordChars).equals(String.valueOf(p.getId()))
 					&& textUsuario.getText().equalsIgnoreCase(p.getCorreo())) {
@@ -812,6 +871,7 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					btnCrearCurso_1 = new JButton("Crear");
 					btnCrearCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
+					btnCrearCurso_1.addActionListener(this);
 					btnCrearCurso_1.setBounds(689, 302, 195, 21);
 					panel4.add(btnCrearCurso_1);
 
@@ -823,6 +883,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnEliminarCurso_1 = new JButton("Eliminar");
 					btnEliminarCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					btnEliminarCurso_1.setBounds(689, 367, 195, 21);
+					btnEliminarCurso_1.addActionListener(this);
 					panel4.add(btnEliminarCurso_1);
 
 					btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
@@ -840,11 +901,22 @@ public class PagInicio extends JFrame implements ActionListener {
 				}
 				tabbedPane.setSelectedIndex(2);
 
-			} else if (p == null) {
-				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				// Credenciales incorrectas para profesor
+	            JOptionPane.showMessageDialog(this, "ID o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
+		}else {
+			// Longitud de contraseña inválida (ni 1 ni 9 caracteres)
+	        JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+	}
+
+	private void crear() {
+		CrearCurso crear = new CrearCurso(cursoSeleccionado, true, p);
+		System.out.println(cursoSeleccionado);
+		crear.setVisible(true);
+		actualizarTablaCursosPorProfesor(p.getId());
 	}
 
 	private boolean existePestana(String titulo) {

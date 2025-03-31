@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.security.auth.login.LoginException;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import modelo.Bailarin;
 import modelo.Curso;
@@ -17,16 +19,14 @@ public class Principal {
     private static Dao dao = new DaoImplementacionMysql();
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    PagInicio frame = new PagInicio();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+    	SwingUtilities.invokeLater(() -> {
+			try {
+				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			new PagInicio().setVisible(true);
+		}); 
     }
 
     public static Bailarin leerDni(String dni) {
@@ -42,7 +42,6 @@ public class Principal {
 		try {
 			return dao.leerProfesor(id);
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
 			return null;
 		}
@@ -53,7 +52,6 @@ public class Principal {
 		try {
 			return dao.obtenerCurso(idCurso);
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
 			return null;
 		}
@@ -69,13 +67,21 @@ public class Principal {
 			}
 			return cursos;
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
 			return null;
 		}
     	
     }
     
+
+    public static void crearCurso(Curso curso) {
+    	try {
+			dao.crearCurso(curso);
+		} catch (LoginException e) {
+			e.printStackTrace();
+		}
+
+    }
     public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin){
     	ArrayList<Curso> cursos= new ArrayList<Curso>();
     	dao.obtnerCursosPorBailarin(idBailarin, cursos);
@@ -89,7 +95,6 @@ public class Principal {
     	ArrayList<Curso> cursos= new ArrayList<Curso>();
     	dao.obtenerTodosLosCursos(cursos);
 		return cursos;
-    	
     }
     
     public static Participa leerParticipa(int idCurso) {
@@ -109,6 +114,18 @@ public class Principal {
     	
     	try {
 			dao.darDeBajaCurso(idCurso, dniBailarin);
+			return true;
+		} catch (LoginException e) {
+			
+			e.printStackTrace();
+			return false;
+		}
+    }
+    
+    public static boolean elimiinarCurso(int idCurso) {
+    	
+    	try {
+			dao.eliminarCurso(idCurso);
 			return true;
 		} catch (LoginException e) {
 			

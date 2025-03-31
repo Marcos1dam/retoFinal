@@ -46,16 +46,16 @@ public class PagInicio extends JFrame implements ActionListener {
 	private JButton btnBajaCurso;
 	private JButton btnApuntarse;
 	
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			try {
-				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			new PagInicio().setVisible(true);
-		});
-	}
+//	public static void main(String[] args) {
+//		SwingUtilities.invokeLater(() -> {
+//			try {
+//				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			new PagInicio().setVisible(true);
+//		});
+//	}
 
 	public PagInicio() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PagInicio.class.getResource("/imagenes/CodeAndDance.png")));
@@ -312,9 +312,11 @@ public class PagInicio extends JFrame implements ActionListener {
 			mostrar();
 		} else if (e.getSource().equals(btnCrearCurso_1)) {
 			crear();
-
+		} else if (e.getSource().equals(btnModificar_1)) {
+			modificar();
 		}
 	}
+
 
 	private void mostrar() {
 		JOptionPane.showMessageDialog(this, "Tu usuario es tu correo electrónico y la contraseña es tu DNI",
@@ -724,6 +726,7 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					btnModificar_1 = new JButton("Modificar");
 					btnModificar_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
+					btnModificar_1.addActionListener(this);
 					btnModificar_1.setBounds(689, 336, 195, 21);
 					panel4.add(btnModificar_1);
 
@@ -754,9 +757,13 @@ public class PagInicio extends JFrame implements ActionListener {
 		}
 	}
 
+	private void modificar() {
+		ModificarCurso mod = new ModificarCurso(cursoSeleccionado, true);
+		mod.setVisible(true);
+	}
+
 	private void crear() {
 		CrearCurso crear = new CrearCurso(cursoSeleccionado, true, p);
-		System.out.println(cursoSeleccionado);
 		crear.setVisible(true);
 	}
 

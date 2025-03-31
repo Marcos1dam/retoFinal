@@ -24,4 +24,5 @@ public interface Dao {
 
 	public void obtenerTodosLosCursos(ArrayList<Curso> cursos);
 
+	public void modificarCurso(Curso curso) throws LoginException;
 }

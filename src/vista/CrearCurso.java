@@ -42,6 +42,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 	/**
 	 * Create the dialog.
+	 * @author Luis
 	 */
 	public CrearCurso(Curso c, boolean b, Profesor p) {
 		setModal(b);
@@ -175,8 +176,8 @@ public class CrearCurso extends JDialog implements ActionListener {
 	private void crearCurso() {
 		Curso c = new Curso();
 		c.setIdCurso(Integer.valueOf(textFieldIDCurso.getText()));
-		c.setHorario(Time.valueOf(textFieldHorario.getText()));
 		c.setTipo(textFieldTipo.getText());
+		c.setHorario(Time.valueOf(textFieldHorario.getText()));
 		c.setPrecio(Float.valueOf(textFieldPrecio.getText()));
 		c.setPlazas(Integer.valueOf(textFieldPlazas.getText()));
 		c.setNivel(Nivel.valueOf(textFieldNivel.getText()));

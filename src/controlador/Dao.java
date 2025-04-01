@@ -1,11 +1,13 @@
 package controlador;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import javax.security.auth.login.LoginException;
 
 import modelo.Bailarin;
 import modelo.Curso;
+import modelo.Participa;
 import modelo.Profesor;
 
 public interface Dao {
@@ -25,4 +27,13 @@ public interface Dao {
 	public void obtenerTodosLosCursos(ArrayList<Curso> cursos);
 
 	public void modificarCurso(Curso curso) throws LoginException;
+
+	public Participa leerPaarticipa(int idCurso) throws LoginException;
+
+	public void inscripcionCurso(int idCurso, String DniBailarin, Date FInicio, Date FFin);
+
+	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException;
+	
+	public void eliminarCurso(int idCurso) throws LoginException;
+
 }

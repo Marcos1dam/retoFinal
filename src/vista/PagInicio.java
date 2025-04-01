@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -16,9 +17,14 @@ import controlador.Principal;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Nivel;
+import modelo.Participa;
 import modelo.Profesor;
 
 public class PagInicio extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane;
 	private JPanel contentPane;
 	private JTextField textUsuario;
@@ -260,6 +266,11 @@ public class PagInicio extends JFrame implements ActionListener {
 
 // Clase interna para botones de cierre de pestaña
 	private class CloseTabButton extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public CloseTabButton(String title, Icon icon, final Component component) {
 			setOpaque(false);
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -310,13 +321,160 @@ public class PagInicio extends JFrame implements ActionListener {
 			cancelar();
 		} else if (e.getSource().equals(btnRecuperarContraseña)) {
 			mostrar();
+		}else if(e.getSource().equals(btnApuntarse)) {
+			try {
+				apuntarse(cursoSeleccionado);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}else if(e.getSource().equals(btnBajaCurso)) {
+			try {
+				bajaCurso(cursoSeleccionado);
+			} catch (SQLException ex) {
+			      JOptionPane.showMessageDialog(this, "Error al darse de baja: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		            ex.printStackTrace();
+			}
 		} else if (e.getSource().equals(btnCrearCurso_1)) {
 			crear();
+
 		} else if (e.getSource().equals(btnModificar_1)) {
 			modificar();
+		} else if(e.getSource().equals(btnEliminarCurso_1)) {
+			eliminarCurso(cursoSeleccionado);
 		}
 	}
 
+	private void eliminarCurso(Curso cursoSeleccionado2) {
+		if(cursoSeleccionado2 != null) {
+			Principal.elimiinarCurso(cursoSeleccionado2.getIdCurso());
+			JOptionPane.showMessageDialog(this, "Curso eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			actualizarTablaCursosPorProfesor(cursoSeleccionado2.getIdProfesor());
+		} else {
+			 JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+		}
+		
+	}
+
+	private void actualizarTablaCursosPorProfesor(int idProfesor) {
+		// Obtener el panel de la pestaña actual
+	    Component selectedTab = tabbedPane.getSelectedComponent();
+	    
+	    if(selectedTab instanceof JPanel) {
+	    	JPanel panel = (JPanel) selectedTab;
+	    	
+	    	 for (Component comp : panel.getComponents()) {
+		            if (comp instanceof JScrollPane) {
+		                JScrollPane scrollPane = (JScrollPane) comp;
+		                Component view = scrollPane.getViewport().getView();
+		                
+		                if (view instanceof JTable) {
+		                    JTable tableMisCursos = (JTable) view;
+		                    DefaultTableModel model = (DefaultTableModel) tableMisCursos.getModel();
+		                    model.setRowCount(0); // Limpiar la tabla
+		                    
+		                    // Obtener los cursos actualizados del Profesor
+		                    ArrayList<Curso> cursosProfesor= Principal.obtenerCursosPorProfesor(idProfesor);
+		                    
+		                    // Llenar la tabla con los nuevos datos
+		                    for (Curso curso : cursosProfesor) {
+		                        model.addRow(new Object[]{
+		                            curso.getIdCurso(),
+		                            curso.getTipo(),
+		                            curso.getHorario(),
+		                            curso.getNivel(),
+		                            curso.getPrecio(),
+		                            curso.getPlazas(),
+		                            curso.getIdProfesor()
+		                        });
+		                    }
+		                    return; // Terminar después de actualizar
+		                }
+		            }
+		        }
+		                
+	    }
+	    JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error", JOptionPane.ERROR_MESSAGE);
+	}
+
+	private void bajaCurso(Curso cursoSeleccionado2) throws SQLException {
+	    if (cursoSeleccionado2 != null) {
+	        String dniBailarin = new String(passwordField.getPassword()); // Obtiene el DNI del bailarín
+	        
+	        Principal.darDeBajaCurso(cursoSeleccionado.getIdCurso(), dniBailarin);
+			JOptionPane.showMessageDialog(this, "Baja realizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+			
+			// Actualiza las tablas
+			actualizarTablaMisCursos(dniBailarin);
+	    } else {
+	        JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+	    }
+	}
+	
+
+	private void apuntarse(Curso cursoSeleccionado) throws SQLException {
+	    try {
+	        // Obtener el DNI del bailarín (que es la contraseña)
+	        String dniBailarin = new String(passwordField.getPassword());
+	        
+	        // Obtener las fechas de participación (puedes usar las predeterminadas o pedirlas)
+	        Participa par = Principal.leerParticipa(cursoSeleccionado.getIdCurso());
+	        
+	        // Realizar la inscripción
+	        Principal.inscripcion(cursoSeleccionado.getIdCurso(), dniBailarin, 
+	                            par.getFechaInicio(), par.getFechaFin());
+	        
+	        // Actualizar la tabla de "Mis cursos"
+	        actualizarTablaMisCursos(dniBailarin);
+	        
+	        JOptionPane.showMessageDialog(this, "Inscripción realizada con éxito");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), 
+	                                    "Error", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+
+	// Método para actualizar la tabla de "Mis cursos"
+	private void actualizarTablaMisCursos(String dniBailarin) {
+	    // Obtener el panel de la pestaña actual
+	    Component selectedTab = tabbedPane.getSelectedComponent();
+	    
+	    if (selectedTab instanceof JPanel) {
+	        JPanel panel = (JPanel) selectedTab;
+	        
+	        // Buscar table_1 dentro del panel
+	        for (Component comp : panel.getComponents()) {
+	            if (comp instanceof JScrollPane) {
+	                JScrollPane scrollPane = (JScrollPane) comp;
+	                Component view = scrollPane.getViewport().getView();
+	                
+	                if (view instanceof JTable) {
+	                    JTable tableMisCursos = (JTable) view;
+	                    DefaultTableModel model = (DefaultTableModel) tableMisCursos.getModel();
+	                    model.setRowCount(0); // Limpiar la tabla
+	                    
+	                    // Obtener los cursos actualizados del bailarín
+	                    ArrayList<Curso> cursosBailarin = Principal.obtenerCursosPorBailarin(dniBailarin);
+	                    
+	                    // Llenar la tabla con los nuevos datos
+	                    for (Curso curso : cursosBailarin) {
+	                        model.addRow(new Object[]{
+	                            curso.getIdCurso(),
+	                            curso.getTipo(),
+	                            curso.getHorario(),
+	                            curso.getNivel(),
+	                            curso.getPrecio(),
+	                            curso.getPlazas(),
+	                            curso.getIdProfesor()
+	                        });
+	                    }
+	                    return; // Terminar después de actualizar
+	                }
+	            }
+	        }
+	    }
+	    JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error", JOptionPane.ERROR_MESSAGE);
+	}
 
 	private void mostrar() {
 		JOptionPane.showMessageDialog(this, "Tu usuario es tu correo electrónico y la contraseña es tu DNI",
@@ -329,7 +487,8 @@ public class PagInicio extends JFrame implements ActionListener {
 	}
 
 	private void comprobar() {
-		char[] passwordChars = passwordField.getPassword();
+
+        char[] passwordChars = passwordField.getPassword();
 
 		if (passwordChars.length == 9) {
 			Bailarin bailarin = Principal.leerDni(String.valueOf(passwordChars));
@@ -486,6 +645,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnBajaCurso = new JButton("Darse de baja");
 					btnBajaCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
 					btnBajaCurso.setBounds(598, 229, 190, 21);
+					btnBajaCurso.addActionListener(this);
 					panel3.add(btnBajaCurso);
 
 					JLabel lblInfoCursos = new JLabel("mas cursos");
@@ -527,6 +687,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					    });
 					}
 
+					
 					// Listener para selección de filas
 					table_3.getSelectionModel().addListSelectionListener(e -> {
 						if (!e.getValueIsAdjusting()) {
@@ -555,6 +716,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnApuntarse = new JButton("Apuntarse");
 					btnApuntarse.setFont(new Font("Arial Black", Font.PLAIN, 16));
 					btnApuntarse.setBounds(408, 465, 136, 21);
+					btnApuntarse.addActionListener(this);
 					panel3.add(btnApuntarse);
 
 					agregarBotonCerrarSesion(panel3);
@@ -562,8 +724,9 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					tabbedPane.setSelectedIndex(2);
 				}
-			} else if (bailarin == null) {
-				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				  // Credenciales incorrectas para bailarín
+	            JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
 		} else if (passwordChars.length == 1) {
@@ -733,6 +896,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnEliminarCurso_1 = new JButton("Eliminar");
 					btnEliminarCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					btnEliminarCurso_1.setBounds(689, 367, 195, 21);
+					btnEliminarCurso_1.addActionListener(this);
 					panel4.add(btnEliminarCurso_1);
 
 					btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
@@ -750,10 +914,14 @@ public class PagInicio extends JFrame implements ActionListener {
 				}
 				tabbedPane.setSelectedIndex(2);
 
-			} else if (p == null) {
-				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				// Credenciales incorrectas para profesor
+	            JOptionPane.showMessageDialog(this, "ID o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
+		}else {
+			// Longitud de contraseña inválida (ni 1 ni 9 caracteres)
+	        JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -765,6 +933,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	private void crear() {
 		CrearCurso crear = new CrearCurso(cursoSeleccionado, true, p);
 		crear.setVisible(true);
+		actualizarTablaCursosPorProfesor(p.getId());
 	}
 
 	private boolean existePestana(String titulo) {

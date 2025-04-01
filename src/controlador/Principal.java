@@ -1,5 +1,9 @@
 package controlador;
 
+
+import java.awt.EventQueue;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.security.auth.login.LoginException;
@@ -8,22 +12,24 @@ import javax.swing.UIManager;
 
 import modelo.Bailarin;
 import modelo.Curso;
+import modelo.Participa;
 import modelo.Profesor;
 import vista.PagInicio;
 
 public class Principal {
 	private static Dao dao = new DaoImplementacionMysql();
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
+
+    public static void main(String[] args) {
+    	SwingUtilities.invokeLater(() -> {
 			try {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			new PagInicio().setVisible(true);
-		});
-	}
+		}); 
+    }
 
 	public static Bailarin leerDni(String dni) {
 		try {
@@ -85,6 +91,7 @@ public class Principal {
 			System.out.println(c);
 		}
 		return cursos;
+
 	}
 
 	public static ArrayList<Curso> obtenerTodosLosCursos() {
@@ -100,4 +107,41 @@ public class Principal {
 			e.printStackTrace();
 		}
 	}
+    
+    public static Participa leerParticipa(int idCurso) {
+    	try {
+			return dao.leerPaarticipa(idCurso);
+		} catch (LoginException e) {
+			e.printStackTrace();
+			return null;
+		}
+    }
+    
+    public static void inscripcion(int idCurso, String dniBailarin, Date fInicio, Date fFin) {
+    	
+    	dao.inscripcionCurso(idCurso, dniBailarin, fInicio, fFin);
+    }
+    public static boolean darDeBajaCurso(int idCurso, String dniBailarin){
+    	
+    	try {
+			dao.darDeBajaCurso(idCurso, dniBailarin);
+			return true;
+		} catch (LoginException e) {
+			
+			e.printStackTrace();
+			return false;
+		}
+    }
+    
+    public static boolean elimiinarCurso(int idCurso) {
+    	
+    	try {
+			dao.eliminarCurso(idCurso);
+			return true;
+		} catch (LoginException e) {
+			
+			e.printStackTrace();
+			return false;
+		}
+    }
 }

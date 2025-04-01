@@ -28,10 +28,12 @@ public interface Dao {
 
 	public Participa leerPaarticipa(int idCurso) throws LoginException;
 
-	public void inscripcionCurso(int idCurso, String DniBailarin, Date FInicio, Date FFin);
+	public void inscripcionCurso(int idCurso, String DniBailarin);
 
 	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException;
 	
 	public void eliminarCurso(int idCurso) throws LoginException;
+
+	
 
 }

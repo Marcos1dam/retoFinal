@@ -106,9 +106,9 @@ public class Principal {
 		}
     }
     
-    public static void inscripcion(int idCurso, String dniBailarin, Date fInicio, Date fFin) {
+    public static void inscripcion(int idCurso, String dniBailarin) {
     	
-    	dao.inscripcionCurso(idCurso, dniBailarin, fInicio, fFin);
+    	dao.inscripcionCurso(idCurso, dniBailarin);
     }
     public static boolean darDeBajaCurso(int idCurso, String dniBailarin){
     	

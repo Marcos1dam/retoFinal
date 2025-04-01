@@ -4,8 +4,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -372,6 +375,8 @@ public class PagInicio extends JFrame implements ActionListener {
 		                            curso.getNivel(),
 		                            curso.getPrecio(),
 		                            curso.getPlazas(),
+		                            curso.getFechaInicio(),
+		                            curso.getFechaFin(),
 		                            curso.getIdProfesor()
 		                        });
 		                    }
@@ -408,8 +413,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	        Participa par = Principal.leerParticipa(cursoSeleccionado.getIdCurso());
 	        
 	        // Realizar la inscripción
-	        Principal.inscripcion(cursoSeleccionado.getIdCurso(), dniBailarin, 
-	                            par.getFechaInicio(), par.getFechaFin());
+	        Principal.inscripcion(cursoSeleccionado.getIdCurso(), dniBailarin);
 	        
 	        // Actualizar la tabla de "Mis cursos"
 	        actualizarTablaMisCursos(dniBailarin);
@@ -453,6 +457,8 @@ public class PagInicio extends JFrame implements ActionListener {
 	                            curso.getNivel(),
 	                            curso.getPrecio(),
 	                            curso.getPlazas(),
+	                            curso.getFechaInicio(),
+	                            curso.getFechaFin(),
 	                            curso.getIdProfesor()
 	                        });
 	                    }
@@ -577,7 +583,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel3.add(scrollPaneTable1);
 
 					// Configurar el modelo de tabla para table_1 (no para table)
-					String[] columnNames = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor"};
+					String[] columnNames = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas","Fecha Inicio","Fecha Fin", "Id Profesor"};
 					DefaultTableModel model_1 = new DefaultTableModel(columnNames, 0) {
 					    @Override
 					    public boolean isCellEditable(int row, int column) {
@@ -600,33 +606,83 @@ public class PagInicio extends JFrame implements ActionListener {
 					        curso.getNivel(),
 					        curso.getPrecio(),
 					        curso.getPlazas(),
+					        curso.getFechaInicio(),
+					        curso.getFechaFin(),
 					        curso.getIdProfesor()
 					    });
 					}
 
 					// Listener para selección de filas
 					table_1.getSelectionModel().addListSelectionListener(e -> {
-						if (!e.getValueIsAdjusting()) {
-							int selectedRow = table_1.getSelectedRow();
-							if (selectedRow >= 0) {
-								cursoSeleccionado = new Curso();
-								cursoSeleccionado
-										.setIdCurso(Integer.parseInt(table_1.getValueAt(selectedRow, 0).toString()));
-								cursoSeleccionado.setTipo(table_1.getValueAt(selectedRow, 1).toString());
-								cursoSeleccionado.setHorario(Time.valueOf(table_1.getValueAt(selectedRow, 2).toString()));
-								cursoSeleccionado
-										.setNivel(Nivel.obtenerPorNombre(table_1.getValueAt(selectedRow, 3).toString()));
-								cursoSeleccionado
-										.setPrecio(Float.parseFloat(table_1.getValueAt(selectedRow, 4).toString()));
-								cursoSeleccionado
-										.setPlazas(Integer.parseInt(table_1.getValueAt(selectedRow, 5).toString()));
-								cursoSeleccionado
-										.setIdProfesor(Integer.parseInt(table_1.getValueAt(selectedRow, 6).toString()));
-								
-								btnBajaCurso.setVisible(true);
-								
-							}
-						}
+					    if (!e.getValueIsAdjusting()) {
+					        int selectedRow = table_1.getSelectedRow();
+					        if (selectedRow >= 0) {
+					            try {
+					                cursoSeleccionado = new Curso();
+					                
+					                // Configuración básica del curso
+					                cursoSeleccionado.setIdCurso(Integer.parseInt(table_1.getValueAt(selectedRow, 0).toString()));
+					                cursoSeleccionado.setTipo(table_1.getValueAt(selectedRow, 1).toString());
+					                
+					                // Horario
+					                cursoSeleccionado.setHorario(Time.valueOf(table_1.getValueAt(selectedRow, 2).toString()));
+					                
+					                // Nivel
+					                cursoSeleccionado.setNivel(Nivel.obtenerPorNombre(table_1.getValueAt(selectedRow, 3).toString()));
+					                
+					                // Precio y plazas
+					                cursoSeleccionado.setPrecio(Float.parseFloat(table_1.getValueAt(selectedRow, 4).toString()));
+					                cursoSeleccionado.setPlazas(Integer.parseInt(table_1.getValueAt(selectedRow, 5).toString()));
+					                
+					                // Conversión segura de fechas a java.sql.Date
+					                Object fechaInicioValue = table_1.getValueAt(selectedRow, 6);
+					                Object fechaFinValue = table_1.getValueAt(selectedRow, 7);
+					                
+					                // Manejo para FechaInicio
+					                if (fechaInicioValue instanceof java.util.Date) {
+					                    java.util.Date utilDate = (java.util.Date) fechaInicioValue;
+					                    cursoSeleccionado.setFechaInicio(new java.sql.Date(utilDate.getTime()));
+					                } else if (fechaInicioValue instanceof String) {
+					                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					                    java.util.Date parsedDate = sdf.parse((String) fechaInicioValue);
+					                    cursoSeleccionado.setFechaInicio(new java.sql.Date(parsedDate.getTime()));
+					                }
+					                
+					                // Manejo para FechaFin
+					                if (fechaFinValue instanceof java.util.Date) {
+					                    java.util.Date utilDate = (java.util.Date) fechaFinValue;
+					                    cursoSeleccionado.setFechaFin(new java.sql.Date(utilDate.getTime()));
+					                } else if (fechaFinValue instanceof String) {
+					                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					                    java.util.Date parsedDate = sdf.parse((String) fechaFinValue);
+					                    cursoSeleccionado.setFechaFin(new java.sql.Date(parsedDate.getTime()));
+					                }
+					                
+					                // ID Profesor
+					                cursoSeleccionado.setIdProfesor(Integer.parseInt(table_1.getValueAt(selectedRow, 8).toString()));
+					                
+					                // Habilitar botones
+					                btnBajaCurso.setVisible(true);
+					                
+					            } catch (ParseException ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Formato de fecha inválido. Use yyyy-MM-dd", 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					            } catch (IllegalArgumentException ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Formato de horario inválido. Use HH:mm:ss", 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					            } catch (Exception ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Error al cargar los datos: " + ex.getMessage(), 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					                ex.printStackTrace();
+					            }
+					        }
+					    }
 					});
 
 
@@ -648,7 +704,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel3.add(scrollPaneTable3);
 
 					// Configurar el modelo de tabla para table_3
-					String[] columnNames3 = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor"};
+					String[] columnNames3 = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas","Fecha Inicio","Fecha Fin", "Id Profesor"};
 					DefaultTableModel model_3 = new DefaultTableModel(columnNames3, 0) {
 					    @Override
 					    public boolean isCellEditable(int row, int column) {
@@ -671,6 +727,8 @@ public class PagInicio extends JFrame implements ActionListener {
 					        curso.getNivel(),
 					        curso.getPrecio(),
 					        curso.getPlazas(),
+					        curso.getFechaInicio(),
+					        curso.getFechaFin(),
 					        curso.getIdProfesor()
 					    });
 					}
@@ -678,27 +736,75 @@ public class PagInicio extends JFrame implements ActionListener {
 					
 					// Listener para selección de filas
 					table_3.getSelectionModel().addListSelectionListener(e -> {
-						if (!e.getValueIsAdjusting()) {
-							int selectedRow = table_3.getSelectedRow();
-							if (selectedRow >= 0) {
-								cursoSeleccionado = new Curso();
-								cursoSeleccionado
-										.setIdCurso(Integer.parseInt(table_3.getValueAt(selectedRow, 0).toString()));
-								cursoSeleccionado.setTipo(table_3.getValueAt(selectedRow, 1).toString());
-								cursoSeleccionado.setHorario(Time.valueOf(table_3.getValueAt(selectedRow, 2).toString()));
-								cursoSeleccionado
-										.setNivel(Nivel.obtenerPorNombre(table_3.getValueAt(selectedRow, 3).toString()));
-								cursoSeleccionado
-										.setPrecio(Float.parseFloat(table_3.getValueAt(selectedRow, 4).toString()));
-								cursoSeleccionado
-										.setPlazas(Integer.parseInt(table_3.getValueAt(selectedRow, 5).toString()));
-								cursoSeleccionado
-										.setIdProfesor(Integer.parseInt(table_3.getValueAt(selectedRow, 6).toString()));
-								
-								btnApuntarse.setVisible(true);
-								
-							}
-						}
+					    if (!e.getValueIsAdjusting()) {
+					        int selectedRow = table_3.getSelectedRow();
+					        if (selectedRow >= 0) {
+					            try {
+					                cursoSeleccionado = new Curso();
+					                
+					                // Configuración básica del curso
+					                cursoSeleccionado.setIdCurso(Integer.parseInt(table_3.getValueAt(selectedRow, 0).toString()));
+					                cursoSeleccionado.setTipo(table_3.getValueAt(selectedRow, 1).toString());
+					                
+					                // Horario
+					                cursoSeleccionado.setHorario(Time.valueOf(table_3.getValueAt(selectedRow, 2).toString()));
+					                
+					                // Nivel
+					                cursoSeleccionado.setNivel(Nivel.obtenerPorNombre(table_3.getValueAt(selectedRow, 3).toString()));
+					                
+					                // Precio y plazas
+					                cursoSeleccionado.setPrecio(Float.parseFloat(table_3.getValueAt(selectedRow, 4).toString()));
+					                cursoSeleccionado.setPlazas(Integer.parseInt(table_3.getValueAt(selectedRow, 5).toString()));
+					                
+					                // Conversión segura de fechas a java.sql.Date
+					                Object fechaInicioValue = table_3.getValueAt(selectedRow, 6);
+					                Object fechaFinValue = table_3.getValueAt(selectedRow, 7);
+					                
+					                // Manejo para FechaInicio
+					                if (fechaInicioValue instanceof java.util.Date) {
+					                    java.util.Date utilDate = (java.util.Date) fechaInicioValue;
+					                    cursoSeleccionado.setFechaInicio(new java.sql.Date(utilDate.getTime()));
+					                } else if (fechaInicioValue instanceof String) {
+					                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					                    java.util.Date parsedDate = sdf.parse((String) fechaInicioValue);
+					                    cursoSeleccionado.setFechaInicio(new java.sql.Date(parsedDate.getTime()));
+					                }
+					                
+					                // Manejo para FechaFin
+					                if (fechaFinValue instanceof java.util.Date) {
+					                    java.util.Date utilDate = (java.util.Date) fechaFinValue;
+					                    cursoSeleccionado.setFechaFin(new java.sql.Date(utilDate.getTime()));
+					                } else if (fechaFinValue instanceof String) {
+					                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					                    java.util.Date parsedDate = sdf.parse((String) fechaFinValue);
+					                    cursoSeleccionado.setFechaFin(new java.sql.Date(parsedDate.getTime()));
+					                }
+					                
+					                // ID Profesor
+					                cursoSeleccionado.setIdProfesor(Integer.parseInt(table_3.getValueAt(selectedRow, 8).toString()));
+					                
+					                // Habilitar botones
+					                btnApuntarse.setVisible(true);
+					                
+					            } catch (ParseException ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Formato de fecha inválido. Use yyyy-MM-dd", 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					            } catch (IllegalArgumentException ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Formato de horario inválido. Use HH:mm:ss", 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					            } catch (Exception ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Error al cargar los datos: " + ex.getMessage(), 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					                ex.printStackTrace();
+					            }
+					        }
+					    }
 					});
 
 					btnApuntarse = new JButton("Apuntarse");
@@ -817,7 +923,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel4.add(scrollPane);
 
 					// Configurar el modelo de tabla para cursos
-					String[] columnNames = { "ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor" };
+					String[] columnNames = { "ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas","Fecha Inicio","Fecha Fin", "Id Profesor" };
 					DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
 						@Override
 						public boolean isCellEditable(int row, int column) {
@@ -831,33 +937,81 @@ public class PagInicio extends JFrame implements ActionListener {
 					cursos = Principal.obtenerCursosPorProfesor(p.getId());
 					for (Curso curso : cursos) {
 						model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
-								curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getIdProfesor() });
+								curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
 					}
 
-					// Listener para selección de filas
 					table.getSelectionModel().addListSelectionListener(e -> {
-						if (!e.getValueIsAdjusting()) {
-							int selectedRow = table.getSelectedRow();
-							if (selectedRow >= 0) {
-								cursoSeleccionado = new Curso();
-								cursoSeleccionado
-										.setIdCurso(Integer.parseInt(table.getValueAt(selectedRow, 0).toString()));
-								cursoSeleccionado.setTipo(table.getValueAt(selectedRow, 1).toString());
-								cursoSeleccionado.setHorario(Time.valueOf(table.getValueAt(selectedRow, 2).toString()));
-								cursoSeleccionado
-										.setNivel(Nivel.obtenerPorNombre(table.getValueAt(selectedRow, 3).toString()));
-								cursoSeleccionado
-										.setPrecio(Float.parseFloat(table.getValueAt(selectedRow, 4).toString()));
-								cursoSeleccionado
-										.setPlazas(Integer.parseInt(table.getValueAt(selectedRow, 5).toString()));
-								cursoSeleccionado
-										.setIdProfesor(Integer.parseInt(table.getValueAt(selectedRow, 6).toString()));
-
-								btnModificar_1.setEnabled(true);
-								btnEliminarCurso_1.setEnabled(true);
-								btnEliminarBailarin_1.setEnabled(true);
-							}
-						}
+					    if (!e.getValueIsAdjusting()) {
+					        int selectedRow = table.getSelectedRow();
+					        if (selectedRow >= 0) {
+					            try {
+					                cursoSeleccionado = new Curso();
+					                
+					                // Configuración básica del curso
+					                cursoSeleccionado.setIdCurso(Integer.parseInt(table.getValueAt(selectedRow, 0).toString()));
+					                cursoSeleccionado.setTipo(table.getValueAt(selectedRow, 1).toString());
+					                
+					                // Horario
+					                cursoSeleccionado.setHorario(Time.valueOf(table.getValueAt(selectedRow, 2).toString()));
+					                
+					                // Nivel
+					                cursoSeleccionado.setNivel(Nivel.obtenerPorNombre(table.getValueAt(selectedRow, 3).toString()));
+					                
+					                // Precio y plazas
+					                cursoSeleccionado.setPrecio(Float.parseFloat(table.getValueAt(selectedRow, 4).toString()));
+					                cursoSeleccionado.setPlazas(Integer.parseInt(table.getValueAt(selectedRow, 5).toString()));
+					                
+					                // Conversión segura de fechas a java.sql.Date
+					                Object fechaInicioValue = table.getValueAt(selectedRow, 6);
+					                Object fechaFinValue = table.getValueAt(selectedRow, 7);
+					                
+					                // Manejo para FechaInicio
+					                if (fechaInicioValue instanceof java.util.Date) {
+					                    java.util.Date utilDate = (java.util.Date) fechaInicioValue;
+					                    cursoSeleccionado.setFechaInicio(new java.sql.Date(utilDate.getTime()));
+					                } else if (fechaInicioValue instanceof String) {
+					                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					                    java.util.Date parsedDate = sdf.parse((String) fechaInicioValue);
+					                    cursoSeleccionado.setFechaInicio(new java.sql.Date(parsedDate.getTime()));
+					                }
+					                
+					                // Manejo para FechaFin
+					                if (fechaFinValue instanceof java.util.Date) {
+					                    java.util.Date utilDate = (java.util.Date) fechaFinValue;
+					                    cursoSeleccionado.setFechaFin(new java.sql.Date(utilDate.getTime()));
+					                } else if (fechaFinValue instanceof String) {
+					                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					                    java.util.Date parsedDate = sdf.parse((String) fechaFinValue);
+					                    cursoSeleccionado.setFechaFin(new java.sql.Date(parsedDate.getTime()));
+					                }
+					                
+					                // ID Profesor
+					                cursoSeleccionado.setIdProfesor(Integer.parseInt(table.getValueAt(selectedRow, 8).toString()));
+					                
+					                // Habilitar botones
+					                btnModificar_1.setEnabled(true);
+					                btnEliminarCurso_1.setEnabled(true);
+					                btnEliminarBailarin_1.setEnabled(true);
+					                
+					            } catch (ParseException ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Formato de fecha inválido. Use yyyy-MM-dd", 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					            } catch (IllegalArgumentException ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Formato de horario inválido. Use HH:mm:ss", 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					            } catch (Exception ex) {
+					                JOptionPane.showMessageDialog(null, 
+					                    "Error al cargar los datos: " + ex.getMessage(), 
+					                    "Error", 
+					                    JOptionPane.ERROR_MESSAGE);
+					                ex.printStackTrace();
+					            }
+					        }
+					    }
 					});
 
 					JSeparator separator = new JSeparator();

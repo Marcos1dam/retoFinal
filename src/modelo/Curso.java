@@ -1,5 +1,6 @@
 package modelo;
 
+import java.sql.Date;
 import java.sql.Time;
 
 public class Curso {
@@ -9,10 +10,28 @@ public class Curso {
 	private Nivel nivel;
 	private float precio;
 	private int plazas;
+	private Date fechaInicio;
+	private Date fechaFin;
 	private int idProfesor;
 
 	public int getIdCurso() {
 		return idCurso;
+	}
+	
+	public Date getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
 	}
 
 	public void setIdCurso(int idCurso) {
@@ -70,7 +89,9 @@ public class Curso {
 	@Override
 	public String toString() {
 		return "Curso [idCurso=" + idCurso + ", tipo=" + tipo + ", horario=" + horario + ", nivel=" + nivel
-				+ ", precio=" + precio + ", plazas=" + plazas + ", idProfesor=" + idProfesor + "]";
+				+ ", precio=" + precio + ", plazas=" + plazas + ", fechaInicio=" + fechaInicio + ", fechaFin="
+				+ fechaFin + ", idProfesor=" + idProfesor + "]";
 	}
 
+	
 }

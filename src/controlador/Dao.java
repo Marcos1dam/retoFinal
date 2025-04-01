@@ -26,6 +26,8 @@ public interface Dao {
 
 	public void obtenerTodosLosCursos(ArrayList<Curso> cursos);
 
+	public void modificarCurso(Curso curso) throws LoginException;
+
 	public Participa leerPaarticipa(int idCurso) throws LoginException;
 
 	public void inscripcionCurso(int idCurso, String DniBailarin, Date FInicio, Date FFin);

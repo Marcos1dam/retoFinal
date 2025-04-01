@@ -45,12 +45,14 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 	/**
 	 * Create the dialog.
+	 * 
+	 * @author Luis
 	 */
 	public CrearCurso(Curso c, boolean b, Profesor p) {
 		setModal(b);
 		JPanel crearCurso = new JPanel() {
-			Image backgroundImage = new ImageIcon(
-					getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
+			Image backgroundImage = new ImageIcon(getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
+
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -63,7 +65,6 @@ public class CrearCurso extends JDialog implements ActionListener {
 		crearCurso.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(crearCurso, BorderLayout.CENTER);
 		crearCurso.setLayout(null);
-
 
 		JLabel lblIDCurso = new JLabel("ID Curso:");
 		lblIDCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
@@ -137,9 +138,9 @@ public class CrearCurso extends JDialog implements ActionListener {
 		btnCrear.setFont(new Font("Arial Black", Font.PLAIN, 18));
 		btnCrear.setBounds(134, 388, 221, 45);
 		crearCurso.add(btnCrear);
-		
+
 		comboBoxNivel = new JComboBox();
-		comboBoxNivel.setModel(new DefaultComboBoxModel(new String[] {"PRINCIPIANTE", "MEDIO", "AVANZADO"}));
+		comboBoxNivel.setModel(new DefaultComboBoxModel(new String[] { "PRINCIPIANTE", "MEDIO", "AVANZADO" }));
 		comboBoxNivel.setFont(new Font("Arial Black", Font.PLAIN, 10));
 		comboBoxNivel.setBounds(181, 166, 148, 21);
 		crearCurso.add(comboBoxNivel);
@@ -156,15 +157,15 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 	private int obtenerIdCurso() {
 		ArrayList<Curso> cursos = Principal.obtenerTodosLosCursos();
-		
+
 		int id = 0;
-		
+
 		for (Curso cu : cursos) {
-		if (cu.getIdCurso() > id) {
-			id = cu.getIdCurso();
+			if (cu.getIdCurso() > id) {
+				id = cu.getIdCurso();
+			}
 		}
-	}
-		
+
 		return id + 1;
 	}
 
@@ -178,28 +179,24 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private void crearCurso() {
-		
-		
-		
-			Curso c = new Curso();
-			
-			try {
-				c.setIdCurso(Integer.valueOf(textFieldIDCurso.getText()));
-				c.setHorario(Time.valueOf(textFieldHorario.getText()));
-				c.setTipo(textFieldTipo.getText());
-				c.setPrecio(Float.valueOf(textFieldPrecio.getText()));
-				c.setPlazas(Integer.valueOf(textFieldPlazas.getText()));
-				c.setNivel(Nivel.obtenerPorNombre(String.valueOf(comboBoxNivel.getSelectedItem())));
-				c.setIdProfesor(Integer.valueOf(textFieldIDProfesor.getText()));
-				Principal.crearCurso(c);
-				
-				
-			} catch (IllegalArgumentException e) {
-				JOptionPane.showMessageDialog(this, "EL NIVEL solo puede ser: PRINCIPIANTE, MEDIO O AVANZADO.", "Error", JOptionPane.INFORMATION_MESSAGE);
-				
-			}
-		
-	
+
+		Curso c = new Curso();
+
+		try {
+			c.setIdCurso(Integer.valueOf(textFieldIDCurso.getText()));
+			c.setHorario(Time.valueOf(textFieldHorario.getText()));
+			c.setTipo(textFieldTipo.getText());
+			c.setPrecio(Float.valueOf(textFieldPrecio.getText()));
+			c.setPlazas(Integer.valueOf(textFieldPlazas.getText()));
+			c.setNivel(Nivel.obtenerPorNombre(String.valueOf(comboBoxNivel.getSelectedItem())));
+			c.setIdProfesor(Integer.valueOf(textFieldIDProfesor.getText()));
+			Principal.crearCurso(c);
+
+		} catch (IllegalArgumentException e) {
+			JOptionPane.showMessageDialog(this, "EL NIVEL solo puede ser: PRINCIPIANTE, MEDIO O AVANZADO.", "Error",
+					JOptionPane.INFORMATION_MESSAGE);
+
+		}
 
 	}
 }

@@ -28,18 +28,20 @@ public class DaoImplementacionMysql implements Dao {
 	private String userBD;
 	private String passwordDB;
 
-	// Sentencias
-	final String SIGNIN = "SELECT * FROM Bailarin WHERE DniBailarin = ?";
-	final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
-	final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
-	final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
-	final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
-	final String TODOSLOSCURSOS = "SELECT * FROM Curso";
+    // Sentencias
+    final String SIGNIN = "SELECT * FROM Bailarin WHERE DniBailarin = ?";
+    final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
+    final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
+    final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
+    final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
+    final String TODOSLOSCURSOS = "SELECT * FROM Curso";
+    final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?  WHERE IdCurso = ?";
 	final String ELIMINARCURSO = "DELETE FROM Curso WHERE IdCurso = ?";
 	final String PARTICIPA = "SELECT * FROM Participa WHERE IdCurso= ?";
 	final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?, ?, ?) ";
 	final String DARDEBAJACURSO = "DELETE FROM Participa WHERE IdCurso = ? AND DniBailarin = ?";
+
 
 	public DaoImplementacionMysql() {
 		this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -225,6 +227,7 @@ public class DaoImplementacionMysql implements Dao {
 		try {
 			openConnection();
 			stmt = con.prepareStatement(CREARCURSO);
+			
 			stmt.setInt(1, curso.getIdCurso());
 			stmt.setString(2, curso.getTipo());
 			stmt.setTime(3, curso.getHorario());
@@ -437,6 +440,41 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void modificarCurso(Curso curso) throws LoginException {
+		int filasModificadas;
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(MODIFICARCURSO);
+			
+			stmt.setString(1, curso.getTipo());
+			stmt.setTime(2, curso.getHorario());
+			stmt.setString(3, String.valueOf(curso.getNivel()));
+			stmt.setFloat(4, curso.getPrecio());
+			stmt.setInt(5, curso.getPlazas());
+			stmt.setInt(6, curso.getIdCurso());
+			
+			filasModificadas = stmt.executeUpdate();
+			if (filasModificadas > 0) {
+				System.out.println("Curso actualizado. ");
+			} else {
+				System.out.println("No se encontró el curso.");
+			}
+			
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+            LoginException ex= new LoginException(message);
+		} finally {
+			try {
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }

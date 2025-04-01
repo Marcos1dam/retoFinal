@@ -24,6 +24,10 @@ import modelo.Participa;
 import modelo.Profesor;
 
 public class PagInicio extends JFrame implements ActionListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane;
 	private JPanel contentPane;
 	private JTextField textUsuario;
@@ -265,6 +269,11 @@ public class PagInicio extends JFrame implements ActionListener {
 
 // Clase interna para botones de cierre de pestaña
 	private class CloseTabButton extends JPanel {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public CloseTabButton(String title, Icon icon, final Component component) {
 			setOpaque(false);
 			setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
@@ -330,7 +339,10 @@ public class PagInicio extends JFrame implements ActionListener {
 			}
 		} else if (e.getSource().equals(btnCrearCurso_1)) {
 			crear();
-		}else if(e.getSource().equals(btnEliminarCurso_1)) {
+
+		} else if (e.getSource().equals(btnModificar_1)) {
+			modificar();
+		} else if(e.getSource().equals(btnEliminarCurso_1)) {
 			eliminarCurso(cursoSeleccionado);
 		}
 	}
@@ -340,7 +352,7 @@ public class PagInicio extends JFrame implements ActionListener {
 			Principal.elimiinarCurso(cursoSeleccionado2.getIdCurso());
 			JOptionPane.showMessageDialog(this, "Curso eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 			actualizarTablaCursosPorProfesor(cursoSeleccionado2.getIdProfesor());
-		}else {
+		} else {
 			 JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 		}
 		
@@ -1031,6 +1043,7 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					btnModificar_1 = new JButton("Modificar");
 					btnModificar_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
+					btnModificar_1.addActionListener(this);
 					btnModificar_1.setBounds(689, 336, 195, 21);
 					panel4.add(btnModificar_1);
 
@@ -1066,9 +1079,13 @@ public class PagInicio extends JFrame implements ActionListener {
 		}
 	}
 
+	private void modificar() {
+		ModificarCurso mod = new ModificarCurso(cursoSeleccionado, true);
+		mod.setVisible(true);
+	}
+
 	private void crear() {
 		CrearCurso crear = new CrearCurso(cursoSeleccionado, true, p);
-		System.out.println(cursoSeleccionado);
 		crear.setVisible(true);
 		actualizarTablaCursosPorProfesor(p.getId());
 	}

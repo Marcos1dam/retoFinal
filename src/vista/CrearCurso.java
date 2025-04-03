@@ -24,6 +24,7 @@ import modelo.Curso;
 import modelo.Nivel;
 import modelo.Profesor;
 import javax.swing.JComboBox;
+import javax.security.auth.login.LoginException;
 import javax.swing.DefaultComboBoxModel;
 
 public class CrearCurso extends JDialog implements ActionListener {
@@ -179,17 +180,24 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private int obtenerIdCurso() {
-		ArrayList<Curso> cursos = Principal.obtenerTodosLosCursos();
+		ArrayList<Curso> cursos;
+		try {
+			cursos = Principal.obtenerTodosLosCursos();
+			int id = 0;
 
-		int id = 0;
-
-		for (Curso cu : cursos) {
-			if (cu.getIdCurso() > id) {
-				id = cu.getIdCurso();
+			for (Curso cu : cursos) {
+				if (cu.getIdCurso() > id) {
+					id = cu.getIdCurso();
+				}
 			}
+
+			return id + 1;
+		} catch (LoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return id + 1;
+		return (Integer) null;
 	}
 
 	@Override
@@ -216,7 +224,12 @@ public class CrearCurso extends JDialog implements ActionListener {
 			c.setIdProfesor(Integer.valueOf(textFieldIDProfesor.getText()));
 			c.setFechaInicio(Date.valueOf(textFieldFInicio.getText()));
 			c.setFechaFin(Date.valueOf(textFieldFechaFin.getText()));
-			Principal.crearCurso(c);
+			try {
+				Principal.crearCurso(c);
+			} catch (LoginException e) {
+				
+				e.printStackTrace();
+			}
 
 		} catch (IllegalArgumentException e) {
 			JOptionPane.showMessageDialog(this, "EL NIVEL solo puede ser: PRINCIPIANTE, MEDIO O AVANZADO.", "Error",

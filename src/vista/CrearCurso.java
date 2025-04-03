@@ -1,6 +1,7 @@
 package vista;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import controlador.Principal;
@@ -23,7 +25,9 @@ import modelo.Curso;
 import modelo.Nivel;
 import modelo.Profesor;
 import javax.swing.JComboBox;
+import javax.security.auth.login.LoginException;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Label;
 
 public class CrearCurso extends JDialog implements ActionListener {
 
@@ -133,10 +137,39 @@ public class CrearCurso extends JDialog implements ActionListener {
 		textFieldIDProfesor.setBounds(181, 312, 148, 27);
 		crearCurso.add(textFieldIDProfesor);
 
+		// Botón fuera de la pantalla
 		btnCrear = new JButton("Crear Curso");
 		btnCrear.addActionListener(this);
 		btnCrear.setFont(new Font("Arial Black", Font.PLAIN, 18));
-		btnCrear.setBounds(134, 388, 221, 45);
+		btnCrear.setBounds(134, 388, 221, 45); // Fuera de la ventana
+		btnCrear.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				new Thread(() -> {
+					for (int i = 221; i <= 250; i += 2) { // Aumentar tamaño
+						btnCrear.setBounds(134 - (i - 221) / 2, 388 - (i - 221) / 4, i, 50);
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException ex) {
+						}
+					}
+				}).start();
+			}
+
+			@Override
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				new Thread(() -> {
+					for (int i = 250; i >= 221; i -= 2) { // Volver al tamaño normal
+						btnCrear.setBounds(134 - (i - 221) / 2, 388 - (i - 221) / 4, i, 45);
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException ex) {
+						}
+					}
+				}).start();
+			}
+		});
+
 		crearCurso.add(btnCrear);
 
 		comboBoxNivel = new JComboBox();
@@ -195,7 +228,8 @@ public class CrearCurso extends JDialog implements ActionListener {
 		} catch (IllegalArgumentException e) {
 			JOptionPane.showMessageDialog(this, "EL NIVEL solo puede ser: PRINCIPIANTE, MEDIO O AVANZADO.", "Error",
 					JOptionPane.INFORMATION_MESSAGE);
-
+		} catch (LoginException e) {
+			e.printStackTrace();
 		}
 
 	}

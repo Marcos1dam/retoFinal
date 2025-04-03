@@ -1,6 +1,5 @@
 package controlador;
 
-
 import java.awt.EventQueue;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -19,77 +18,42 @@ import vista.PagInicio;
 public class Principal {
 	private static Dao dao = new DaoImplementacionMysql();
 
-
-    public static void main(String[] args) {
-    	SwingUtilities.invokeLater(() -> {
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
 			try {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			new PagInicio().setVisible(true);
-		}); 
-    }
-
-	public static Bailarin leerDni(String dni) {
-		try {
-			return dao.leerBailarin(dni);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
+		});
 	}
 
-	public static Profesor leerId(String id) {
-		try {
-			return dao.leerProfesor(id);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
-
+	public static Bailarin leerDni(String dni) throws LoginException {
+		return dao.leerBailarin(dni);
 	}
 
-	public static Curso obtenerCursoPorId(int idCurso) {
-		try {
-			return dao.obtenerCurso(idCurso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
-
+	public static Profesor leerId(String id) throws LoginException {
+		return dao.leerProfesor(id);
 	}
 
-	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor) {
+	public static Curso obtenerCursoPorId(int idCurso) throws LoginException {
+		return dao.obtenerCurso(idCurso);
+	}
+
+	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor) throws LoginException {
 		ArrayList<Curso> cursos = new ArrayList<Curso>();
-		try {
-			dao.obtenerCursosPorProfesor(idProfesor, cursos);
-			for (Curso c : cursos) {
-				System.out.println(c);
-			}
-			return cursos;
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
-
+		dao.obtenerCursosPorProfesor(idProfesor, cursos);
+		return cursos;
 	}
 
-	public static void crearCurso(Curso curso) {
-		try {
-			dao.crearCurso(curso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-		}
-
+	public static void crearCurso(Curso curso) throws LoginException {
+		dao.crearCurso(curso);
 	}
 
 	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin) {
 		ArrayList<Curso> cursos = new ArrayList<Curso>();
 		dao.obtnerCursosPorBailarin(idBailarin, cursos);
-		for (Curso c : cursos) {
-			System.out.println(c);
-		}
 		return cursos;
 
 	}
@@ -100,48 +64,24 @@ public class Principal {
 		return cursos;
 	}
 
-	public static void modificarCurso(Curso curso) {
-		try {
+	public static void modificarCurso(Curso curso) throws LoginException {
 			dao.modificarCurso(curso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-		}
 	}
-    
-    public static Participa leerParticipa(int idCurso) {
-    	try {
+
+	public static Participa leerParticipa(int idCurso) throws LoginException {
 			return dao.leerPaarticipa(idCurso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
-    }
-    
-    public static void inscripcion(int idCurso, String dniBailarin, Date fInicio, Date fFin) {
-    	
-    	dao.inscripcionCurso(idCurso, dniBailarin, fInicio, fFin);
-    }
-    public static boolean darDeBajaCurso(int idCurso, String dniBailarin){
-    	
-    	try {
+	}
+
+	public static void inscripcion(int idCurso, String dniBailarin, Date fInicio, Date fFin) {
+		dao.inscripcionCurso(idCurso, dniBailarin, fInicio, fFin);
+	}
+
+	public static void darDeBajaCurso(int idCurso, String dniBailarin) throws LoginException {
 			dao.darDeBajaCurso(idCurso, dniBailarin);
-			return true;
-		} catch (LoginException e) {
-			
-			e.printStackTrace();
-			return false;
-		}
-    }
-    
-    public static boolean elimiinarCurso(int idCurso) {
-    	
-    	try {
+
+	}
+
+	public static void elimiinarCurso(int idCurso) throws LoginException {
 			dao.eliminarCurso(idCurso);
-			return true;
-		} catch (LoginException e) {
-			
-			e.printStackTrace();
-			return false;
-		}
-    }
+	}
 }

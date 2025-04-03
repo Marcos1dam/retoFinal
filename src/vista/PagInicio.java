@@ -608,7 +608,7 @@ public class PagInicio extends JFrame implements ActionListener {
 				if (bailarin != null && String.valueOf(passwordChars).equalsIgnoreCase(bailarin.getDni())
 						&& textUsuario.getText().equalsIgnoreCase(bailarin.getCorreo())) {
 
-					JOptionPane.showMessageDialog(this, "Bienvenid@, " + bailarin.getNombre(), "Acceso concedido",
+					JOptionPane.showMessageDialog(this, "Bienvenido, " + bailarin.getNombre(), "Acceso concedido",
 							JOptionPane.INFORMATION_MESSAGE);
 
 					tabbedPane.setEnabledAt(1, false);
@@ -1073,34 +1073,6 @@ public class PagInicio extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	private void animarColorFondo(JTextField textField, Color colorInicial, Color colorFinal) {
-	    new Thread(() -> {
-	        for (int i = 0; i <= 100; i += 5) {
-	            int r = colorInicial.getRed() + (colorFinal.getRed() - colorInicial.getRed()) * i / 100;
-	            int g = colorInicial.getGreen() + (colorFinal.getGreen() - colorInicial.getGreen()) * i / 100;
-	            int b = colorInicial.getBlue() + (colorFinal.getBlue() - colorInicial.getBlue()) * i / 100;
-
-	            textField.setBackground(new Color(r, g, b));
-	            try { Thread.sleep(10); } catch (InterruptedException ex) {}
-	        }
-	    }).start();
-	}
-
-	private void agregarAnimacionFondo(JTextField textField) {
-	    textField.addFocusListener(new FocusAdapter() {
-	        @Override
-	        public void focusGained(FocusEvent e) {
-	            animarColorFondo(textField, Color.WHITE, new Color(230, 240, 255)); // Azul clarito
-	        }
-
-	        @Override
-	        public void focusLost(FocusEvent e) {
-	            animarColorFondo(textField, new Color(230, 240, 255), Color.WHITE);
-	        }
-	    });
-	}
-
 
 	private void addHoverEffect(JButton button) {
 		button.addMouseListener(new java.awt.event.MouseAdapter() {

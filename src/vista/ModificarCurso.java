@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.security.auth.login.LoginException;
 import javax.swing.DefaultComboBoxModel;
 
 public class ModificarCurso extends JDialog implements ActionListener{
@@ -165,11 +166,17 @@ public class ModificarCurso extends JDialog implements ActionListener{
 		cu2.setIdCurso(Integer.valueOf(textoIDCurso.getText()));
 		cu2.setTipo(textoTipo.getText());
 		cu2.setHorario(Time.valueOf(textoHorario.getText()));
-		cu2.setNivel(Nivel.obtenerPorNombre(String.valueOf(comboBox.getSelectedIndex())));
+		cu2.setNivel(Nivel.obtenerPorNombre(String.valueOf(comboBox.getSelectedItem())));
 		cu2.setPrecio(Float.valueOf(textoPrecio.getText()));
 		cu2.setPlazas(Integer.valueOf(textoPlaza.getText()));
 		cu2.setIdProfesor(Integer.valueOf(textoIDProfesor.getText()));
 		
-		Principal.modificarCurso(cu2);
+		try {
+			Principal.modificarCurso(cu2);
+		} catch (LoginException e) {
+			
+			e.printStackTrace();
+		}
+		this.dispose();
 	}
 }

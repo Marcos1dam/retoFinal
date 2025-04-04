@@ -6,9 +6,12 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.security.auth.login.LoginException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -41,7 +44,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	private JButton btnCrearCurso_1;
 	private JButton btnModificar_1;
 	private JButton btnEliminarCurso_1;
-	private JButton btnEliminarBailarin_1;
+	private JButton btnConsultar;
 	private JButton btnOcupacion_1;
 	private Profesor p;
 
@@ -49,19 +52,9 @@ public class PagInicio extends JFrame implements ActionListener {
 	// Variable para almacenar el curso seleccionado
 	private Curso cursoSeleccionado = null;
 	private ArrayList<Curso> cursos = new ArrayList<>();
+	private ArrayList<Bailarin> bailarines = new ArrayList<>();
 	private JButton btnBajaCurso;
-	private JButton btnApuntarse;
-	
-//	public static void main(String[] args) {
-//		SwingUtilities.invokeLater(() -> {
-//			try {
-//				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			new PagInicio().setVisible(true);
-//		});
-//	}
+	private JButton btnApuntarse, btnInscripcion;
 
 	public PagInicio() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(PagInicio.class.getResource("/imagenes/CodeAndDance.png")));
@@ -103,11 +96,17 @@ public class PagInicio extends JFrame implements ActionListener {
 		singIn.setOpaque(false);
 		singIn.setLayout(new FlowLayout());
 		tabbedPane.addTab("CODE AND DANCE", null, singIn, "Información de la Pestaña 1");
+		
+		btnInscripcion = new JButton("INSCRIBETE");
+		btnInscripcion.setFont(new Font("Arial Black", Font.PLAIN, 16));
+		btnInscripcion.setBounds(370, 171, 162, 43);
+		btnInscripcion.addActionListener(this);
+		singIn.add(btnInscripcion);
 
 		// Pestaña de login
 		JPanel passwordPanel = new JPanel() {
-			private Image backgroundImage = new ImageIcon(
-					getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
+			private Image backgroundImage = new ImageIcon(getClass().getResource("/imagenes/CodeAndDance.png"))
+					.getImage();
 
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -157,109 +156,89 @@ public class PagInicio extends JFrame implements ActionListener {
 		passwordField.setBounds(356, 240, 253, 19);
 		passwordPanel.add(passwordField);
 		//////////////////////////////////////////////
-		/*JPanel panel3 = new JPanel();
-		panel3.setLayout(null);
-
-		textNombre = new JTextField();
-		textNombre.setEditable(false);
-		textNombre.setBounds(130, 33, 123, 19);
-		textNombre.setText(bailarin.getNombre());
-		panel3.add(textNombre);
-		textNombre.setColumns(10);
-
-		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblNombre.setBounds(42, 36, 78, 16);
-		panel3.add(lblNombre);
-
-		JLabel lblApellido = new JLabel("Apellido:");
-		lblApellido.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblApellido.setBounds(42, 73, 78, 16);
-		panel3.add(lblApellido);
-
-		JLabel lblFechaNacimiento = new JLabel("Edad:");
-		lblFechaNacimiento.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblFechaNacimiento.setBounds(42, 111, 78, 16);
-		panel3.add(lblFechaNacimiento);
-
-		JLabel lblCorreo = new JLabel("Correo:");
-		lblCorreo.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblCorreo.setBounds(42, 153, 78, 16);
-		panel3.add(lblCorreo);
-
-		textApellido = new JTextField();
-		textApellido.setEditable(false);
-		textApellido.setColumns(10);
-		textApellido.setBounds(130, 74, 123, 19);
-		textApellido.setText(bailarin.getApellido());
-		panel3.add(textApellido);
-
-		textFechaNaciemto = new JTextField();
-		textFechaNaciemto.setEditable(false);
-		textFechaNaciemto.setColumns(10);
-		textFechaNaciemto.setBounds(130, 112, 123, 19);
-		textFechaNaciemto.setText(String.valueOf(bailarin.getFechaNacimiento()));
-		panel3.add(textFechaNaciemto);
-
-		textCorreo = new JTextField();
-		textCorreo.setEditable(false);
-		textCorreo.setColumns(10);
-		textCorreo.setBounds(130, 154, 267, 19);
-		textCorreo.setText(bailarin.getCorreo());
-		panel3.add(textCorreo);
-
-		JLabel lblTelefono = new JLabel("Telefono:");
-		lblTelefono.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblTelefono.setBounds(42, 192, 78, 16);
-		panel3.add(lblTelefono);
-
-		textTelefono = new JTextField();
-		textTelefono.setEditable(false);
-		textTelefono.setColumns(10);
-		textTelefono.setBounds(130, 193, 123, 19);
-		textTelefono.setText(String.valueOf(bailarin.getTelefono()));
-		panel3.add(textTelefono);
-
-		agregarBotonCerrarSesion(panel3);
-		tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
-
-		JLabel lblMisCursos = new JLabel("Mis cursos");
-		lblMisCursos.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		lblMisCursos.setBounds(639, 75, 123, 26);
-		panel3.add(lblMisCursos);
-
-		JTable table_1 = new JTable();
-		table_1.setBounds(748, 176, 1, 1);
-		panel3.add(table_1);
-
-		JTable table_2 = new JTable();
-		table_2.setBounds(451, 114, 454, 97);
-		panel3.add(table_2);
-
-		JButton btnBajaCurso = new JButton("Darse de baja");
-		btnBajaCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		btnBajaCurso.setBounds(598, 229, 190, 21);
-		panel3.add(btnBajaCurso);
-
-		JLabel lblInfoCursos = new JLabel("mas cursos");
-		lblInfoCursos.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		lblInfoCursos.setBounds(423, 289, 136, 13);
-		panel3.add(lblInfoCursos);
-
-		JTable table_3 = new JTable();
-		table_3.setBounds(86, 318, 819, 137);
-		panel3.add(table_3);
-
-		JButton btnApuntarse = new JButton("Apuntarse");
-		btnApuntarse.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		btnApuntarse.setBounds(408, 465, 136, 21);
-		panel3.add(btnApuntarse);
-
-		agregarBotonCerrarSesion(panel3);
-		tabbedPane.addTab("Información de Bailarines", null, panel3, "Datos de los Bailarines");
-
-		tabbedPane.setSelectedIndex(2);
-	}*/
+		/*
+		 * JPanel panel3 = new JPanel(); panel3.setLayout(null);
+		 * 
+		 * textNombre = new JTextField(); textNombre.setEditable(false);
+		 * textNombre.setBounds(130, 33, 123, 19);
+		 * textNombre.setText(bailarin.getNombre()); panel3.add(textNombre);
+		 * textNombre.setColumns(10);
+		 * 
+		 * JLabel lblNombre = new JLabel("Nombre:"); lblNombre.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblNombre.setBounds(42, 36, 78, 16);
+		 * panel3.add(lblNombre);
+		 * 
+		 * JLabel lblApellido = new JLabel("Apellido:"); lblApellido.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblApellido.setBounds(42, 73, 78, 16);
+		 * panel3.add(lblApellido);
+		 * 
+		 * JLabel lblFechaNacimiento = new JLabel("Edad:");
+		 * lblFechaNacimiento.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		 * lblFechaNacimiento.setBounds(42, 111, 78, 16);
+		 * panel3.add(lblFechaNacimiento);
+		 * 
+		 * JLabel lblCorreo = new JLabel("Correo:"); lblCorreo.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblCorreo.setBounds(42, 153, 78, 16);
+		 * panel3.add(lblCorreo);
+		 * 
+		 * textApellido = new JTextField(); textApellido.setEditable(false);
+		 * textApellido.setColumns(10); textApellido.setBounds(130, 74, 123, 19);
+		 * textApellido.setText(bailarin.getApellido()); panel3.add(textApellido);
+		 * 
+		 * textFechaNaciemto = new JTextField(); textFechaNaciemto.setEditable(false);
+		 * textFechaNaciemto.setColumns(10); textFechaNaciemto.setBounds(130, 112, 123,
+		 * 19);
+		 * textFechaNaciemto.setText(String.valueOf(bailarin.getFechaNacimiento()));
+		 * panel3.add(textFechaNaciemto);
+		 * 
+		 * textCorreo = new JTextField(); textCorreo.setEditable(false);
+		 * textCorreo.setColumns(10); textCorreo.setBounds(130, 154, 267, 19);
+		 * textCorreo.setText(bailarin.getCorreo()); panel3.add(textCorreo);
+		 * 
+		 * JLabel lblTelefono = new JLabel("Telefono:"); lblTelefono.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 14)); lblTelefono.setBounds(42, 192, 78, 16);
+		 * panel3.add(lblTelefono);
+		 * 
+		 * textTelefono = new JTextField(); textTelefono.setEditable(false);
+		 * textTelefono.setColumns(10); textTelefono.setBounds(130, 193, 123, 19);
+		 * textTelefono.setText(String.valueOf(bailarin.getTelefono()));
+		 * panel3.add(textTelefono);
+		 * 
+		 * agregarBotonCerrarSesion(panel3);
+		 * tabbedPane.addTab("Información de Bailarines", null, panel3,
+		 * "Datos de los Bailarines");
+		 * 
+		 * JLabel lblMisCursos = new JLabel("Mis cursos"); lblMisCursos.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 16)); lblMisCursos.setBounds(639, 75, 123,
+		 * 26); panel3.add(lblMisCursos);
+		 * 
+		 * JTable table_1 = new JTable(); table_1.setBounds(748, 176, 1, 1);
+		 * panel3.add(table_1);
+		 * 
+		 * JTable table_2 = new JTable(); table_2.setBounds(451, 114, 454, 97);
+		 * panel3.add(table_2);
+		 * 
+		 * JButton btnBajaCurso = new JButton("Darse de baja"); btnBajaCurso.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 16)); btnBajaCurso.setBounds(598, 229, 190,
+		 * 21); panel3.add(btnBajaCurso);
+		 * 
+		 * JLabel lblInfoCursos = new JLabel("mas cursos"); lblInfoCursos.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 16)); lblInfoCursos.setBounds(423, 289, 136,
+		 * 13); panel3.add(lblInfoCursos);
+		 * 
+		 * JTable table_3 = new JTable(); table_3.setBounds(86, 318, 819, 137);
+		 * panel3.add(table_3);
+		 * 
+		 * JButton btnApuntarse = new JButton("Apuntarse"); btnApuntarse.setFont(new
+		 * Font("Arial Black", Font.PLAIN, 16)); btnApuntarse.setBounds(408, 465, 136,
+		 * 21); panel3.add(btnApuntarse);
+		 * 
+		 * agregarBotonCerrarSesion(panel3);
+		 * tabbedPane.addTab("Información de Bailarines", null, panel3,
+		 * "Datos de los Bailarines");
+		 * 
+		 * tabbedPane.setSelectedIndex(2); }
+		 */
 		//////////////////////////////////////////////
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 	}
@@ -316,164 +295,196 @@ public class PagInicio extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnAcceder)) {
-			comprobar();
+			try {
+				comprobar();
+			} catch (LoginException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} else if (e.getSource().equals(btnCancelar)) {
 			cancelar();
 		} else if (e.getSource().equals(btnRecuperarContraseña)) {
 			mostrar();
-		}else if(e.getSource().equals(btnApuntarse)) {
+		} else if (e.getSource().equals(btnApuntarse)) {
 			try {
 				apuntarse(cursoSeleccionado);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		}else if(e.getSource().equals(btnBajaCurso)) {
+		} else if (e.getSource().equals(btnBajaCurso)) {
 			try {
 				bajaCurso(cursoSeleccionado);
 			} catch (SQLException ex) {
-			      JOptionPane.showMessageDialog(this, "Error al darse de baja: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		            ex.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Error al darse de baja: " + ex.getMessage(), "Error",
+						JOptionPane.ERROR_MESSAGE);
+				ex.printStackTrace();
 			}
 		} else if (e.getSource().equals(btnCrearCurso_1)) {
-			crear();
+			try {
+				crear();
+			} catch (LoginException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 		} else if (e.getSource().equals(btnModificar_1)) {
 			modificar();
-		} else if(e.getSource().equals(btnEliminarCurso_1)) {
-			eliminarCurso(cursoSeleccionado);
+		} else if (e.getSource().equals(btnEliminarCurso_1)) {
+			try {
+				eliminarCurso(cursoSeleccionado);
+			} catch (LoginException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else if (e.getSource().equals(btnConsultar)) {
+			consultarCurso(cursoSeleccionado);
+		}else if(e.getSource().equals(btnInscripcion)) {
+			inscripcion();
 		}
 	}
 
-	private void eliminarCurso(Curso cursoSeleccionado2) {
-		if(cursoSeleccionado2 != null) {
+	private void inscripcion() {
+		Inscripcion mod= new Inscripcion(true);
+		mod.setVisible(true);
+	}
+
+
+	private void consultarCurso(Curso cursoSeleccionado2) {
+		ConsultarBailarinesCurso vent = new ConsultarBailarinesCurso(this, true, cursoSeleccionado2);
+		vent.setVisible(true);
+	}
+
+	private void eliminarCurso(Curso cursoSeleccionado2) throws LoginException {
+		if (cursoSeleccionado2 != null) {
 			Principal.elimiinarCurso(cursoSeleccionado2.getIdCurso());
 			JOptionPane.showMessageDialog(this, "Curso eliminado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 			actualizarTablaCursosPorProfesor(cursoSeleccionado2.getIdProfesor());
 		} else {
-			 JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia",
+					JOptionPane.WARNING_MESSAGE);
 		}
-		
+
 	}
 
-	private void actualizarTablaCursosPorProfesor(int idProfesor) {
+	private void actualizarTablaCursosPorProfesor(int idProfesor) throws LoginException {
 		// Obtener el panel de la pestaña actual
-	    Component selectedTab = tabbedPane.getSelectedComponent();
-	    
-	    if(selectedTab instanceof JPanel) {
-	    	JPanel panel = (JPanel) selectedTab;
-	    	
-	    	 for (Component comp : panel.getComponents()) {
-		            if (comp instanceof JScrollPane) {
-		                JScrollPane scrollPane = (JScrollPane) comp;
-		                Component view = scrollPane.getViewport().getView();
-		                
-		                if (view instanceof JTable) {
-		                    JTable tableMisCursos = (JTable) view;
-		                    DefaultTableModel model = (DefaultTableModel) tableMisCursos.getModel();
-		                    model.setRowCount(0); // Limpiar la tabla
-		                    
-		                    // Obtener los cursos actualizados del Profesor
-		                    ArrayList<Curso> cursosProfesor= Principal.obtenerCursosPorProfesor(idProfesor);
-		                    
-		                    // Llenar la tabla con los nuevos datos
-		                    for (Curso curso : cursosProfesor) {
-		                        model.addRow(new Object[]{
-		                            curso.getIdCurso(),
-		                            curso.getTipo(),
-		                            curso.getHorario(),
-		                            curso.getNivel(),
-		                            curso.getPrecio(),
-		                            curso.getPlazas(),
-		                            curso.getIdProfesor()
-		                        });
-		                    }
-		                    return; // Terminar después de actualizar
-		                }
-		            }
-		        }
-		                
-	    }
-	    JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error", JOptionPane.ERROR_MESSAGE);
+		Component selectedTab = tabbedPane.getSelectedComponent();
+
+		if (selectedTab instanceof JPanel) {
+			JPanel panel = (JPanel) selectedTab;
+
+			for (Component comp : panel.getComponents()) {
+				if (comp instanceof JScrollPane) {
+					JScrollPane scrollPane = (JScrollPane) comp;
+					Component view = scrollPane.getViewport().getView();
+
+					if (view instanceof JTable) {
+						JTable tableMisCursos = (JTable) view;
+						DefaultTableModel model = (DefaultTableModel) tableMisCursos.getModel();
+						model.setRowCount(0); // Limpiar la tabla
+
+						// Obtener los cursos actualizados del Profesor
+						ArrayList<Curso> cursosProfesor = Principal.obtenerCursosPorProfesor(idProfesor);
+
+						// Llenar la tabla con los nuevos datos
+						for (Curso curso : cursosProfesor) {
+							model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+									curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getIdProfesor() });
+						}
+						return; // Terminar después de actualizar
+					}
+				}
+			}
+
+		}
+		JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	private void bajaCurso(Curso cursoSeleccionado2) throws SQLException {
-	    if (cursoSeleccionado2 != null) {
-	        String dniBailarin = new String(passwordField.getPassword()); // Obtiene el DNI del bailarín
-	        
-	        Principal.darDeBajaCurso(cursoSeleccionado.getIdCurso(), dniBailarin);
+		if (cursoSeleccionado2 != null) {
+			String dniBailarin = new String(passwordField.getPassword()); // Obtiene el DNI del bailarín
+
+			try {
+				Principal.darDeBajaCurso(cursoSeleccionado.getIdCurso(), dniBailarin);
+			} catch (LoginException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			JOptionPane.showMessageDialog(this, "Baja realizada con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-			
+
 			// Actualiza las tablas
 			actualizarTablaMisCursos(dniBailarin);
-	    } else {
-	        JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-	    }
+		} else {
+			JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia",
+					JOptionPane.WARNING_MESSAGE);
+		}
 	}
-	
 
 	private void apuntarse(Curso cursoSeleccionado) throws SQLException {
-	    try {
-	        // Obtener el DNI del bailarín (que es la contraseña)
-	        String dniBailarin = new String(passwordField.getPassword());
-	        
-	        // Obtener las fechas de participación (puedes usar las predeterminadas o pedirlas)
-	        Participa par = Principal.leerParticipa(cursoSeleccionado.getIdCurso());
-	        
-	        // Realizar la inscripción
-	        Principal.inscripcion(cursoSeleccionado.getIdCurso(), dniBailarin, 
-	                            par.getFechaInicio(), par.getFechaFin());
-	        
-	        // Actualizar la tabla de "Mis cursos"
-	        actualizarTablaMisCursos(dniBailarin);
-	        
-	        JOptionPane.showMessageDialog(this, "Inscripción realizada con éxito");
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), 
-	                                    "Error", JOptionPane.ERROR_MESSAGE);
-	    }
+		try {
+			// Obtener el DNI del bailarín (que es la contraseña)
+			String dniBailarin = new String(passwordField.getPassword());
+
+			// Obtener las fechas de participación (puedes usar las predeterminadas o
+			// pedirlas)
+			Participa par = Principal.leerParticipa(cursoSeleccionado.getIdCurso());
+
+			// Realizar la inscripción
+			Principal.inscripcion(cursoSeleccionado.getIdCurso(), dniBailarin, par.getFechaInicio(), par.getFechaFin());
+
+			// Actualizar la tabla de "Mis cursos"
+			actualizarTablaMisCursos(dniBailarin);
+
+			JOptionPane.showMessageDialog(this, "Inscripción realizada con éxito");
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Error inesperado: " + e.getMessage(), "Error",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	// Método para actualizar la tabla de "Mis cursos"
 	private void actualizarTablaMisCursos(String dniBailarin) {
-	    // Obtener el panel de la pestaña actual
-	    Component selectedTab = tabbedPane.getSelectedComponent();
-	    
-	    if (selectedTab instanceof JPanel) {
-	        JPanel panel = (JPanel) selectedTab;
-	        
-	        // Buscar table_1 dentro del panel
-	        for (Component comp : panel.getComponents()) {
-	            if (comp instanceof JScrollPane) {
-	                JScrollPane scrollPane = (JScrollPane) comp;
-	                Component view = scrollPane.getViewport().getView();
-	                
-	                if (view instanceof JTable) {
-	                    JTable tableMisCursos = (JTable) view;
-	                    DefaultTableModel model = (DefaultTableModel) tableMisCursos.getModel();
-	                    model.setRowCount(0); // Limpiar la tabla
-	                    
-	                    // Obtener los cursos actualizados del bailarín
-	                    ArrayList<Curso> cursosBailarin = Principal.obtenerCursosPorBailarin(dniBailarin);
-	                    
-	                    // Llenar la tabla con los nuevos datos
-	                    for (Curso curso : cursosBailarin) {
-	                        model.addRow(new Object[]{
-	                            curso.getIdCurso(),
-	                            curso.getTipo(),
-	                            curso.getHorario(),
-	                            curso.getNivel(),
-	                            curso.getPrecio(),
-	                            curso.getPlazas(),
-	                            curso.getIdProfesor()
-	                        });
-	                    }
-	                    return; // Terminar después de actualizar
-	                }
-	            }
-	        }
-	    }
-	    JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error", JOptionPane.ERROR_MESSAGE);
+		// Obtener el panel de la pestaña actual
+		Component selectedTab = tabbedPane.getSelectedComponent();
+
+		if (selectedTab instanceof JPanel) {
+			JPanel panel = (JPanel) selectedTab;
+
+			// Buscar table_1 dentro del panel
+			for (Component comp : panel.getComponents()) {
+				if (comp instanceof JScrollPane) {
+					JScrollPane scrollPane = (JScrollPane) comp;
+					Component view = scrollPane.getViewport().getView();
+
+					if (view instanceof JTable) {
+						JTable tableMisCursos = (JTable) view;
+						DefaultTableModel model = (DefaultTableModel) tableMisCursos.getModel();
+						model.setRowCount(0); // Limpiar la tabla
+
+						// Obtener los cursos actualizados del bailarín
+						ArrayList<Curso> cursosBailarin = null;
+						try {
+							cursosBailarin = Principal.obtenerCursosPorBailarin(dniBailarin);
+							for (Curso curso : cursosBailarin) {
+								model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+										curso.getNivel(), curso.getPrecio(), curso.getPlazas(),
+										curso.getIdProfesor() });
+							}
+							return; // Terminar después de actualizar
+						} catch (LoginException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+						// Llenar la tabla con los nuevos datos
+					}
+				}
+			}
+		}
+		JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error",
+				JOptionPane.ERROR_MESSAGE);
 	}
 
 	private void mostrar() {
@@ -486,15 +497,14 @@ public class PagInicio extends JFrame implements ActionListener {
 		passwordField.setText("");
 	}
 
-	private void comprobar() {
+	private void comprobar() throws LoginException {
 
-        char[] passwordChars = passwordField.getPassword();
+		char[] passwordChars = passwordField.getPassword();
 
 		if (passwordChars.length == 9) {
 			Bailarin bailarin = Principal.leerDni(String.valueOf(passwordChars));
 			if (bailarin != null && String.valueOf(passwordChars).equalsIgnoreCase(bailarin.getDni())
 					&& textUsuario.getText().equalsIgnoreCase(bailarin.getCorreo())) {
-
 
 				JOptionPane.showMessageDialog(this, "Bienvenido, " + bailarin.getNombre(), "Acceso concedido",
 						JOptionPane.INFORMATION_MESSAGE);
@@ -589,31 +599,24 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel3.add(scrollPaneTable1);
 
 					// Configurar el modelo de tabla para table_1 (no para table)
-					String[] columnNames = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor"};
+					String[] columnNames = { "ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor" };
 					DefaultTableModel model_1 = new DefaultTableModel(columnNames, 0) {
-					    @Override
-					    public boolean isCellEditable(int row, int column) {
-					        return false;
-					    }
+						@Override
+						public boolean isCellEditable(int row, int column) {
+							return false;
+						}
 					};
 					table_1.setModel(model_1);
 
 					// Llenar la tabla
 					model_1.setRowCount(0);
-					ArrayList<Curso>cursosBailarin= new ArrayList<>();
+					ArrayList<Curso> cursosBailarin = new ArrayList<>();
 					cursosBailarin = Principal.obtenerCursosPorBailarin(bailarin.getDni());
-					
+
 					for (Curso curso : cursosBailarin) {
 						System.out.println();
-					    model_1.addRow(new Object[]{
-					        curso.getIdCurso(),
-					        curso.getTipo(),
-					        curso.getHorario(),
-					        curso.getNivel(),
-					        curso.getPrecio(),
-					        curso.getPlazas(),
-					        curso.getIdProfesor()
-					    });
+						model_1.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+								curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getIdProfesor() });
 					}
 
 					// Listener para selección de filas
@@ -625,22 +628,22 @@ public class PagInicio extends JFrame implements ActionListener {
 								cursoSeleccionado
 										.setIdCurso(Integer.parseInt(table_1.getValueAt(selectedRow, 0).toString()));
 								cursoSeleccionado.setTipo(table_1.getValueAt(selectedRow, 1).toString());
-								cursoSeleccionado.setHorario(Time.valueOf(table_1.getValueAt(selectedRow, 2).toString()));
 								cursoSeleccionado
-										.setNivel(Nivel.obtenerPorNombre(table_1.getValueAt(selectedRow, 3).toString()));
+										.setHorario(Time.valueOf(table_1.getValueAt(selectedRow, 2).toString()));
+								cursoSeleccionado.setNivel(
+										Nivel.obtenerPorNombre(table_1.getValueAt(selectedRow, 3).toString()));
 								cursoSeleccionado
 										.setPrecio(Float.parseFloat(table_1.getValueAt(selectedRow, 4).toString()));
 								cursoSeleccionado
 										.setPlazas(Integer.parseInt(table_1.getValueAt(selectedRow, 5).toString()));
 								cursoSeleccionado
 										.setIdProfesor(Integer.parseInt(table_1.getValueAt(selectedRow, 6).toString()));
-								
+
 								btnBajaCurso.setVisible(true);
-								
+
 							}
 						}
 					});
-
 
 					btnBajaCurso = new JButton("Darse de baja");
 					btnBajaCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
@@ -653,41 +656,33 @@ public class PagInicio extends JFrame implements ActionListener {
 					lblInfoCursos.setBounds(423, 289, 136, 13);
 					panel3.add(lblInfoCursos);
 
-					// Declarar la tabla correctamente 
+					// Declarar la tabla correctamente
 					JTable table_3 = new JTable();
 					JScrollPane scrollPaneTable3 = new JScrollPane(table_3); // ScrollPane para table_3
 					scrollPaneTable3.setBounds(86, 318, 819, 137); // Ajusta estos valores según necesites
 					panel3.add(scrollPaneTable3);
 
 					// Configurar el modelo de tabla para table_3
-					String[] columnNames3 = {"ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor"};
+					String[] columnNames3 = { "ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas", "Id Profesor" };
 					DefaultTableModel model_3 = new DefaultTableModel(columnNames3, 0) {
-					    @Override
-					    public boolean isCellEditable(int row, int column) {
-					        return false;
-					    }
+						@Override
+						public boolean isCellEditable(int row, int column) {
+							return false;
+						}
 					};
 					table_3.setModel(model_3);
 
 					// Llenar la tabla
 					model_3.setRowCount(0);
-					ArrayList<Curso>todosLosCursos= new ArrayList<>();
-					todosLosCursos= Principal.obtenerTodosLosCursos();
-					
+					ArrayList<Curso> todosLosCursos = new ArrayList<>();
+					todosLosCursos = Principal.obtenerTodosLosCursos();
+
 					for (Curso curso : todosLosCursos) {
 						System.out.println();
-					    model_3.addRow(new Object[]{
-					        curso.getIdCurso(),
-					        curso.getTipo(),
-					        curso.getHorario(),
-					        curso.getNivel(),
-					        curso.getPrecio(),
-					        curso.getPlazas(),
-					        curso.getIdProfesor()
-					    });
+						model_3.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+								curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getIdProfesor() });
 					}
 
-					
 					// Listener para selección de filas
 					table_3.getSelectionModel().addListSelectionListener(e -> {
 						if (!e.getValueIsAdjusting()) {
@@ -697,18 +692,19 @@ public class PagInicio extends JFrame implements ActionListener {
 								cursoSeleccionado
 										.setIdCurso(Integer.parseInt(table_3.getValueAt(selectedRow, 0).toString()));
 								cursoSeleccionado.setTipo(table_3.getValueAt(selectedRow, 1).toString());
-								cursoSeleccionado.setHorario(Time.valueOf(table_3.getValueAt(selectedRow, 2).toString()));
 								cursoSeleccionado
-										.setNivel(Nivel.obtenerPorNombre(table_3.getValueAt(selectedRow, 3).toString()));
+										.setHorario(Time.valueOf(table_3.getValueAt(selectedRow, 2).toString()));
+								cursoSeleccionado.setNivel(
+										Nivel.obtenerPorNombre(table_3.getValueAt(selectedRow, 3).toString()));
 								cursoSeleccionado
 										.setPrecio(Float.parseFloat(table_3.getValueAt(selectedRow, 4).toString()));
 								cursoSeleccionado
 										.setPlazas(Integer.parseInt(table_3.getValueAt(selectedRow, 5).toString()));
 								cursoSeleccionado
 										.setIdProfesor(Integer.parseInt(table_3.getValueAt(selectedRow, 6).toString()));
-								
+
 								btnApuntarse.setVisible(true);
-								
+
 							}
 						}
 					});
@@ -725,13 +721,13 @@ public class PagInicio extends JFrame implements ActionListener {
 					tabbedPane.setSelectedIndex(2);
 				}
 			} else {
-				  // Credenciales incorrectas para bailarín
-	            JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+				// Credenciales incorrectas para bailarín
+				JOptionPane.showMessageDialog(this, "DNI o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
 		} else if (passwordChars.length == 1) {
 
-			 p = Principal.leerId(String.valueOf(passwordChars));
+			p = Principal.leerId(String.valueOf(passwordChars));
 
 			if (p != null && String.valueOf(passwordChars).equals(String.valueOf(p.getId()))
 					&& textUsuario.getText().equalsIgnoreCase(p.getCorreo())) {
@@ -852,22 +848,51 @@ public class PagInicio extends JFrame implements ActionListener {
 							int selectedRow = table.getSelectedRow();
 							if (selectedRow >= 0) {
 								cursoSeleccionado = new Curso();
-								cursoSeleccionado
-										.setIdCurso(Integer.parseInt(table.getValueAt(selectedRow, 0).toString()));
+								cursoSeleccionado.setIdCurso(Integer.parseInt(table.getValueAt(selectedRow, 0).toString()));
 								cursoSeleccionado.setTipo(table.getValueAt(selectedRow, 1).toString());
 								cursoSeleccionado.setHorario(Time.valueOf(table.getValueAt(selectedRow, 2).toString()));
-								cursoSeleccionado
-										.setNivel(Nivel.obtenerPorNombre(table.getValueAt(selectedRow, 3).toString()));
-								cursoSeleccionado
-										.setPrecio(Float.parseFloat(table.getValueAt(selectedRow, 4).toString()));
-								cursoSeleccionado
-										.setPlazas(Integer.parseInt(table.getValueAt(selectedRow, 5).toString()));
-								cursoSeleccionado
-										.setIdProfesor(Integer.parseInt(table.getValueAt(selectedRow, 6).toString()));
+								cursoSeleccionado.setNivel(Nivel.obtenerPorNombre(table.getValueAt(selectedRow, 3).toString()));
+								cursoSeleccionado.setPrecio(Float.parseFloat(table.getValueAt(selectedRow, 4).toString()));
+								cursoSeleccionado.setPlazas(Integer.parseInt(table.getValueAt(selectedRow, 5).toString()));
+								
+								Object fechaInicioValue = table.getValueAt(selectedRow, 6);
+				                Object fechaFinValue = table.getValueAt(selectedRow, 7);
+								 // Manejo para FechaInicio
+				                if (fechaInicioValue instanceof java.util.Date) {
+				                    java.util.Date utilDate = (java.util.Date) fechaInicioValue;
+				                    cursoSeleccionado.setFechaInicio(new java.sql.Date(utilDate.getTime()));
+				                } else if (fechaInicioValue instanceof String) {
+				                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				                    java.util.Date parsedDate = null;
+									try {
+										parsedDate = sdf.parse((String) fechaInicioValue);
+									} catch (ParseException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+				                    cursoSeleccionado.setFechaInicio(new java.sql.Date(parsedDate.getTime()));
+				                }
+				                
+				                // Manejo para FechaFin
+				                if (fechaFinValue instanceof java.util.Date) {
+				                    java.util.Date utilDate = (java.util.Date) fechaFinValue;
+				                    cursoSeleccionado.setFechaFin(new java.sql.Date(utilDate.getTime()));
+				                } else if (fechaFinValue instanceof String) {
+				                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				                    java.util.Date parsedDate = null;
+									try {
+										parsedDate = sdf.parse((String) fechaFinValue);
+									} catch (ParseException e1) {
+										// TODO Auto-generated catch block
+										e1.printStackTrace();
+									}
+				                    cursoSeleccionado.setFechaFin(new java.sql.Date(parsedDate.getTime()));
+				                }
+								cursoSeleccionado.setIdProfesor(Integer.parseInt(table.getValueAt(selectedRow, 6).toString()));
 
 								btnModificar_1.setEnabled(true);
 								btnEliminarCurso_1.setEnabled(true);
-								btnEliminarBailarin_1.setEnabled(true);
+								btnConsultar.setEnabled(true);
 							}
 						}
 					});
@@ -899,10 +924,11 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnEliminarCurso_1.addActionListener(this);
 					panel4.add(btnEliminarCurso_1);
 
-					btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
-					btnEliminarBailarin_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-					btnEliminarBailarin_1.setBounds(689, 398, 195, 21);
-					panel4.add(btnEliminarBailarin_1);
+					btnConsultar = new JButton("Consultar Bailarines del Curso");
+					btnConsultar.setFont(new Font("Arial Black", Font.PLAIN, 14));
+					btnConsultar.addActionListener(this);
+					btnConsultar.setBounds(689, 398, 195, 21);
+					panel4.add(btnConsultar);
 
 					btnOcupacion_1 = new JButton("Consultar ocupación");
 					btnOcupacion_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
@@ -916,12 +942,12 @@ public class PagInicio extends JFrame implements ActionListener {
 
 			} else {
 				// Credenciales incorrectas para profesor
-	            JOptionPane.showMessageDialog(this, "ID o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "ID o correo incorrectos", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
-		}else {
+		} else {
 			// Longitud de contraseña inválida (ni 1 ni 9 caracteres)
-	        JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -930,7 +956,7 @@ public class PagInicio extends JFrame implements ActionListener {
 		mod.setVisible(true);
 	}
 
-	private void crear() {
+	private void crear() throws LoginException {
 		CrearCurso crear = new CrearCurso(cursoSeleccionado, true, p);
 		crear.setVisible(true);
 		actualizarTablaCursosPorProfesor(p.getId());

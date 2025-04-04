@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.security.auth.login.LoginException;
 import javax.swing.DefaultComboBoxModel;
 
 public class ModificarCurso extends JDialog implements ActionListener{
@@ -170,6 +171,11 @@ public class ModificarCurso extends JDialog implements ActionListener{
 		cu2.setPlazas(Integer.valueOf(textoPlaza.getText()));
 		cu2.setIdProfesor(Integer.valueOf(textoIDProfesor.getText()));
 		
-		Principal.modificarCurso(cu2);
+		try {
+			Principal.modificarCurso(cu2);
+		} catch (LoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

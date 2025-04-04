@@ -22,9 +22,9 @@ public interface Dao {
 
 	public void obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException;
 
-	public void obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos);
+	public void obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos)throws LoginException;
 
-	public void obtenerTodosLosCursos(ArrayList<Curso> cursos);
+	public ArrayList<Curso> obtenerTodosLosCursos(ArrayList<Curso> cursos);
 
 	public void modificarCurso(Curso curso) throws LoginException;
 
@@ -35,5 +35,13 @@ public interface Dao {
 	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException;
 	
 	public void eliminarCurso(int idCurso) throws LoginException;
+
+	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso);
+
+	public void eliminarBailarin(Bailarin bailarin, int i);
+	
+	public void inscribirse(Bailarin b) throws LoginException;
+	
+	public void inscripcionCurso(int idCurso, String DniBailarin) throws LoginException;
 
 }

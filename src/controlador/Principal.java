@@ -31,117 +31,77 @@ public class Principal {
 		}); 
     }
 
-	public static Bailarin leerDni(String dni) {
-		try {
+	public static Bailarin leerDni(String dni) throws LoginException {
 			return dao.leerBailarin(dni);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 
-	public static Profesor leerId(String id) {
-		try {
+	public static Profesor leerId(String id) throws LoginException {
 			return dao.leerProfesor(id);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
-
 	}
 
-	public static Curso obtenerCursoPorId(int idCurso) {
-		try {
+	public static Curso obtenerCursoPorId(int idCurso) throws LoginException {
 			return dao.obtenerCurso(idCurso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
-
 	}
 
-	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor) {
+	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor) throws LoginException {
 		ArrayList<Curso> cursos = new ArrayList<Curso>();
-		try {
 			dao.obtenerCursosPorProfesor(idProfesor, cursos);
-			for (Curso c : cursos) {
-				System.out.println(c);
-			}
 			return cursos;
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
-
 	}
 
-	public static void crearCurso(Curso curso) {
-		try {
+	public static void crearCurso(Curso curso) throws LoginException {
 			dao.crearCurso(curso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-		}
-
 	}
 
-	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin) {
+	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin) throws LoginException {
 		ArrayList<Curso> cursos = new ArrayList<Curso>();
 		dao.obtnerCursosPorBailarin(idBailarin, cursos);
-		for (Curso c : cursos) {
-			System.out.println(c);
-		}
 		return cursos;
 
 	}
 
-	public static ArrayList<Curso> obtenerTodosLosCursos() {
+	public static ArrayList<Curso> obtenerTodosLosCursos() throws LoginException{
 		ArrayList<Curso> cursos = new ArrayList<Curso>();
 		dao.obtenerTodosLosCursos(cursos);
 		return cursos;
 	}
 
-	public static void modificarCurso(Curso curso) {
-		try {
+	public static void modificarCurso(Curso curso) throws LoginException {
 			dao.modificarCurso(curso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-		}
 	}
     
-    public static Participa leerParticipa(int idCurso) {
-    	try {
+    public static Participa leerParticipa(int idCurso) throws LoginException {
 			return dao.leerPaarticipa(idCurso);
-		} catch (LoginException e) {
-			e.printStackTrace();
-			return null;
-		}
     }
     
     public static void inscripcion(int idCurso, String dniBailarin, Date fInicio, Date fFin) {
-    	
     	dao.inscripcionCurso(idCurso, dniBailarin, fInicio, fFin);
     }
-    public static boolean darDeBajaCurso(int idCurso, String dniBailarin){
-    	
-    	try {
+    
+    public static void darDeBajaCurso(int idCurso, String dniBailarin) throws LoginException{
 			dao.darDeBajaCurso(idCurso, dniBailarin);
-			return true;
-		} catch (LoginException e) {
-			
-			e.printStackTrace();
-			return false;
-		}
     }
     
-    public static boolean elimiinarCurso(int idCurso) {
-    	
-    	try {
+    public static void elimiinarCurso(int idCurso) throws LoginException {
 			dao.eliminarCurso(idCurso);
-			return true;
-		} catch (LoginException e) {
-			
-			e.printStackTrace();
-			return false;
-		}
+
     }
+
+	public static ArrayList<Bailarin> obtenerBailarinsDelCurso(int idCurso) {
+		
+		 
+		return dao.obtenerTodosBailarines(idCurso);
+	}
+
+	public static void eliminarBailarin(Bailarin bailarin, int i) {
+		
+		 dao.eliminarBailarin(bailarin, i);
+	}
+	public static void inscripcion(int idCurso, String dniBailarin) throws LoginException{
+    	
+    	dao.inscripcionCurso(idCurso, dniBailarin);
+    }
+	public static void inscribirse(Bailarin b) throws LoginException{
+		dao.inscribirse(b);
+	}
 }

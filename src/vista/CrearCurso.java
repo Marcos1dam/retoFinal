@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -46,6 +47,8 @@ public class CrearCurso extends JDialog implements ActionListener {
 	private JLabel lblNivel;
 	private JButton btnCrear;
 	private JComboBox comboBoxNivel;
+	private JTextField textFieldFInicio;
+	private JTextField textFieldFechaFin;
 
 	/**
 	 * Create the dialog.
@@ -128,19 +131,20 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 		lblIdProfesor = new JLabel("ID Profesor:");
 		lblIdProfesor.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		lblIdProfesor.setBounds(44, 313, 110, 19);
+		lblIdProfesor.setBounds(44, 384, 110, 19);
 		crearCurso.add(lblIdProfesor);
 
 		textFieldIDProfesor = new JTextField();
 		textFieldIDProfesor.setEditable(false);
 		textFieldIDProfesor.setColumns(10);
-		textFieldIDProfesor.setBounds(181, 312, 148, 27);
+		textFieldIDProfesor.setBounds(181, 376, 148, 27);
 		crearCurso.add(textFieldIDProfesor);
 
 		// Botón fuera de la pantalla
 		btnCrear = new JButton("Crear Curso");
 		btnCrear.addActionListener(this);
 		btnCrear.setFont(new Font("Arial Black", Font.PLAIN, 18));
+
 		btnCrear.setBounds(134, 388, 221, 45); // Fuera de la ventana
 		btnCrear.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
@@ -169,6 +173,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 				}).start();
 			}
 		});
+		btnCrear.setBounds(131, 426, 221, 45);
 
 		crearCurso.add(btnCrear);
 
@@ -177,6 +182,26 @@ public class CrearCurso extends JDialog implements ActionListener {
 		comboBoxNivel.setFont(new Font("Arial Black", Font.PLAIN, 10));
 		comboBoxNivel.setBounds(181, 166, 148, 21);
 		crearCurso.add(comboBoxNivel);
+
+		JLabel lblFechaInicio = new JLabel("Fecha Inicio:");
+		lblFechaInicio.setFont(new Font("Arial Black", Font.PLAIN, 16));
+		lblFechaInicio.setBounds(32, 309, 122, 19);
+		crearCurso.add(lblFechaInicio);
+
+		textFieldFInicio = new JTextField();
+		textFieldFInicio.setColumns(10);
+		textFieldFInicio.setBounds(181, 301, 148, 27);
+		crearCurso.add(textFieldFInicio);
+
+		JLabel lblFechaFin = new JLabel("Fecha Fin:");
+		lblFechaFin.setFont(new Font("Arial Black", Font.PLAIN, 16));
+		lblFechaFin.setBounds(32, 338, 122, 19);
+		crearCurso.add(lblFechaFin);
+
+		textFieldFechaFin = new JTextField();
+		textFieldFechaFin.setColumns(10);
+		textFieldFechaFin.setBounds(181, 330, 148, 27);
+		crearCurso.add(textFieldFechaFin);
 
 		// Cargar ID's
 		cargarDatos(p.getId());
@@ -189,23 +214,31 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private int obtenerIdCurso() {
-		ArrayList<Curso> cursos = Principal.obtenerTodosLosCursos();
+		ArrayList<Curso> cursos;
+		try {
+			cursos = Principal.obtenerTodosLosCursos();
+			int id = 0;
 
-		int id = 0;
-
-		for (Curso cu : cursos) {
-			if (cu.getIdCurso() > id) {
-				id = cu.getIdCurso();
+			for (Curso cu : cursos) {
+				if (cu.getIdCurso() > id) {
+					id = cu.getIdCurso();
+				}
 			}
+
+			return id + 1;
+		} catch (LoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		return id + 1;
+		return (Integer) null;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource().equals(btnCrear)) {
 			crearCurso();
+
 			this.dispose();
 		}
 
@@ -223,13 +256,18 @@ public class CrearCurso extends JDialog implements ActionListener {
 			c.setPlazas(Integer.valueOf(textFieldPlazas.getText()));
 			c.setNivel(Nivel.obtenerPorNombre(String.valueOf(comboBoxNivel.getSelectedItem())));
 			c.setIdProfesor(Integer.valueOf(textFieldIDProfesor.getText()));
-			Principal.crearCurso(c);
+			c.setFechaInicio(Date.valueOf(textFieldFInicio.getText()));
+			c.setFechaFin(Date.valueOf(textFieldFechaFin.getText()));
+			try {
+				Principal.crearCurso(c);
+			} catch (LoginException e) {
+				
+				e.printStackTrace();
+			}
 
 		} catch (IllegalArgumentException e) {
 			JOptionPane.showMessageDialog(this, "EL NIVEL solo puede ser: PRINCIPIANTE, MEDIO O AVANZADO.", "Error",
 					JOptionPane.INFORMATION_MESSAGE);
-		} catch (LoginException e) {
-			e.printStackTrace();
 		}
 
 	}

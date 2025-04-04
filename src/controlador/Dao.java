@@ -20,7 +20,7 @@ public interface Dao {
 
 	public void crearCurso(Curso curso) throws LoginException;
 
-	public void obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException;
+	public ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException;
 
 	public void obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos);
 
@@ -30,10 +30,14 @@ public interface Dao {
 
 	public Participa leerPaarticipa(int idCurso) throws LoginException;
 
-	public void inscripcionCurso(int idCurso, String DniBailarin, Date FInicio, Date FFin);
+	public void inscripcionCurso(int idCurso, String DniBailarin) throws LoginException;
 
 	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException;
 	
 	public void eliminarCurso(int idCurso) throws LoginException;
+	
+	public void inscribirse(Bailarin b) throws LoginException;
+
+	
 
 }

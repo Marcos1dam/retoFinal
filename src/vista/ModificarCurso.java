@@ -190,25 +190,21 @@ public class ModificarCurso extends JDialog implements ActionListener {
 
 	private void modificar() {
 		Curso cu2 = new Curso();
+
+		cu2.setIdCurso(Integer.valueOf(textoIDCurso.getText()));
+		cu2.setTipo(textoTipo.getText());
+		cu2.setHorario(Time.valueOf(textoHorario.getText()));
+		cu2.setNivel(Nivel.obtenerPorNombre(String.valueOf(comboBox.getSelectedItem())));
+		cu2.setPrecio(Float.valueOf(textoPrecio.getText()));
+		cu2.setPlazas(Integer.valueOf(textoPlaza.getText()));
+		cu2.setIdProfesor(Integer.valueOf(textoIDProfesor.getText()));
 		
 		try {
-			cu2.setIdCurso(Integer.valueOf(textoIDCurso.getText()));
-			cu2.setTipo(textoTipo.getText());
-			cu2.setHorario(Time.valueOf(textoHorario.getText()));
-			cu2.setNivel(Nivel.obtenerPorNombre(String.valueOf(comboBox.getSelectedItem())));
-			cu2.setPrecio(Float.valueOf(textoPrecio.getText()));
-			cu2.setPlazas(Integer.valueOf(textoPlaza.getText()));
-			cu2.setIdProfesor(Integer.valueOf(textoIDProfesor.getText()));
-			
 			Principal.modificarCurso(cu2);
-			
-			this.dispose();
-		} catch (IllegalArgumentException e) {
-			JOptionPane.showMessageDialog(this, "EL NIVEL solo puede ser: PRINCIPIANTE, MEDIO O AVANZADO.", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
 		} catch (LoginException e) {
+			
 			e.printStackTrace();
 		}
-		
+		this.dispose();
 	}
 }

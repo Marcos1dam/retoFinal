@@ -26,6 +26,7 @@ import modelo.Profesor;
 import javax.swing.JComboBox;
 import javax.security.auth.login.LoginException;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Toolkit;
 
 public class CrearCurso extends JDialog implements ActionListener {
 
@@ -46,6 +47,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 	private JComboBox comboBoxNivel;
 	private JTextField textFieldFInicio;
 	private JTextField textFieldFechaFin;
+	private JButton btnCancelar;
 
 	/**
 	 * Create the dialog.
@@ -53,6 +55,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 	 * @author Luis
 	 */
 	public CrearCurso(Curso c, boolean b, Profesor p) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(CrearCurso.class.getResource("/imagenes/CodeAndDance.png")));
 		setModal(b);
 		JPanel crearCurso = new JPanel() {
 			Image backgroundImage = new ImageIcon(getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
@@ -140,7 +143,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 		btnCrear = new JButton("Crear Curso");
 		btnCrear.addActionListener(this);
 		btnCrear.setFont(new Font("Arial Black", Font.PLAIN, 18));
-		btnCrear.setBounds(131, 426, 221, 45);
+		btnCrear.setBounds(32, 426, 221, 45);
 		crearCurso.add(btnCrear);
 
 		comboBoxNivel = new JComboBox();
@@ -168,6 +171,12 @@ public class CrearCurso extends JDialog implements ActionListener {
 		textFieldFechaFin.setColumns(10);
 		textFieldFechaFin.setBounds(181, 330, 148, 27);
 		crearCurso.add(textFieldFechaFin);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 18));
+		btnCancelar.setBounds(326, 426, 221, 45);
+		btnCancelar.addActionListener(this);
+		crearCurso.add(btnCancelar);
 
 		// Cargar ID's
 		cargarDatos(p.getId());
@@ -180,9 +189,10 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private int obtenerIdCurso() {
-		ArrayList<Curso> cursos;
+		
 		try {
-			cursos = Principal.obtenerTodosLosCursos();
+			ArrayList<Curso> cursos= new ArrayList<>();
+			cursos = Principal.obtenerTodosLosCursos(cursos);
 			int id = 0;
 
 			for (Curso cu : cursos) {
@@ -193,7 +203,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 			return id + 1;
 		} catch (LoginException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
@@ -206,8 +216,16 @@ public class CrearCurso extends JDialog implements ActionListener {
 			crearCurso();
 
 			this.dispose();
+		}else if(e.getSource().equals(btnCancelar)) {
+			cancelar();
 		}
 
+	}
+
+	private void cancelar() {
+		
+		this.dispose();
+		
 	}
 
 	private void crearCurso() {

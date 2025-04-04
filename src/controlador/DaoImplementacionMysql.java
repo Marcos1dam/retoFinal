@@ -28,6 +28,7 @@ public class DaoImplementacionMysql implements Dao {
 	private String userBD;
 	private String passwordDB;
 
+
     // Sentencias
     final String SIGNIN = "SELECT * FROM Bailarin WHERE DniBailarin = ?";
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
@@ -39,14 +40,14 @@ public class DaoImplementacionMysql implements Dao {
     final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?  WHERE IdCurso = ?";
 	final String ELIMINARCURSO = "DELETE FROM Curso WHERE IdCurso = ?";
 	final String PARTICIPA = "SELECT * FROM Participa WHERE IdCurso= ?";
-	final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?, ?, ?) ";
+	final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?) ";
 	final String DARDEBAJACURSO = "DELETE FROM Participa WHERE IdCurso = ? AND DniBailarin = ?";
 	final String LISTASLUMNOSCURSO = "SELECT b.* FROM Bailarin b JOIN Participa p on b.DniBailarin = p.DniBailarin WHERE p.IdCurso = ?";
 	final String ELIMINARBAILARIN = "DELETE from Participa where DniBailarin= ? and IdCurso= ?";
 	final String INSCRIPCION = "INSERT INTO Bailarin (DniBailarin, NombreB, ApellidoB, FechaNacimiento, Telefono, EmailB) VALUES (?, ?, ?, ?, ?, ?)";
 	final String CONSULTARCAPACIDAD = "SELECT TotalBailarinesCapacesDeInscritos(?)";
 	
-
+	
 	public DaoImplementacionMysql() {
 		this.configFile = ResourceBundle.getBundle("modelo.configClase");
 		this.urlDB = this.configFile.getString("Conn");
@@ -167,6 +168,8 @@ public class DaoImplementacionMysql implements Dao {
 				c.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
 				c.setPrecio(rs.getFloat("Precio"));
 				c.setPlazas(rs.getInt("Plaza"));
+				c.setFechaInicio(rs.getDate("FInicio"));
+				c.setFechaFin(rs.getDate("FFin"));
 				c.setIdProfesor(rs.getInt("IdProfesor"));
 
 				return c;
@@ -190,7 +193,7 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public void obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException {
+	public ArrayList obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException {
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -207,9 +210,12 @@ public class DaoImplementacionMysql implements Dao {
 				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
 				cu.setPrecio(rs.getFloat("Precio"));
 				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setFechaInicio(rs.getDate("FInicio"));
+				cu.setFechaFin(rs.getDate("FFin"));
 				cu.setIdProfesor(rs.getInt("IdProfesor"));
 				cursos.add(cu);
 			}
+			return cursos;
 		} catch (SQLException e) {
 			String message = "Error al leer datos: ";
 			LoginException ex = new LoginException(message);
@@ -223,7 +229,7 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
-
+		return null;
 	}
 
 	@Override
@@ -238,7 +244,9 @@ public class DaoImplementacionMysql implements Dao {
 			stmt.setString(4, String.valueOf(curso.getNivel()));
 			stmt.setFloat(5, curso.getPrecio());
 			stmt.setInt(6, curso.getPlazas());
-			stmt.setInt(7, curso.getIdProfesor());
+			stmt.setDate(7, curso.getFechaInicio());
+			stmt.setDate(8, curso.getFechaFin());
+			stmt.setInt(9, curso.getIdProfesor());
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -270,8 +278,13 @@ public class DaoImplementacionMysql implements Dao {
 				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
 				cu.setPrecio(rs.getFloat("Precio"));
 				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setFechaInicio(rs.getDate("FInicio"));
+				cu.setFechaFin(rs.getDate("FFin"));
 				cu.setIdProfesor(rs.getInt("IdProfesor"));
 				cursos.add(cu);
+				for(Curso c: cursos) {
+					System.out.println(c);
+				}
 			}
 		} catch (SQLException e) {
 			String message = "Error al leer datos: ";
@@ -307,6 +320,8 @@ public class DaoImplementacionMysql implements Dao {
 				cu.setNivel(Nivel.obtenerPorNombre(rs.getNString("Nivel")));
 				cu.setPrecio(rs.getFloat("Precio"));
 				cu.setPlazas(rs.getInt("Plaza"));
+				cu.setFechaInicio(rs.getDate("FInicio"));
+				cu.setFechaFin(rs.getDate("FFin"));
 				cu.setIdProfesor(rs.getInt("IdProfesor"));
 				cursos.add(cu);
 			}
@@ -342,8 +357,7 @@ public class DaoImplementacionMysql implements Dao {
 				p = new Participa();
 				p.setIdCurso(rs.getInt("IdCurso"));
 				p.setDniBailarin(rs.getNString("DniBailarin"));
-				p.setFechaInicio(rs.getDate("FInicio"));
-				p.setFechaFin(rs.getDate("FFin"));
+				
 				return p;
 			} else {
 				throw new LoginException("No se encontró ningún curso con el ID proporcionado.");
@@ -365,38 +379,7 @@ public class DaoImplementacionMysql implements Dao {
 		return null;
 	}
 
-	@Override
-	public void inscripcionCurso(int idCurso, String DniBailarin, Date FInicio, Date FFin) {
-		ResultSet rs = null;
-
-		try {
-			openConnection();
-			stmt = con.prepareStatement(INSCRIPCIONCURSO);
-			stmt.setInt(1, idCurso);
-			stmt.setString(2, DniBailarin);
-			stmt.setDate(3, FInicio);
-			stmt.setDate(4, FFin);
-
-			int affectedRows = stmt.executeUpdate();
-
-			if (affectedRows == 0) {
-				throw new SQLException("La inserción falló, no se afectaron filas.");
-			}
-		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				closeConnection();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
+	
 
 	@Override
 	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException {
@@ -447,6 +430,7 @@ public class DaoImplementacionMysql implements Dao {
 			}
 		}
 	}
+
 
 	@Override
 	public void modificarCurso(Curso curso) throws LoginException {
@@ -602,9 +586,4 @@ public class DaoImplementacionMysql implements Dao {
 		}
 
 	}
-
-	
-
-	
-
 }

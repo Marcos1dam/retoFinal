@@ -180,9 +180,9 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private int obtenerIdCurso() {
-		ArrayList<Curso> cursos;
+		ArrayList<Curso> cursos = new ArrayList<>();
 		try {
-			cursos = Principal.obtenerTodosLosCursos();
+			cursos = Principal.obtenerTodosLosCursos(cursos);
 			int id = 0;
 
 			for (Curso cu : cursos) {

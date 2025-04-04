@@ -1,6 +1,5 @@
 package controlador;
 
-
 import java.awt.EventQueue;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -19,89 +18,98 @@ import vista.PagInicio;
 public class Principal {
 	private static Dao dao = new DaoImplementacionMysql();
 
-
-    public static void main(String[] args) {
-    	SwingUtilities.invokeLater(() -> {
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
 			try {
 				UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			new PagInicio().setVisible(true);
-		}); 
-    }
+		});
+	}
 
 	public static Bailarin leerDni(String dni) throws LoginException {
-			return dao.leerBailarin(dni);
+		return dao.leerBailarin(dni);
 	}
 
 	public static Profesor leerId(String id) throws LoginException {
-			return dao.leerProfesor(id);
+		return dao.leerProfesor(id);
 	}
 
 	public static Curso obtenerCursoPorId(int idCurso) throws LoginException {
-			return dao.obtenerCurso(idCurso);
+		return dao.obtenerCurso(idCurso);
 	}
 
 	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor) throws LoginException {
 		ArrayList<Curso> cursos = new ArrayList<Curso>();
-			dao.obtenerCursosPorProfesor(idProfesor, cursos);
-			return cursos;
+		dao.obtenerCursosPorProfesor(idProfesor, cursos);
+		return cursos;
+	}
+
+	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursosProfesor)
+			throws LoginException {
+
+		return dao.obtenerCursosPorProfesor(idProfesor, cursosProfesor);
+
 	}
 
 	public static void crearCurso(Curso curso) throws LoginException {
-			dao.crearCurso(curso);
+
+		dao.crearCurso(curso);
 	}
 
-	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin) throws LoginException {
-		ArrayList<Curso> cursos = new ArrayList<Curso>();
-		dao.obtnerCursosPorBailarin(idBailarin, cursos);
-		return cursos;
+	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursosBailarin) throws LoginException {
+		
+		dao.obtnerCursosPorBailarin(idBailarin, cursosBailarin);
+		return cursosBailarin;
 
 	}
 
-	public static ArrayList<Curso> obtenerTodosLosCursos() throws LoginException{
-		ArrayList<Curso> cursos = new ArrayList<Curso>();
-		dao.obtenerTodosLosCursos(cursos);
-		return cursos;
+	public static ArrayList<Curso> obtenerTodosLosCursos(ArrayList<Curso> todosLosCursos) throws LoginException {
+		dao.obtenerTodosLosCursos(todosLosCursos);
+		return todosLosCursos;
+	}
+
+	public static void elimiinarCurso(int idCurso) throws LoginException {
+		dao.eliminarCurso(idCurso);
 	}
 
 	public static void modificarCurso(Curso curso) throws LoginException {
-			dao.modificarCurso(curso);
-	}
-    
-    public static Participa leerParticipa(int idCurso) throws LoginException {
-			return dao.leerPaarticipa(idCurso);
-    }
-    
-    public static void inscripcion(int idCurso, String dniBailarin, Date fInicio, Date fFin) {
-    	dao.inscripcionCurso(idCurso, dniBailarin, fInicio, fFin);
-    }
-    
-    public static void darDeBajaCurso(int idCurso, String dniBailarin) throws LoginException{
-			dao.darDeBajaCurso(idCurso, dniBailarin);
-    }
-    
-    public static void elimiinarCurso(int idCurso) throws LoginException {
-			dao.eliminarCurso(idCurso);
 
-    }
+		dao.modificarCurso(curso);
+
+	}
+
+	public static Participa leerParticipa(int idCurso) throws LoginException {
+
+		return dao.leerPaarticipa(idCurso);
+
+	}
+
+	public static void inscripcion(int idCurso, String dniBailarin) throws LoginException {
+
+		dao.inscripcionCurso(idCurso, dniBailarin);
+	}
+
+	public static void darDeBajaCurso(int idCurso, String dniBailarin) throws LoginException {
+
+		dao.darDeBajaCurso(idCurso, dniBailarin);
+
+	}
+
+	public static void inscribirse(Bailarin b) throws LoginException {
+		dao.inscribirse(b);
+	}
 
 	public static ArrayList<Bailarin> obtenerBailarinsDelCurso(int idCurso) {
-		
-		 
+
 		return dao.obtenerTodosBailarines(idCurso);
 	}
 
 	public static void eliminarBailarin(Bailarin bailarin, int i) {
-		
-		 dao.eliminarBailarin(bailarin, i);
+
+		dao.eliminarBailarin(bailarin, i);
 	}
-	public static void inscripcion(int idCurso, String dniBailarin) throws LoginException{
-    	
-    	dao.inscripcionCurso(idCurso, dniBailarin);
-    }
-	public static void inscribirse(Bailarin b) throws LoginException{
-		dao.inscribirse(b);
-	}
+
 }

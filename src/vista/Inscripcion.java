@@ -164,28 +164,32 @@ public class Inscripcion extends JDialog implements ActionListener{
 
 		// Llenar la tabla
 		model.setRowCount(0);
-		ArrayList<Curso>todosLosCursos= new ArrayList<>();
+		
 		try {
+
+			ArrayList<Curso>todosLosCursos= new ArrayList<>();
 			todosLosCursos = Principal.obtenerTodosLosCursos(todosLosCursos);
+			
+			for (Curso curso : todosLosCursos) {
+				System.out.println();
+			    model.addRow(new Object[]{
+			        curso.getIdCurso(),
+			        curso.getTipo(),
+			        curso.getHorario(),
+			        curso.getNivel(),
+			        curso.getPrecio(),
+			        curso.getPlazas(),
+			        curso.getFechaInicio(),
+			        curso.getFechaFin(),
+			        curso.getIdProfesor()
+			    });
+			}
 		} catch (LoginException e1) {
 			
 			e1.printStackTrace();
 		}
 		
-		for (Curso curso : todosLosCursos) {
-			System.out.println();
-		    model.addRow(new Object[]{
-		        curso.getIdCurso(),
-		        curso.getTipo(),
-		        curso.getHorario(),
-		        curso.getNivel(),
-		        curso.getPrecio(),
-		        curso.getPlazas(),
-		        curso.getFechaInicio(),
-		        curso.getFechaFin(),
-		        curso.getIdProfesor()
-		    });
-		}
+		
 
 		
 		// Listener para selección de filas
@@ -269,7 +273,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 		
 		JLabel lblImagen = new JLabel("");
 		// Código modificado para redimensionar la imagen
-		ImageIcon originalIcon = new ImageIcon(Inscripcion.class.getResource("/imagenes/CodeAndDance.png"));
+		ImageIcon originalIcon = new ImageIcon(Inscripcion.class.getResource("/imagenes/Logo.png"));
 		Image originalImage = originalIcon.getImage();
 		Image resizedImage = originalImage.getScaledInstance(135, 152, Image.SCALE_SMOOTH);
 		ImageIcon resizedIcon = new ImageIcon(resizedImage);
@@ -301,29 +305,43 @@ public class Inscripcion extends JDialog implements ActionListener{
 	}
 
 	private void solicitudInscripcion(Curso cursoSeleccionado2) {
-		
-		Bailarin b= new Bailarin();
-		
-		b.setDni(textFieldDni.getText());
-		b.setNombre(textFieldNombre.getText());
-		b.setApellido(textFieldApellido.getText());
-		b.setFechaNacimiento(Date.valueOf(textFieldFechaNacimiento.getText()));
-		b.setTelefono(Integer.valueOf(textFieldTelefono.getText()));
-		b.setCorreo(textFieldEmail.getText());
-		
-		try {
-			Principal.inscribirse(b);
-		} catch (LoginException e) {
-			JOptionPane.showMessageDialog(this, "No se ha podido inscribir", "Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-		
-		try {
-			Principal.inscripcion(cursoSeleccionado2.getIdCurso(), b.getDni());
-		} catch (LoginException e) {
-			JOptionPane.showMessageDialog(this, "No se ha podido inscribir en el curso", "Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
-		
+	    // Validar que el curso seleccionado no sea nulo
+	    if (cursoSeleccionado2 == null) {
+	        JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún curso", "Error", JOptionPane.ERROR_MESSAGE);
+	        return;
+	    }
+
+	    // Crear el objeto Bailarín con los datos del formulario
+	    Bailarin b = new Bailarin();
+	    b.setDni(textFieldDni.getText());
+	    b.setNombre(textFieldNombre.getText());
+	    b.setApellido(textFieldApellido.getText());
+	    b.setFechaNacimiento(Date.valueOf(textFieldFechaNacimiento.getText()));
+	    b.setTelefono(Integer.valueOf(textFieldTelefono.getText()));
+	    b.setCorreo(textFieldEmail.getText());
+
+	    try {
+	        // Primero intentamos inscribir al bailarín
+	        Principal.inscribirse(b);
+	        
+	        //  la inscripción fue exitosa, entonces lo inscribimos al curso
+	        try {
+	            Principal.inscripcion(cursoSeleccionado2.getIdCurso(), b.getDni());
+	            JOptionPane.showMessageDialog(this, "Inscripción realizada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+	        } catch (LoginException e) {
+	            JOptionPane.showMessageDialog(this, "El bailarín se registró pero hubo un error al inscribirlo en el curso: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	            e.printStackTrace();
+	        }
+	        
+	    } catch (LoginException e) {
+	        // Verificamos si el error es por DNI duplicado
+	        if (e.getMessage().contains("Duplicate entry") || e.getMessage().contains("clave duplicada") || 
+	            e.getMessage().contains("viola la restricción única") || e.getMessage().contains("PRIMARY KEY")) {
+	            JOptionPane.showMessageDialog(this, "El DNI ya está registrado en el sistema", "Error", JOptionPane.ERROR_MESSAGE);
+	        } else {
+	            JOptionPane.showMessageDialog(this, "Error al registrar el bailarín: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	        e.printStackTrace();
+	    }
 	}
 }

@@ -46,6 +46,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	private JButton btnModificar_1;
 	private JButton btnEliminarCurso_1;
 	private JButton btnConsultar;
+	private JButton btnEliminarBailarin_1;
 	private Profesor p;
 
 	// Campos para curso
@@ -150,19 +151,19 @@ public class PagInicio extends JFrame implements ActionListener {
 
 		btnAcceder = new JButton("Acceder");
 		btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnAcceder.setBounds(282, 343, 102, 21);
+		btnAcceder.setBounds(287, 393, 102, 21);
 		btnAcceder.addActionListener(this);
 		passwordPanel.add(btnAcceder);
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnCancelar.setBounds(472, 343, 116, 21);
+		btnCancelar.setBounds(493, 393, 116, 21);
 		btnCancelar.addActionListener(this);
 		passwordPanel.add(btnCancelar);
 
 		btnRecuperarContraseña = new JButton("¿Has olvidado tu contraseña?");
 		btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
-		btnRecuperarContraseña.setBounds(425, 279, 184, 21);
+		btnRecuperarContraseña.setBounds(425, 313, 184, 21);
 		btnRecuperarContraseña.addActionListener(this);
 		passwordPanel.add(btnRecuperarContraseña);
 
@@ -504,17 +505,24 @@ public class PagInicio extends JFrame implements ActionListener {
 		}else if(e.getSource().equals(btnConsultar)) {
 			consultar(cursoSeleccionado);
 		}else if(e.getSource().equals(btnAltaProfesor)) {
-			
+			altaProfesor();
 		}
 	}
 
 	private void consultar(Curso cursoSeleccionado2) {
 		if(cursoSeleccionado2!=null) {
-		ConsultarBailarinesCurso vent =  new ConsultarBailarinesCurso(this, true, cursoSeleccionado2);
-		vent.setVisible(true);
+			ConsultarBailarinesCurso vent =  new ConsultarBailarinesCurso(this, true, cursoSeleccionado2);
+			vent.setVisible(true);
 		}else {
 			 JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 		}
+		
+		
+	}
+
+	private void altaProfesor() {
+		AltaProfesor vent = new AltaProfesor();
+		vent.setVisible(true);
 	}
 
 	private void inscripcion() {
@@ -1182,11 +1190,15 @@ public class PagInicio extends JFrame implements ActionListener {
 									curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getFechaInicio(), curso.getFechaFin(), curso.getIdProfesor() });
 						}
 						
+
 					} catch (LoginException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+					for (Curso curso : cursosProfesor) {
+						model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+								curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
+					}
 
 					table.getSelectionModel().addListSelectionListener(e -> {
 					    if (!e.getValueIsAdjusting()) {
@@ -1289,11 +1301,17 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnEliminarCurso_1.addActionListener(this);
 					panel4.add(btnEliminarCurso_1);
 
+
 					btnConsultar = new JButton("Consultar bailarines");
 					btnConsultar.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					btnConsultar.setBounds(689, 398, 195, 21);
 					btnConsultar.addActionListener(this);
 					panel4.add(btnConsultar);
+
+					btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
+					btnEliminarBailarin_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
+					btnEliminarBailarin_1.setBounds(689, 398, 195, 21);
+					panel4.add(btnEliminarBailarin_1);
 
 					agregarBotonCerrarSesion(panel4);
 					tabbedPane.addTab("Información de Profesores", null, panel4, "Datos de los Profesores");
@@ -1319,6 +1337,13 @@ public class PagInicio extends JFrame implements ActionListener {
 						 btnAltaProfesor.addActionListener(this);
 						 panel4.add(btnAltaProfesor);
 					 }
+					if(p.isAdmin()) {
+						btnAltaProfesor = new JButton("Alta Profesor");
+						btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
+						btnAltaProfesor.setBounds(373, 173, 155, 21);
+						panel4.add(btnAltaProfesor);
+					}
+					
 				}
 				tabbedPane.setSelectedIndex(2);
 

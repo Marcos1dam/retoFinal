@@ -41,18 +41,13 @@ public class Principal {
 		return dao.obtenerCurso(idCurso);
 	}
 
-	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor) throws LoginException {
-		ArrayList<Curso> cursos = new ArrayList<Curso>();
-		dao.obtenerCursosPorProfesor(idProfesor, cursos);
-		return cursos;
-	}
-
-	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursosProfesor)
-			throws LoginException {
-
+	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursosProfesor) throws LoginException {
+		
 		return dao.obtenerCursosPorProfesor(idProfesor, cursosProfesor);
-
+		
 	}
+
+	
 
 	public static void crearCurso(Curso curso) throws LoginException {
 
@@ -61,14 +56,14 @@ public class Principal {
 
 	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursosBailarin) throws LoginException {
 		
-		dao.obtnerCursosPorBailarin(idBailarin, cursosBailarin);
-		return cursosBailarin;
+		return dao.obtnerCursosPorBailarin(idBailarin, cursosBailarin);
+		
 
 	}
 
 	public static ArrayList<Curso> obtenerTodosLosCursos(ArrayList<Curso> todosLosCursos) throws LoginException {
-		dao.obtenerTodosLosCursos(todosLosCursos);
-		return todosLosCursos;
+		 return dao.obtenerTodosLosCursos(todosLosCursos);
+		
 	}
 
 	public static void elimiinarCurso(int idCurso) throws LoginException {
@@ -110,6 +105,11 @@ public class Principal {
 	public static void eliminarBailarin(Bailarin bailarin, int i) {
 
 		dao.eliminarBailarin(bailarin, i);
+	}
+
+	public static float ocupacionDelProfesor(Profesor p) {
+		
+		return dao.ocupacionDelProfesor(p);
 	}
 
 }

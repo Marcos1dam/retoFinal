@@ -503,14 +503,18 @@ public class PagInicio extends JFrame implements ActionListener {
 			inscripcion();
 		}else if(e.getSource().equals(btnConsultar)) {
 			consultar(cursoSeleccionado);
+		}else if(e.getSource().equals(btnAltaProfesor)) {
+			
 		}
 	}
 
-	
-
 	private void consultar(Curso cursoSeleccionado2) {
-		ConsultarBailarinesCurso vent = new ConsultarBailarinesCurso(this, true, cursoSeleccionado2);
+		if(cursoSeleccionado2!=null) {
+		ConsultarBailarinesCurso vent =  new ConsultarBailarinesCurso(this, true, cursoSeleccionado2);
 		vent.setVisible(true);
+		}else {
+			 JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 
 	private void inscripcion() {
@@ -1173,14 +1177,16 @@ public class PagInicio extends JFrame implements ActionListener {
 				
 					try {
 						cursosProfesor = Principal.obtenerCursosPorProfesor(p.getId(), cursosProfesor);
+						for (Curso curso : cursosProfesor) {
+							model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+									curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getFechaInicio(), curso.getFechaFin(), curso.getIdProfesor() });
+						}
+						
 					} catch (LoginException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					for (Curso curso : cursosProfesor) {
-						model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
-								curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
-					}
+					
 
 					table.getSelectionModel().addListSelectionListener(e -> {
 					    if (!e.getValueIsAdjusting()) {
@@ -1283,9 +1289,10 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnEliminarCurso_1.addActionListener(this);
 					panel4.add(btnEliminarCurso_1);
 
-					btnConsultar = new JButton("Consultar Bailarines");
+					btnConsultar = new JButton("Consultar bailarines");
 					btnConsultar.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					btnConsultar.setBounds(689, 398, 195, 21);
+					btnConsultar.addActionListener(this);
 					panel4.add(btnConsultar);
 
 					agregarBotonCerrarSesion(panel4);
@@ -1302,10 +1309,16 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel4.add(textField);
 					textField.setColumns(10);
 					
-					btnAltaProfesor = new JButton("Alta Profesor");
-					btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
-					btnAltaProfesor.setBounds(373, 173, 155, 21);
-					panel4.add(btnAltaProfesor);
+					float num = Principal.ocupacionDelProfesor(p);
+					String mensaje =String.format("%.1f", num) + "%";
+					textField.setText(mensaje);
+					 if(p.isAdmin()) {
+						 btnAltaProfesor = new JButton("Alta Profesor");
+						 btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
+						 btnAltaProfesor.setBounds(373, 173, 155, 21);
+						 btnAltaProfesor.addActionListener(this);
+						 panel4.add(btnAltaProfesor);
+					 }
 				}
 				tabbedPane.setSelectedIndex(2);
 

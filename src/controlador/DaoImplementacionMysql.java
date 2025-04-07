@@ -1,7 +1,6 @@
 package controlador;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,7 +44,7 @@ public class DaoImplementacionMysql implements Dao {
 	final String LISTASLUMNOSCURSO = "SELECT b.* FROM Bailarin b JOIN Participa p on b.DniBailarin = p.DniBailarin WHERE p.IdCurso = ?";
 	final String ELIMINARBAILARIN = "DELETE from Participa where DniBailarin= ? and IdCurso= ?";
 	final String INSCRIPCION = "INSERT INTO Bailarin (DniBailarin, NombreB, ApellidoB, FechaNacimiento, Telefono, EmailB) VALUES (?, ?, ?, ?, ?, ?)";
-	final String CONSULTARCAPACIDAD = "SELECT TotalBailarinesCapacesDeInscritos(?)";
+	final String TotalBailarinesCapacesDeInscritos = "SELECT TotalBailarinesCapacesDeInscritos(?) as resultado";
 	
 	
 	public DaoImplementacionMysql() {
@@ -193,7 +192,8 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException {
+	public ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso>cursos) throws LoginException {
+		
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -261,7 +261,7 @@ public class DaoImplementacionMysql implements Dao {
 		}
 	}
 
-	public void obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
+	public ArrayList<Curso> obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -282,10 +282,9 @@ public class DaoImplementacionMysql implements Dao {
 				cu.setFechaFin(rs.getDate("FFin"));
 				cu.setIdProfesor(rs.getInt("IdProfesor"));
 				cursos.add(cu);
-				for(Curso c: cursos) {
-					System.out.println(c);
-				}
+				
 			}
+			return cursos;
 		} catch (SQLException e) {
 			String message = "Error al leer datos: ";
 			LoginException ex = new LoginException(message);
@@ -299,7 +298,7 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
-
+		return null;
 	}
 
 	@Override
@@ -585,5 +584,40 @@ public class DaoImplementacionMysql implements Dao {
 			}
 		}
 
+	}
+
+	@Override
+	public float ocupacionDelProfesor(Profesor p) {
+		float resultado = 0;
+		ResultSet rs = null;
+		
+		try {
+			
+			openConnection();
+			
+			stmt = con.prepareStatement(TotalBailarinesCapacesDeInscritos);
+			stmt.setInt(1,p.getId());
+
+			rs=stmt.executeQuery();
+			if (rs.next()) {
+			    resultado = rs.getFloat("resultado");
+			    System.out.println("Resultado: " + resultado + "%");
+			}
+			return resultado;
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+			LoginException ex = new LoginException(message);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return -1;
+		
 	}
 }

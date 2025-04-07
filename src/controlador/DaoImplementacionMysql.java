@@ -34,7 +34,7 @@ public class DaoImplementacionMysql implements Dao {
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
     final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
     final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
-    final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, FInicio, FFin, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
     final String TODOSLOSCURSOS = "SELECT * FROM Curso";
     final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?  WHERE IdCurso = ?";
@@ -248,8 +248,7 @@ public class DaoImplementacionMysql implements Dao {
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
+			throw new LoginException("error en la base de datos");
 		} finally {
 			try {
 				closeConnection();
@@ -259,7 +258,7 @@ public class DaoImplementacionMysql implements Dao {
 		}
 	}
 
-	public ArrayList obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
+	public ArrayList<Curso> obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -303,7 +302,7 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList obtenerTodosLosCursos(ArrayList<Curso> cursos) {
+	public ArrayList<Curso> obtenerTodosLosCursos(ArrayList<Curso> cursos) {
 		ResultSet rs = null;
 		Curso cu = null;
 

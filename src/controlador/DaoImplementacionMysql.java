@@ -43,6 +43,8 @@ public class DaoImplementacionMysql implements Dao {
 	final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?) ";
 	final String DARDEBAJACURSO = "DELETE FROM Participa WHERE IdCurso = ? AND DniBailarin = ?";
 	final String INSCRIPCION = "INSERT INTO Bailarin (DniBailarin, NombreB, ApellidoB, FechaNacimiento, Telefono, EmailB) VALUES (?, ?, ?, ?, ?, ?)";
+	final String TODOSLOSPROFESORES = "SELECT * FROM Profesor";
+	final String ALTAPROFESOR = "INSERT INTO Profesor (IdProfesor, NombreP, ApellidoP, Salario, EmailP, EsAdmin, Imagen) VALUES(?, ?, ?, ?, ?, ?, ?)";
 	
 	public DaoImplementacionMysql() {
 		this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -189,7 +191,7 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException {
+	public ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException {
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -513,6 +515,70 @@ public class DaoImplementacionMysql implements Dao {
 			}
 		}
 		
+		
+	}
+
+	@Override
+	public ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException {
+		ResultSet rs = null;
+		Profesor p= null;
+
+		try {
+			openConnection();
+			stmt = con.prepareStatement(TODOSLOSPROFESORES);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				p= new Profesor();
+				p.setId(rs.getInt("IdProfesor"));
+				p.setNombre(rs.getNString("NombreP"));
+				p.setApellido(rs.getNString("ApellidoP"));
+				p.setSalario(rs.getFloat("Salario"));
+				p.setCorreo(rs.getNString("EmailP"));
+				p.setAdmin(rs.getBoolean("EsAdmin"));
+				p.setImagen(rs.getNString("Imagen"));
+				profesores.add(p);
+			}
+			return profesores;
+		} catch (SQLException e) {
+			throw new LoginException("error en la base de datos");
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	@Override
+	public void altaProfesor(Profesor p) throws LoginException {
+		try {
+			openConnection();
+			stmt = con.prepareStatement(ALTAPROFESOR);
+			
+			stmt.setInt(1, p.getId());
+			stmt.setString(2, p.getNombre());
+			stmt.setString(3, p.getApellido());
+			stmt.setFloat(4, p.getSalario());
+			stmt.setString(5, p.getCorreo());
+			stmt.setBoolean(6, p.isAdmin());
+			stmt.setString(7, p.getImagen());
+
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new LoginException("error en la base de datos");
+		} finally {
+			try {
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 

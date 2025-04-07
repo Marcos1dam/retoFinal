@@ -38,6 +38,8 @@ public interface Dao {
 	
 	public void inscribirse(Bailarin b) throws LoginException;
 
+	public ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException;
 	
+	public void altaProfesor(Profesor p) throws LoginException;
 
 }

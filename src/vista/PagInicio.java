@@ -507,7 +507,8 @@ public class PagInicio extends JFrame implements ActionListener {
 	}
 
 	private void altaProfesor() {
-		
+		AltaProfesor mod= new AltaProfesor(true);
+		mod.setVisible(true);
 		
 	}
 
@@ -1058,7 +1059,7 @@ public class PagInicio extends JFrame implements ActionListener {
 			 try {
 				p = Principal.leerId(String.valueOf(passwordChars));
 			} catch (LoginException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -1166,19 +1167,20 @@ public class PagInicio extends JFrame implements ActionListener {
 						}
 					};
 					table.setModel(model);
+					
 					model.setRowCount(0);
-					// ArrayList<Curso>cursos = Principal.obtenerCursosPorProfesor(p.getId());
-				
+									
 					try {
-						cursosProfesor = Principal.obtenerCursosPorProfesor(p.getId(), cursosProfesor);
+						cursosProfesor = Principal.obtenerCursosPorProfesor(p.getId(), new ArrayList<>());
+						for (Curso curso : cursosProfesor) {
+							model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+									curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
+						}
 					} catch (LoginException e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					}
-					for (Curso curso : cursosProfesor) {
-						model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
-								curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
-					}
+					
 
 					table.getSelectionModel().addListSelectionListener(e -> {
 					    if (!e.getValueIsAdjusting()) {
@@ -1304,6 +1306,7 @@ public class PagInicio extends JFrame implements ActionListener {
 						btnAltaProfesor = new JButton("Alta Profesor");
 						btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
 						btnAltaProfesor.setBounds(373, 173, 155, 21);
+						btnAltaProfesor.addActionListener(this);
 						panel4.add(btnAltaProfesor);
 					}
 					

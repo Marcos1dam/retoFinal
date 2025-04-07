@@ -99,4 +99,13 @@ public class Principal {
     public static void inscribirse(Bailarin b) throws LoginException{
     	dao.inscribirse(b);
     }
+    
+    public static ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException{
+		return dao.obtenerTodosLosProfesores(profesores);
+    	
+    }
+    
+    public static void altaProfesor(Profesor p) throws LoginException{
+    	dao.altaProfesor(p);
+    }
 }

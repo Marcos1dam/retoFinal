@@ -579,14 +579,11 @@ public class PagInicio extends JFrame implements ActionListener {
 							} catch (LoginException e) {
 								JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error", JOptionPane.ERROR_MESSAGE);
 								e.printStackTrace();
-							}
-		                    
-		                    
+							} 
 		                    return; // Terminar después de actualizar
 		                }
 		            }
-		        }
-		                
+		        }        
 	    }
 	    
 	}

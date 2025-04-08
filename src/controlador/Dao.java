@@ -22,7 +22,9 @@ public interface Dao {
 
 	public ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso>cursos) throws LoginException;
 
-	public ArrayList<Curso> obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos)throws LoginException;
+
+	public ArrayList<Curso> obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos);
+
 
 	public ArrayList<Curso> obtenerTodosLosCursos(ArrayList<Curso> cursos);
 

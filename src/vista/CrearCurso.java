@@ -1,6 +1,7 @@
 package vista;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -17,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 import controlador.Principal;
@@ -26,6 +28,8 @@ import modelo.Profesor;
 import javax.swing.JComboBox;
 import javax.security.auth.login.LoginException;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Label;
+import java.awt.Toolkit;
 
 public class CrearCurso extends JDialog implements ActionListener {
 
@@ -46,6 +50,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 	private JComboBox comboBoxNivel;
 	private JTextField textFieldFInicio;
 	private JTextField textFieldFechaFin;
+	private JButton btnCancelar;
 
 	/**
 	 * Create the dialog.
@@ -53,6 +58,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 	 * @author Luis
 	 */
 	public CrearCurso(Curso c, boolean b, Profesor p) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(CrearCurso.class.getResource("/imagenes/CodeAndDance.png")));
 		setModal(b);
 		JPanel crearCurso = new JPanel() {
 			Image backgroundImage = new ImageIcon(getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
@@ -137,10 +143,36 @@ public class CrearCurso extends JDialog implements ActionListener {
 		textFieldIDProfesor.setBounds(181, 376, 148, 27);
 		crearCurso.add(textFieldIDProfesor);
 
+		// Botón fuera de la pantalla
 		btnCrear = new JButton("Crear Curso");
 		btnCrear.addActionListener(this);
 		btnCrear.setFont(new Font("Arial Black", Font.PLAIN, 18));
-		btnCrear.setBounds(131, 426, 221, 45);
+		btnCrear.setBounds(136, 429, 221, 45);
+		btnCrear.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				new Thread(() -> {
+					for (int i = 221; i <= 250; i += 2) {
+						int newX = 136 - (i - 221) / 2;
+						int newY = 429 - (50 - 45) / 2;
+						btnCrear.setBounds(newX, newY, i, 50);
+						try { Thread.sleep(10); } catch (InterruptedException ex) {}
+					}
+				}).start();
+			}
+
+			@Override
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				new Thread(() -> {
+					for (int i = 250; i >= 221; i -= 2) {
+						int newX = 136 - (i - 221) / 2;
+						int newY = 429 - (50 - 45) / 2;
+						btnCrear.setBounds(newX, newY, i, 45);
+						try { Thread.sleep(10); } catch (InterruptedException ex) {}
+					}
+				}).start();
+			}
+		});
 		crearCurso.add(btnCrear);
 
 		comboBoxNivel = new JComboBox();
@@ -168,6 +200,12 @@ public class CrearCurso extends JDialog implements ActionListener {
 		textFieldFechaFin.setColumns(10);
 		textFieldFechaFin.setBounds(181, 330, 148, 27);
 		crearCurso.add(textFieldFechaFin);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 18));
+		btnCancelar.setBounds(326, 426, 221, 45);
+		btnCancelar.addActionListener(this);
+		crearCurso.add(btnCancelar);
 
 		// Cargar ID's
 		cargarDatos(p.getId());
@@ -180,8 +218,10 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private int obtenerIdCurso() {
-		ArrayList<Curso> cursos = new ArrayList<>();
+
+		
 		try {
+			ArrayList<Curso> cursos= new ArrayList<>();
 			cursos = Principal.obtenerTodosLosCursos(cursos);
 			int id = 0;
 
@@ -193,7 +233,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 			return id + 1;
 		} catch (LoginException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
@@ -206,8 +246,17 @@ public class CrearCurso extends JDialog implements ActionListener {
 			crearCurso();
 
 			this.dispose();
+		}else if(e.getSource().equals(btnCancelar)) {
+			cancelar();
 		}
 
+	}
+
+
+	private void cancelar() {
+		
+		this.dispose();
+		
 	}
 
 	private void crearCurso() {
@@ -234,7 +283,6 @@ public class CrearCurso extends JDialog implements ActionListener {
 		} catch (IllegalArgumentException e) {
 			JOptionPane.showMessageDialog(this, "EL NIVEL solo puede ser: PRINCIPIANTE, MEDIO O AVANZADO.", "Error",
 					JOptionPane.INFORMATION_MESSAGE);
-
 		}
 
 	}

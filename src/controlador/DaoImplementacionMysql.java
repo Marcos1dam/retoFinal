@@ -33,7 +33,7 @@ public class DaoImplementacionMysql implements Dao {
     final String SIGNINADMIN = "SELECT * FROM Profesor WHERE IdProfesor = ? ";
     final String OBTENERCURSO = "SELECT * FROM Curso WHERE IdCurso = ?";
     final String CURSOPORPROFESOR = "SELECT * FROM Curso WHERE IdProfesor = ?";
-    final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, FInicio, FFin, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
     final String TODOSLOSCURSOS = "SELECT * FROM Curso";
     final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?  WHERE IdCurso = ?";
@@ -217,8 +217,8 @@ public class DaoImplementacionMysql implements Dao {
 			}
 			return cursos;
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
+			throw new LoginException("error en la base de datos");
+			
 		} finally {
 			try {
 				if (rs != null) {
@@ -229,7 +229,7 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
-		return null;
+		
 	}
 
 	@Override
@@ -261,7 +261,8 @@ public class DaoImplementacionMysql implements Dao {
 		}
 	}
 
-	public ArrayList<Curso> obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
+
+	public ArrayList obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -338,8 +339,7 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
-		return cursos;
-
+		return null;
 	}
 
 	@Override
@@ -362,8 +362,7 @@ public class DaoImplementacionMysql implements Dao {
 				throw new LoginException("No se encontró ningún curso con el ID proporcionado.");
 			}
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
+			throw new LoginException("error en la base de datos");
 
 		} finally {
 			try {
@@ -375,10 +374,7 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
-		return null;
 	}
-
-	
 
 	@Override
 	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException {
@@ -394,8 +390,7 @@ public class DaoImplementacionMysql implements Dao {
 				throw new SQLException("No se encontró la inscripción para eliminar.");
 			}
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
+			throw new LoginException("error en la base de datos");
 		} finally {
 			try {
 				closeConnection();
@@ -419,8 +414,7 @@ public class DaoImplementacionMysql implements Dao {
 				throw new SQLException("No se encontró la inscripción para eliminar.");
 			}
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
+			throw new LoginException("error en la base de datos");
 		} finally {
 			try {
 				closeConnection();
@@ -454,8 +448,7 @@ public class DaoImplementacionMysql implements Dao {
 			}
 			
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-            LoginException ex= new LoginException(message);
+			throw new LoginException("error en la base de datos");
 		} finally {
 			try {
 				closeConnection();
@@ -535,16 +528,17 @@ public class DaoImplementacionMysql implements Dao {
 		try {
 			openConnection();
 			stmt = con.prepareStatement(INSCRIPCION);
+			
 			stmt.setString(1, b.getDni());
 			stmt.setString(2, b.getNombre());
 			stmt.setString(3, b.getApellido());
 			stmt.setDate(4, b.getFechaNacimiento());
 			stmt.setInt(5, b.getTelefono());
 			stmt.setString(6, b.getCorreo());
+			
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-            LoginException ex= new LoginException(message);
+			throw new LoginException("error en la base de datos");
 		}finally {
 			try {
 				closeConnection();

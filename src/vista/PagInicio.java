@@ -1329,7 +1329,39 @@ public class PagInicio extends JFrame implements ActionListener {
 	        JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	public void agregarAnimacionHover(JButton boton, int originalX, int originalY, int originalWidth, int originalHeight) {
+	    boton.addMouseListener(new java.awt.event.MouseAdapter() {
+	        @Override
+	        public void mouseEntered(java.awt.event.MouseEvent evt) {
+	            new Thread(() -> {
+	                for (int i = 0; i <= 8; i++) {
+	                    int width = originalWidth + (i * 3);
+	                    int height = originalHeight + (i * 2);
+	                    int x = originalX - (width - originalWidth) / 2;
+	                    int y = originalY - (height - originalHeight) / 2;
 
+	                    boton.setBounds(x, y, width, height);
+	                    try { Thread.sleep(15); } catch (InterruptedException ex) {}
+	                }
+	            }).start();
+	        }
+
+	        @Override
+	        public void mouseExited(java.awt.event.MouseEvent evt) {
+	            new Thread(() -> {
+	                for (int i = 8; i >= 0; i--) {
+	                    int width = originalWidth + (i * 3);
+	                    int height = originalHeight + (i * 2);
+	                    int x = originalX - (width - originalWidth) / 2;
+	                    int y = originalY - (height - originalHeight) / 2;
+
+	                    boton.setBounds(x, y, width, height);
+	                    try { Thread.sleep(15); } catch (InterruptedException ex) {}
+	                }
+	            }).start();
+	        }
+	    });
+	}
 	private void modificar() {
 		ModificarCurso mod = new ModificarCurso(cursoSeleccionado, true);
 		mod.setVisible(true);
@@ -1355,5 +1387,3 @@ public class PagInicio extends JFrame implements ActionListener {
 
 	}
 }
-
-

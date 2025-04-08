@@ -218,6 +218,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private int obtenerIdCurso() {
+
 		
 		try {
 			ArrayList<Curso> cursos= new ArrayList<>();

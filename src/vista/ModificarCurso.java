@@ -202,7 +202,7 @@ public class ModificarCurso extends JDialog implements ActionListener {
 		try {
 			Principal.modificarCurso(cu2);
 		} catch (LoginException e) {
-			
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.dispose();

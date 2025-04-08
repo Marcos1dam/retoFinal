@@ -166,6 +166,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 		model.setRowCount(0);
 		
 		try {
+
 			ArrayList<Curso>todosLosCursos= new ArrayList<>();
 			todosLosCursos = Principal.obtenerTodosLosCursos(todosLosCursos);
 			

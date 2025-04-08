@@ -1,7 +1,6 @@
 package controlador;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,7 +41,11 @@ public class DaoImplementacionMysql implements Dao {
 	final String PARTICIPA = "SELECT * FROM Participa WHERE IdCurso= ?";
 	final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?) ";
 	final String DARDEBAJACURSO = "DELETE FROM Participa WHERE IdCurso = ? AND DniBailarin = ?";
+	final String LISTASLUMNOSCURSO = "SELECT b.* FROM Bailarin b JOIN Participa p on b.DniBailarin = p.DniBailarin WHERE p.IdCurso = ?";
+	final String ELIMINARBAILARIN = "DELETE from Participa where DniBailarin= ? and IdCurso= ?";
 	final String INSCRIPCION = "INSERT INTO Bailarin (DniBailarin, NombreB, ApellidoB, FechaNacimiento, Telefono, EmailB) VALUES (?, ?, ?, ?, ?, ?)";
+	final String TotalBailarinesCapacesDeInscritos = "SELECT TotalBailarinesCapacesDeInscritos(?) as resultado";
+	
 	
 	public DaoImplementacionMysql() {
 		this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -189,7 +192,8 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursos) throws LoginException {
+	public ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso>cursos) throws LoginException {
+		
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -257,6 +261,7 @@ public class DaoImplementacionMysql implements Dao {
 		}
 	}
 
+
 	public ArrayList obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
 		ResultSet rs = null;
 		Curso cu = null;
@@ -278,9 +283,7 @@ public class DaoImplementacionMysql implements Dao {
 				cu.setFechaFin(rs.getDate("FFin"));
 				cu.setIdProfesor(rs.getInt("IdProfesor"));
 				cursos.add(cu);
-				for(Curso c: cursos) {
-					System.out.println(c);
-				}
+				
 			}
 			return cursos;
 		} catch (SQLException e) {
@@ -297,7 +300,6 @@ public class DaoImplementacionMysql implements Dao {
 			}
 		}
 		return null;
-
 	}
 
 	@Override
@@ -338,7 +340,6 @@ public class DaoImplementacionMysql implements Dao {
 			}
 		}
 		return null;
-
 	}
 
 	@Override
@@ -373,36 +374,6 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@Override
-	public void inscripcionCurso(int idCurso, String DniBailarin) throws LoginException{
-		ResultSet rs = null;
-
-		try {
-			openConnection();
-			stmt = con.prepareStatement(INSCRIPCIONCURSO);
-			stmt.setInt(1, idCurso);
-			stmt.setString(2, DniBailarin);
-
-			int affectedRows = stmt.executeUpdate();
-
-			if (affectedRows == 0) {
-				throw new SQLException("La inserción falló, no se afectaron filas.");
-			}
-		} catch (SQLException e) {
-			throw new LoginException("error en la base de datos");
-		} finally {
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-				closeConnection();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
 	}
 
 	@Override
@@ -489,6 +460,69 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
+	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso) {
+		ArrayList<Bailarin> bailarines= new ArrayList<Bailarin>();
+		ResultSet rs=null;
+		Bailarin ba;
+
+		try {
+			openConnection();
+			stmt = con.prepareStatement(LISTASLUMNOSCURSO);
+			stmt.setInt(1,idCurso);
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				ba = new Bailarin();
+				ba.setDni(rs.getString("DniBailarin"));
+				ba.setNombre(rs.getString("NombreB"));
+				ba.setApellido(rs.getString("ApellidoB"));
+				ba.setFechaNacimiento(rs.getDate("FechaNacimiento"));
+				ba.setTelefono(rs.getInt("Telefono"));
+				ba.setCorreo(rs.getString("EmailB"));
+				
+				bailarines.add(ba);
+			}
+			return bailarines;
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+			LoginException ex = new LoginException(message);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return bailarines;
+		
+	}
+
+	@Override
+	public void eliminarBailarin(Bailarin bailarin, int i) {
+		
+		try {
+			openConnection();
+			stmt = con.prepareStatement(ELIMINARBAILARIN);
+			stmt.setInt(2, i);
+			stmt.setString(1, bailarin.getDni());
+			
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+			LoginException ex = new LoginException(message);
+		} finally {
+			try {
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		
+		
+	}
+	}
+	@Override
 	public void inscribirse(Bailarin b) throws LoginException{
 		
 		try {
@@ -515,6 +549,69 @@ public class DaoImplementacionMysql implements Dao {
 		
 		
 	}
+	@Override
+	public void inscripcionCurso(int idCurso, String DniBailarin) throws LoginException{
+		ResultSet rs = null;
 
+		try {
+			openConnection();
+			stmt = con.prepareStatement(INSCRIPCIONCURSO);
+			stmt.setInt(1, idCurso);
+			stmt.setString(2, DniBailarin);
 
+			int affectedRows = stmt.executeUpdate();
+
+			if (affectedRows == 0) {
+				throw new SQLException("La inserción falló, no se afectaron filas.");
+			}
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+			LoginException ex = new LoginException(message);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	@Override
+	public float ocupacionDelProfesor(Profesor p) {
+		float resultado = 0;
+		ResultSet rs = null;
+		
+		try {
+			
+			openConnection();
+			
+			stmt = con.prepareStatement(TotalBailarinesCapacesDeInscritos);
+			stmt.setInt(1,p.getId());
+
+			rs=stmt.executeQuery();
+			if (rs.next()) {
+			    resultado = rs.getFloat("resultado");
+			    System.out.println("Resultado: " + resultado + "%");
+			}
+			return resultado;
+		} catch (SQLException e) {
+			String message = "Error al leer datos: ";
+			LoginException ex = new LoginException(message);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return -1;
+		
+	}
 }

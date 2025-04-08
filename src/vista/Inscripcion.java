@@ -166,7 +166,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 		model.setRowCount(0);
 		ArrayList<Curso>todosLosCursos= new ArrayList<>();
 		try {
-			todosLosCursos = Principal.obtenerTodosLosCursos();
+			todosLosCursos = Principal.obtenerTodosLosCursos(todosLosCursos);
 		} catch (LoginException e1) {
 			
 			e1.printStackTrace();
@@ -264,6 +264,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 		btnInscribirse = new JButton("Inscribirse");
 		btnInscribirse.setFont(new Font("Arial Black", Font.PLAIN, 16));
 		btnInscribirse.setBounds(247, 439, 129, 28);
+		agregarAnimacionHover(btnInscribirse, 247, 439, 129, 28);
 		btnInscribirse.addActionListener(this);
 		contentPanel.add(btnInscribirse);
 		
@@ -298,6 +299,40 @@ public class Inscripcion extends JDialog implements ActionListener{
 			this.dispose();
 		}
 		
+	}
+	
+	public void agregarAnimacionHover(JButton boton, int originalX, int originalY, int originalWidth, int originalHeight) {
+	    boton.addMouseListener(new java.awt.event.MouseAdapter() {
+	        @Override
+	        public void mouseEntered(java.awt.event.MouseEvent evt) {
+	            new Thread(() -> {
+	                for (int i = 0; i <= 8; i++) {
+	                    int width = originalWidth + (i * 3);
+	                    int height = originalHeight + (i * 2);
+	                    int x = originalX - (width - originalWidth) / 2;
+	                    int y = originalY - (height - originalHeight) / 2;
+
+	                    boton.setBounds(x, y, width, height);
+	                    try { Thread.sleep(15); } catch (InterruptedException ex) {}
+	                }
+	            }).start();
+	        }
+
+	        @Override
+	        public void mouseExited(java.awt.event.MouseEvent evt) {
+	            new Thread(() -> {
+	                for (int i = 8; i >= 0; i--) {
+	                    int width = originalWidth + (i * 3);
+	                    int height = originalHeight + (i * 2);
+	                    int x = originalX - (width - originalWidth) / 2;
+	                    int y = originalY - (height - originalHeight) / 2;
+
+	                    boton.setBounds(x, y, width, height);
+	                    try { Thread.sleep(15); } catch (InterruptedException ex) {}
+	                }
+	            }).start();
+	        }
+	    });
 	}
 
 	private void solicitudInscripcion(Curso cursoSeleccionado2) {

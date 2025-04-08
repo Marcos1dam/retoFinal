@@ -58,17 +58,15 @@ public class Principal {
 		dao.crearCurso(curso);
 	}
 
-	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin) throws LoginException {
-		ArrayList<Curso> cursos = new ArrayList<Curso>();
-		dao.obtnerCursosPorBailarin(idBailarin, cursos);
-		return cursos;
+	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursosBailarin) throws LoginException {
+		
+		return dao.obtnerCursosPorBailarin(idBailarin, cursosBailarin);
 
 	}
 
-	public static ArrayList<Curso> obtenerTodosLosCursos() throws LoginException {
-		ArrayList<Curso> cursos = new ArrayList<Curso>();
-		dao.obtenerTodosLosCursos(cursos);
-		return cursos;
+	public static ArrayList<Curso> obtenerTodosLosCursos(ArrayList<Curso> cursos) throws LoginException {
+
+		return dao.obtenerTodosLosCursos(cursos);
 	}
 
 	public static void modificarCurso(Curso curso) throws LoginException {

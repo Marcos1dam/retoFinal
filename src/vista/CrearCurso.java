@@ -145,17 +145,16 @@ public class CrearCurso extends JDialog implements ActionListener {
 		btnCrear.addActionListener(this);
 		btnCrear.setFont(new Font("Arial Black", Font.PLAIN, 18));
 
-		btnCrear.setBounds(134, 388, 221, 45); // Fuera de la ventana
+		btnCrear.setBounds(136, 429, 221, 45);
 		btnCrear.addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
 				new Thread(() -> {
-					for (int i = 221; i <= 250; i += 2) { // Aumentar tamaño
-						btnCrear.setBounds(134 - (i - 221) / 2, 388 - (i - 221) / 4, i, 50);
-						try {
-							Thread.sleep(10);
-						} catch (InterruptedException ex) {
-						}
+					for (int i = 221; i <= 250; i += 2) {
+						int newX = 136 - (i - 221) / 2;
+						int newY = 429 - (50 - 45) / 2;
+						btnCrear.setBounds(newX, newY, i, 50);
+						try { Thread.sleep(10); } catch (InterruptedException ex) {}
 					}
 				}).start();
 			}
@@ -163,17 +162,15 @@ public class CrearCurso extends JDialog implements ActionListener {
 			@Override
 			public void mouseExited(java.awt.event.MouseEvent evt) {
 				new Thread(() -> {
-					for (int i = 250; i >= 221; i -= 2) { // Volver al tamaño normal
-						btnCrear.setBounds(134 - (i - 221) / 2, 388 - (i - 221) / 4, i, 45);
-						try {
-							Thread.sleep(10);
-						} catch (InterruptedException ex) {
-						}
+					for (int i = 250; i >= 221; i -= 2) {
+						int newX = 136 - (i - 221) / 2;
+						int newY = 429 - (50 - 45) / 2;
+						btnCrear.setBounds(newX, newY, i, 45);
+						try { Thread.sleep(10); } catch (InterruptedException ex) {}
 					}
 				}).start();
 			}
 		});
-		btnCrear.setBounds(131, 426, 221, 45);
 
 		crearCurso.add(btnCrear);
 
@@ -214,9 +211,10 @@ public class CrearCurso extends JDialog implements ActionListener {
 	}
 
 	private int obtenerIdCurso() {
-		ArrayList<Curso> cursos;
+		
 		try {
-			cursos = Principal.obtenerTodosLosCursos();
+			ArrayList<Curso> cursos = new ArrayList<>();
+			cursos = Principal.obtenerTodosLosCursos(cursos);
 			int id = 0;
 
 			for (Curso cu : cursos) {
@@ -244,6 +242,7 @@ public class CrearCurso extends JDialog implements ActionListener {
 
 	}
 
+	
 	private void crearCurso() {
 
 		Curso c = new Curso();

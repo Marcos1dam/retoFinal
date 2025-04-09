@@ -2,6 +2,11 @@ package modelo;
 
 import java.sql.Date;
 
+import javax.swing.JOptionPane;
+
+import exceptions.DniExecption;
+import exceptions.EmailExecption;
+
 public class Bailarin {
 	private String dni;
 	private String nombre;
@@ -18,7 +23,10 @@ public class Bailarin {
 		return dni;
 	}
 
-	public void setDni(String dni) {
+	public void setDni(String dni) throws DniExecption {
+		if (!dni.matches("^\\d{8}[A-Za-z]$")) {
+		    throw new DniExecption("DNI no válido. El formato correcto es: 8 dígitos seguidos de una letra (ejemplo: 12345678A)");
+		}
 		this.dni = dni;
 	}
 
@@ -59,7 +67,10 @@ public class Bailarin {
 		return correo;
 	}
 
-	public void setCorreo(String correo) {
+	public void setCorreo(String correo) throws EmailExecption {
+		  if (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+		        throw new EmailExecption("Email no válido. Ejemplo válido: usuario@dominio.com");
+		    }
 		this.correo = correo;
 	}
 

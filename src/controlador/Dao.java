@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.security.auth.login.LoginException;
 
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Participa;
@@ -14,7 +15,7 @@ public interface Dao {
 
 	public Bailarin leerBailarin(String dni) throws LoginException;
 
-	public Profesor leerProfesor(String id) throws LoginException;
+	public Profesor leerProfesor(String id) throws LoginException, EmailExecption;
 
 	public Curso obtenerCurso(int idCurso) throws LoginException;
 
@@ -38,7 +39,7 @@ public interface Dao {
 	
 	public void inscribirse(Bailarin b) throws LoginException;
 
-	public ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException;
+	public ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException, EmailExecption;
 	
 	public void altaProfesor(Profesor p) throws LoginException;
 

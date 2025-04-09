@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 
 import javax.security.auth.login.LoginException;
 
+import exceptions.DniExecption;
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Nivel;
@@ -37,7 +39,7 @@ public class DaoImplementacionMysql implements Dao {
     final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, FInicio, FFin, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
     final String TODOSLOSCURSOS = "SELECT * FROM Curso";
-    final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?  WHERE IdCurso = ?";
+    final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?, FInicio = ?, FFin = ?  WHERE IdCurso = ?";
 	final String ELIMINARCURSO = "DELETE FROM Curso WHERE IdCurso = ?";
 	final String PARTICIPA = "SELECT * FROM Participa WHERE IdCurso= ?";
 	final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?) ";
@@ -86,7 +88,7 @@ public class DaoImplementacionMysql implements Dao {
 				ba.setTelefono(rs.getInt("Telefono"));
 				ba.setCorreo(rs.getString("EmailB"));
 
-				return ba;
+				
 			} else {
 				throw new LoginException("No se encontró ningún bailarín con el DNI proporcionado.");
 			}
@@ -94,6 +96,12 @@ public class DaoImplementacionMysql implements Dao {
 			String message = "Error al leer datos: ";
 			LoginException ex = new LoginException(message);
 			throw ex;
+		} catch (EmailExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DniExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			try {
 				if (rs != null) {
@@ -104,11 +112,12 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
+		return ba;
 
 	}
 
 	@Override
-	public Profesor leerProfesor(String id) throws LoginException {
+	public Profesor leerProfesor(String id) throws LoginException, EmailExecption {
 		ResultSet rs = null;
 		Profesor p = null;
 
@@ -518,7 +527,7 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException {
+	public ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException, EmailExecption {
 		ResultSet rs = null;
 		Profesor p= null;
 

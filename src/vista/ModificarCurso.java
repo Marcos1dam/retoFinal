@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Time;
+import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,6 +25,7 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.security.auth.login.LoginException;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.Toolkit;
 
 public class ModificarCurso extends JDialog implements ActionListener{
 
@@ -37,6 +39,8 @@ public class ModificarCurso extends JDialog implements ActionListener{
 	private JComboBox comboBox;
 	private JButton btnModificarCurso;
 	private Curso cu;
+	private JTextField textFechaInicio;
+	private JTextField textFechaFin;
 
 	/**
 	 * Create the dialog.
@@ -44,6 +48,7 @@ public class ModificarCurso extends JDialog implements ActionListener{
 	 * @author Luis
 	 */
 	public ModificarCurso(Curso cursoSeleccionado, boolean b) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ModificarCurso.class.getResource("/imagenes/CodeAndDance.png")));
 		setFont(new Font("Arial Black", Font.PLAIN, 12));
 		setModal(b);
 		cu = cursoSeleccionado;
@@ -101,7 +106,7 @@ public class ModificarCurso extends JDialog implements ActionListener{
 		
 		JLabel lblIDProfesor = new JLabel("ID Profesor:");
 		lblIDProfesor.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		lblIDProfesor.setBounds(93, 343, 112, 26);
+		lblIDProfesor.setBounds(93, 417, 112, 26);
 		contentPanel.add(lblIDProfesor);
 		
 		textoTipo = new JTextField();
@@ -127,7 +132,7 @@ public class ModificarCurso extends JDialog implements ActionListener{
 		textoIDProfesor = new JTextField();
 		textoIDProfesor.setEditable(false);
 		textoIDProfesor.setColumns(10);
-		textoIDProfesor.setBounds(202, 347, 112, 26);
+		textoIDProfesor.setBounds(202, 421, 112, 26);
 		contentPanel.add(textoIDProfesor);
 		
 		btnModificarCurso = new JButton("Modificar Curso");
@@ -141,6 +146,36 @@ public class ModificarCurso extends JDialog implements ActionListener{
 		comboBox.setBounds(202, 209, 112, 27);
 		contentPanel.add(comboBox);
 		
+		textFechaInicio = new JTextField();
+		textFechaInicio.setBounds(202, 343, 108, 19);
+		contentPanel.add(textFechaInicio);
+		textFechaInicio.setColumns(10);
+		
+		textFechaFin = new JTextField();
+		textFechaFin.setColumns(10);
+		textFechaFin.setBounds(202, 384, 108, 19);
+		contentPanel.add(textFechaFin);
+		
+		JLabel lblFechaInicio = new JLabel("F inicio:");
+		lblFechaInicio.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lblFechaInicio.setBounds(130, 349, 67, 13);
+		contentPanel.add(lblFechaInicio);
+		
+		JLabel lblFechaFin = new JLabel("F fin:");
+		lblFechaFin.setFont(new Font("Arial Black", Font.PLAIN, 14));
+		lblFechaFin.setBounds(130, 387, 67, 13);
+		contentPanel.add(lblFechaFin);
+		
+		JLabel lblFormatoFecha = new JLabel("(yyyy-mm-dd)");
+		lblFormatoFecha.setFont(new Font("Arial Black", Font.PLAIN, 8));
+		lblFormatoFecha.setBounds(212, 361, 75, 13);
+		contentPanel.add(lblFormatoFecha);
+		
+		JLabel lblFormatoFecha_1 = new JLabel("(yyyy-mm-dd)");
+		lblFormatoFecha_1.setFont(new Font("Arial Black", Font.PLAIN, 8));
+		lblFormatoFecha_1.setBounds(212, 400, 75, 13);
+		contentPanel.add(lblFormatoFecha_1);
+		
 		cargaDatos(cu);
 	}
 
@@ -151,6 +186,8 @@ public class ModificarCurso extends JDialog implements ActionListener{
 		textoPrecio.setText(String.valueOf(cursoSeleccionado.getPrecio()));
 		textoPlaza.setText(String.valueOf(cursoSeleccionado.getPlazas()));
 		textoIDProfesor.setText(String.valueOf(cursoSeleccionado.getIdProfesor()));
+		textFechaInicio.setText(cursoSeleccionado.getFechaInicio().toString());
+		textFechaFin.setText(cursoSeleccionado.getFechaFin().toString());
 	}
 
 	@Override

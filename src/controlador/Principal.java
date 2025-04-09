@@ -10,6 +10,7 @@ import javax.security.auth.login.LoginException;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Participa;
@@ -37,7 +38,7 @@ public class Principal {
 		
 	}
 
-	public static Profesor leerId(String id) throws LoginException{
+	public static Profesor leerId(String id) throws LoginException, EmailExecption{
 		
 		return dao.leerProfesor(id);
 	
@@ -100,7 +101,7 @@ public class Principal {
     	dao.inscribirse(b);
     }
     
-    public static ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException{
+    public static ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException, EmailExecption{
 		return dao.obtenerTodosLosProfesores(profesores);
     	
     }

@@ -1,5 +1,7 @@
 package modelo;
 
+import exceptions.EmailExecption;
+
 public class Profesor {
 	private int id;
 	private String nombre;
@@ -18,7 +20,10 @@ public class Profesor {
 		return correo;
 	}
 
-	public void setCorreo(String correo) {
+	public void setCorreo(String correo) throws EmailExecption {
+		 if (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+		        throw new EmailExecption("Email no válido. Ejemplo válido: usuario@dominio.com");
+		    }
 		this.correo = correo;
 	}
 

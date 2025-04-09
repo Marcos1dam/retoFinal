@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controlador.Principal;
+import exceptions.EmailExecption;
 import modelo.Curso;
 import modelo.Nivel;
 import modelo.Profesor;
@@ -63,21 +64,10 @@ public class AltaProfesor extends JDialog implements ActionListener{
 	 * Launch the application.
 	 * @param b 
 	 */
-	/*public static void main(String[] args) {
-		try {
-			AltaProfesor dialog = new AltaProfesor();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
+	
 	public AltaProfesor(boolean b) {
 		setModal(b);
+		
 		getContentPane().setBackground(new Color(255, 255, 255));
 		setIconImage(Toolkit.getDefaultToolkit().getImage(AltaProfesor.class.getResource("/imagenes/CodeAndDance.png")));
 		setBounds(100, 100, 499, 542);
@@ -296,6 +286,7 @@ public class AltaProfesor extends JDialog implements ActionListener{
 		lblCurso.setBounds(10, 280, 60, 13);
 		getContentPane().add(lblCurso);
 		
+		
 		cargarDatos();
 	}
 
@@ -323,8 +314,9 @@ public class AltaProfesor extends JDialog implements ActionListener{
 			}
 			return id + 1;
 		} catch (LoginException e) {
-			
 			e.printStackTrace();
+		} catch (EmailExecption e) {
+			e.visualizarMensaje();
 		}
 		return (Integer) null;
 	}
@@ -354,7 +346,7 @@ public class AltaProfesor extends JDialog implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(btnGuardar)) {
 			guardarProfesor();
-			
+			this.dispose();
 			JOptionPane.showMessageDialog(this, 
 		            "Profesor y curso guardados correctamente", 
 		            "Éxito", 
@@ -383,7 +375,7 @@ public class AltaProfesor extends JDialog implements ActionListener{
 	        
 	        Principal.altaProfesor(p);
 	        
-	        // Mostrar imagen (esto debería estar en otro lugar, no aquí)
+	        
 	        JLabel lblFoto = new JLabel("");
 	        ImageIcon originalIcon = new ImageIcon(textFieldRutaImagen.getText());
 	        Image originalImage = originalIcon.getImage();
@@ -445,21 +437,31 @@ public class AltaProfesor extends JDialog implements ActionListener{
 	}
 	
 	private boolean validarCampos() {
-	    // Verificar campos de profesor
+	    // 1. Validar campos del profesor
 	    if (textFieldNombre.getText().trim().isEmpty() ||
 	        textFieldApellido.getText().trim().isEmpty() ||
 	        textFieldSalario.getText().trim().isEmpty() ||
-	        textFieldEmail.getText().trim().isEmpty() ||
+	        textFieldEmail.getText().trim().isEmpty() ||  // <-- Campo email obligatorio
 	        textFieldRutaImagen.getText().trim().isEmpty()) {
 	        
 	        JOptionPane.showMessageDialog(this, 
-	            "Por favor complete todos los campos obligatorios del profesor", 
-	            "Campos vacíos", 
+	            "Complete todos los campos obligatorios del profesor", 
+	            "Error", 
 	            JOptionPane.WARNING_MESSAGE);
 	        return false;
 	    }
+
+	    // 2. Validar formato del email (regex)
 	    
-	    // Verificar campos de curso (si son obligatorios)
+	    if (!textFieldEmail.getText().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+	        JOptionPane.showMessageDialog(this, 
+	            "Email no válido. Ejemplo válido: usuario@dominio.com", 
+	            "Error", 
+	            JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+
+	    // 3. Validar campos del curso (si son obligatorios)
 	    if (textFieldTipoCurso.getText().trim().isEmpty() ||
 	        textFieldHorarioCurso.getText().trim().isEmpty() ||
 	        textFieldPrecioCurso.getText().trim().isEmpty() ||
@@ -468,13 +470,13 @@ public class AltaProfesor extends JDialog implements ActionListener{
 	        textFieldFechaFinCurso.getText().trim().isEmpty()) {
 	        
 	        JOptionPane.showMessageDialog(this, 
-	            "Por favor complete todos los campos obligatorios del curso", 
-	            "Campos vacíos", 
+	            "Complete todos los campos obligatorios del curso", 
+	            "Error", 
 	            JOptionPane.WARNING_MESSAGE);
 	        return false;
 	    }
-	    
-	    return true;
+
+	    return true; // Si pasa todas las validaciones
 	}
 	
 	

@@ -12,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controlador.Principal;
+import exceptions.DniExecption;
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Nivel;
@@ -50,23 +52,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 	private JButton btnInscribirse;
 	private Curso cursoSeleccionado;
 	private JTextField textFieldEmail;
-	/**
-	 * Launch the application.
-	 */
-	/*public static void main(String[] args) {
-		try {
-			Inscripcion dialog = new Inscripcion();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 * @param b 
-	 */
+	
 	public Inscripcion(boolean b) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Inscripcion.class.getResource("/imagenes/CodeAndDance.png")));
 		setModal(b);
@@ -89,7 +75,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 		
 		textFieldNombre = new JTextField();
 		textFieldNombre.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		textFieldNombre.setBounds(163, 59, 129, 19);
+		textFieldNombre.setBounds(163, 59, 213, 19);
 		contentPanel.add(textFieldNombre);
 		textFieldNombre.setColumns(10);
 		
@@ -117,39 +103,39 @@ public class Inscripcion extends JDialog implements ActionListener{
 		textFieldDni = new JTextField();
 		textFieldDni.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		textFieldDni.setColumns(10);
-		textFieldDni.setBounds(163, 90, 129, 19);
+		textFieldDni.setBounds(163, 90, 213, 19);
 		contentPanel.add(textFieldDni);
 		
 		textFieldApellido = new JTextField();
 		textFieldApellido.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		textFieldApellido.setColumns(10);
-		textFieldApellido.setBounds(163, 121, 129, 19);
+		textFieldApellido.setBounds(163, 121, 213, 19);
 		contentPanel.add(textFieldApellido);
 		
 		textFieldTelefono = new JTextField();
 		textFieldTelefono.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		textFieldTelefono.setColumns(10);
-		textFieldTelefono.setBounds(163, 179, 129, 19);
+		textFieldTelefono.setBounds(163, 179, 213, 19);
 		contentPanel.add(textFieldTelefono);
 		
 		textFieldFechaNacimiento = new JTextField();
 		textFieldFechaNacimiento.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		textFieldFechaNacimiento.setColumns(10);
-		textFieldFechaNacimiento.setBounds(163, 150, 129, 19);
+		textFieldFechaNacimiento.setBounds(163, 150, 213, 19);
 		contentPanel.add(textFieldFechaNacimiento);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 237, 643, 10);
+		separator.setBounds(10, 256, 643, 10);
 		contentPanel.add(separator);
 		
-		JLabel lblCursos = new JLabel("CURSOS DISPONIBLES");
+		JLabel lblCursos = new JLabel("SELECCIONA EL CURSO EN EL QUE DESEAS INSCRIBIRTE:");
 		lblCursos.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		lblCursos.setBounds(200, 257, 210, 21);
+		lblCursos.setBounds(57, 276, 523, 21);
 		contentPanel.add(lblCursos);
 		
 		table = new JTable();
 		JScrollPane scrollPaneTable3 = new JScrollPane(table); // ScrollPane para table_3
-		scrollPaneTable3.setBounds(46, 288, 534, 125); // Ajusta estos valores según necesites
+		scrollPaneTable3.setBounds(46, 307, 534, 125); // Ajusta estos valores según necesites
 		contentPanel.add(scrollPaneTable3);
 
 		// Configurar el modelo de tabla para table_3
@@ -266,7 +252,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 		
 		btnInscribirse = new JButton("Inscribirse");
 		btnInscribirse.setFont(new Font("Arial Black", Font.PLAIN, 16));
-		btnInscribirse.setBounds(247, 439, 129, 28);
+		btnInscribirse.setBounds(247, 458, 129, 28);
 		btnInscribirse.addActionListener(this);
 		contentPanel.add(btnInscribirse);
 		
@@ -288,51 +274,128 @@ public class Inscripcion extends JDialog implements ActionListener{
 		textFieldEmail = new JTextField();
 		textFieldEmail.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		textFieldEmail.setColumns(10);
-		textFieldEmail.setBounds(163, 208, 129, 19);
+		textFieldEmail.setBounds(163, 208, 213, 38);
 		contentPanel.add(textFieldEmail);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		if(e.getSource().equals(btnInscribirse)) {
+	    if (e.getSource().equals(btnInscribirse)) {
+	      solicitudInscripcion(cursoSeleccionado);   
+	    }
+	}
+
+	// Método para verificar si hay campos vacíos
+	private boolean camposVacios() {
+		if(textFieldNombre.getText().trim().isEmpty() ||
+		           textFieldDni.getText().trim().isEmpty() ||
+		           textFieldApellido.getText().trim().isEmpty() ||
+		           textFieldTelefono.getText().trim().isEmpty() ||
+		           textFieldFechaNacimiento.getText().trim().isEmpty() ||
+		           textFieldEmail.getText().trim().isEmpty()) {
 			
-			solicitudInscripcion(cursoSeleccionado);
-			this.dispose();
+			JOptionPane.showMessageDialog(this, 
+		            "Todos los campos obligatorios. Completelos, por favor", 
+		            "Error", 
+		            JOptionPane.WARNING_MESSAGE);
+			
+		        return false;
 		}
 		
+		if (!textFieldEmail.getText().matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+	        JOptionPane.showMessageDialog(this, 
+	            "Email no válido. Ejemplo válido: usuario@dominio.com", 
+	            "Error", 
+	            JOptionPane.ERROR_MESSAGE);
+	        
+	        return false;
+	    }
+		 // Validar curso seleccionado
+        if (cursoSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, 
+                "Por favor seleccione un curso", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        System.out.println("llegaaa");
+		return true; // Si pasa todas las validaciones 
 	}
 
 	private void solicitudInscripcion(Curso cursoSeleccionado2) {
 	    // Validar que el curso seleccionado no sea nulo
-	    if (cursoSeleccionado2 == null) {
-	        JOptionPane.showMessageDialog(this, "No se ha seleccionado ningún curso", "Error", JOptionPane.ERROR_MESSAGE);
+		if(textFieldNombre.getText().trim().isEmpty() ||
+		           textFieldDni.getText().trim().isEmpty() ||
+		           textFieldApellido.getText().trim().isEmpty() ||
+		           textFieldTelefono.getText().trim().isEmpty() ||
+		           textFieldFechaNacimiento.getText().trim().isEmpty() ||
+		           textFieldEmail.getText().trim().isEmpty()) {
+			
+			JOptionPane.showMessageDialog(this, 
+		            "Todos los campos obligatorios. Completelos, por favor", 
+		            "Error", 
+		            JOptionPane.WARNING_MESSAGE);
+			
+		        return;
+		}
+		
+		 // Validar curso seleccionado
+     if (cursoSeleccionado == null) {
+         JOptionPane.showMessageDialog(this, 
+             "Por favor seleccione un curso", 
+             "Error", 
+             JOptionPane.ERROR_MESSAGE);
+         return;
+     }
+   
+
+	    // Validar formato de fecha
+	    try {
+	        Date.valueOf(textFieldFechaNacimiento.getText());
+	    } catch (IllegalArgumentException e) {
+	        JOptionPane.showMessageDialog(this, 
+	            "Formato de fecha inválido. Use yyyy-MM-dd", 
+	            "Error", 
+	            JOptionPane.ERROR_MESSAGE);
 	        return;
 	    }
 
-	    // Crear el objeto Bailarín con los datos del formulario
-	    Bailarin b = new Bailarin();
-	    b.setDni(textFieldDni.getText());
-	    b.setNombre(textFieldNombre.getText());
-	    b.setApellido(textFieldApellido.getText());
-	    b.setFechaNacimiento(Date.valueOf(textFieldFechaNacimiento.getText()));
-	    b.setTelefono(Integer.valueOf(textFieldTelefono.getText()));
-	    b.setCorreo(textFieldEmail.getText());
-
+	    // Validar formato de teléfono
 	    try {
-	        // Primero intentamos inscribir al bailarín
+	        Integer.valueOf(textFieldTelefono.getText());
+	    } catch (NumberFormatException e) {
+	        JOptionPane.showMessageDialog(this, 
+	            "El teléfono debe ser un número válido", 
+	            "Error", 
+	            JOptionPane.ERROR_MESSAGE);
+	        return;
+	    } 
+	    
+	    try {
+	    	// Crear el objeto Bailarín con los datos del formulario
+		    Bailarin b = new Bailarin();
+	    	b.setDni(textFieldDni.getText());
+	    	b.setNombre(textFieldNombre.getText());
+		    b.setApellido(textFieldApellido.getText());
+		    b.setFechaNacimiento(Date.valueOf(textFieldFechaNacimiento.getText()));
+		    b.setTelefono(Integer.valueOf(textFieldTelefono.getText()));
+			b.setCorreo(textFieldEmail.getText());
+			
+			// Primero intentamos inscribir al bailarín
 	        Principal.inscribirse(b);
-	        
-	        //  la inscripción fue exitosa, entonces lo inscribimos al curso
-	        try {
-	            Principal.inscripcion(cursoSeleccionado2.getIdCurso(), b.getDni());
-	            JOptionPane.showMessageDialog(this, "Inscripción realizada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-	        } catch (LoginException e) {
-	            JOptionPane.showMessageDialog(this, "El bailarín se registró pero hubo un error al inscribirlo en el curso: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-	            e.printStackTrace();
-	        }
-	        
-	    } catch (LoginException e) {
+	        Principal.inscripcion(cursoSeleccionado2.getIdCurso(), b.getDni());
+            JOptionPane.showMessageDialog(this, "Inscripción realizada con éxito", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            this.dispose();
+			
+		} catch (EmailExecption e) {
+			
+			e.visualizarMensaje();
+		}catch (DniExecption e) {
+			
+			e.visualizarMensaje();
+		}catch (LoginException e) {
+			JOptionPane.showMessageDialog(this, "El bailarín se registró pero hubo un error al inscribirlo en el curso: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
 	        // Verificamos si el error es por DNI duplicado
 	        if (e.getMessage().contains("Duplicate entry") || e.getMessage().contains("clave duplicada") || 
 	            e.getMessage().contains("viola la restricción única") || e.getMessage().contains("PRIMARY KEY")) {
@@ -342,5 +405,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 	        }
 	        e.printStackTrace();
 	    }
+
+	   
 	}
 }

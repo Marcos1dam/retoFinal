@@ -1187,25 +1187,21 @@ public class PagInicio extends JFrame implements ActionListener {
 					};
 					table.setModel(model);
 					model.setRowCount(0);
-					// ArrayList<Curso>cursos = Principal.obtenerCursosPorProfesor(p.getId());
+					
 				
 					try {
 						cursosProfesor = Principal.obtenerCursosPorProfesor(p.getId(), cursosProfesor);
+						
 						for (Curso curso : cursosProfesor) {
 							model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
 									curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getFechaInicio(), curso.getFechaFin(), curso.getIdProfesor() });
+							System.out.println(curso);
 						}
 
 					} catch (LoginException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-					for (Curso curso : cursosProfesor) {
-						model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
-								curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
-					}
-
 
 					table.getSelectionModel().addListSelectionListener(e -> {
 					    if (!e.getValueIsAdjusting()) {

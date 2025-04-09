@@ -607,13 +607,13 @@ public class DaoImplementacionMysql implements Dao {
 			try {
 				if (rs != null) {
 					rs.close();
-				}
+				} 
 				closeConnection();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		return -1;
+		return 0;
 		
 	}
 }

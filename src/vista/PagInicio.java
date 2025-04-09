@@ -114,6 +114,7 @@ public class PagInicio extends JFrame implements ActionListener {
 		btnInscripcion = new JButton("INSCRIBETE");
 		btnInscripcion.setFont(new Font("Arial Black", Font.PLAIN, 16));
 		btnInscripcion.setBounds(370, 171, 162, 43);
+		agregarAnimacionHover(btnInscripcion,370, 171, 162, 43);
 		btnInscripcion.addActionListener(this);
 		singIn.add(btnInscripcion);
 
@@ -151,18 +152,21 @@ public class PagInicio extends JFrame implements ActionListener {
 		btnAcceder = new JButton("Acceder");
 		btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		btnAcceder.setBounds(282, 343, 102, 21);
+		agregarAnimacionHover(btnAcceder,282, 343, 102, 21);
 		btnAcceder.addActionListener(this);
 		passwordPanel.add(btnAcceder);
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		btnCancelar.setBounds(472, 343, 116, 21);
+		agregarAnimacionHover(btnCancelar,472, 343, 116, 21);
 		btnCancelar.addActionListener(this);
 		passwordPanel.add(btnCancelar);
 
 		btnRecuperarContraseña = new JButton("¿Has olvidado tu contraseña?");
 		btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
 		btnRecuperarContraseña.setBounds(425, 279, 184, 21);
+		agregarAnimacionHover(btnRecuperarContraseña,425, 279, 184, 21);
 		btnRecuperarContraseña.addActionListener(this);
 		passwordPanel.add(btnRecuperarContraseña);
 
@@ -428,6 +432,7 @@ public class PagInicio extends JFrame implements ActionListener {
 
 			JButton closeButton = new JButton("x");
 			closeButton.setMargin(new Insets(0, 5, 0, 0));
+			agregarAnimacionHover(closeButton,0, 5, 0, 0);
 			closeButton.addActionListener(e -> {
 				int index = tabbedPane.indexOfComponent(component);
 				if (index != -1) {
@@ -448,6 +453,7 @@ public class PagInicio extends JFrame implements ActionListener {
 		JButton btnCerrarSesion = new JButton("Cerrar sesión");
 		btnCerrarSesion.setFont(new Font("Arial Black", Font.PLAIN, 14));
 		btnCerrarSesion.setBounds(689, 460, 195, 21);
+		agregarAnimacionHover(btnCerrarSesion,689, 460, 195, 21);
 		btnCerrarSesion.addActionListener(e -> {
 			while (tabbedPane.getTabCount() > 2) {
 				tabbedPane.remove(2);
@@ -909,6 +915,7 @@ public class PagInicio extends JFrame implements ActionListener {
 						btnBajaCurso = new JButton("Darse de baja");
 						btnBajaCurso.setFont(new Font("Arial Black", Font.PLAIN, 16));
 						btnBajaCurso.setBounds(598, 229, 190, 21);
+						agregarAnimacionHover(btnBajaCurso,598, 229, 190, 21);
 						btnBajaCurso.addActionListener(this);
 						panel3.add(btnBajaCurso);
 
@@ -1038,6 +1045,7 @@ public class PagInicio extends JFrame implements ActionListener {
 						btnApuntarse = new JButton("Apuntarse");
 						btnApuntarse.setFont(new Font("Arial Black", Font.PLAIN, 16));
 						btnApuntarse.setBounds(408, 465, 136, 21);
+						agregarAnimacionHover(btnApuntarse,408, 465, 136, 21);
 						btnApuntarse.addActionListener(this);
 						panel3.add(btnApuntarse);
 
@@ -1270,25 +1278,31 @@ public class PagInicio extends JFrame implements ActionListener {
 
 					btnCrearCurso_1 = new JButton("Crear");
 					btnCrearCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-					btnCrearCurso_1.addActionListener(this);
 					btnCrearCurso_1.setBounds(689, 302, 195, 21);
+					agregarAnimacionHover(btnCrearCurso_1,689, 302, 195, 21);
+					btnCrearCurso_1.addActionListener(this);
+					
 					panel4.add(btnCrearCurso_1);
 
 					btnModificar_1 = new JButton("Modificar");
 					btnModificar_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-					btnModificar_1.addActionListener(this);
 					btnModificar_1.setBounds(689, 336, 195, 21);
+					agregarAnimacionHover(btnModificar_1,689, 336, 195, 21);
+					btnModificar_1.addActionListener(this);
+					
 					panel4.add(btnModificar_1);
 
 					btnEliminarCurso_1 = new JButton("Eliminar");
 					btnEliminarCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					btnEliminarCurso_1.setBounds(689, 367, 195, 21);
+					agregarAnimacionHover(btnEliminarCurso_1,689, 367, 195, 21);
 					btnEliminarCurso_1.addActionListener(this);
 					panel4.add(btnEliminarCurso_1);
 
 					btnConsultar = new JButton("Consultar bailarines");
 					btnConsultar.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					btnConsultar.setBounds(689, 398, 195, 21);
+					agregarAnimacionHover(btnConsultar,689, 398, 195, 21);
 					btnConsultar.addActionListener(this);
 					panel4.add(btnConsultar);
 
@@ -1313,6 +1327,7 @@ public class PagInicio extends JFrame implements ActionListener {
 						 btnAltaProfesor = new JButton("Alta Profesor");
 						 btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
 						 btnAltaProfesor.setBounds(373, 173, 155, 21);
+						 agregarAnimacionHover(btnAltaProfesor,373, 173, 155, 21);
 						 btnAltaProfesor.addActionListener(this);
 						 panel4.add(btnAltaProfesor);
 					 }

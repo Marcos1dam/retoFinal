@@ -46,7 +46,8 @@ public class PagInicio extends JFrame implements ActionListener {
 	private JButton btnModificar_1;
 	private JButton btnEliminarCurso_1;
 	private JButton btnConsultar;
-	private JButton btnEliminarBailarin_1;
+
+
 	private Profesor p;
 
 	// Campos para curso
@@ -151,19 +152,19 @@ public class PagInicio extends JFrame implements ActionListener {
 
 		btnAcceder = new JButton("Acceder");
 		btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnAcceder.setBounds(287, 393, 102, 21);
+		btnAcceder.setBounds(282, 343, 102, 21);
 		btnAcceder.addActionListener(this);
 		passwordPanel.add(btnAcceder);
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnCancelar.setBounds(493, 393, 116, 21);
+		btnCancelar.setBounds(472, 343, 116, 21);
 		btnCancelar.addActionListener(this);
 		passwordPanel.add(btnCancelar);
 
 		btnRecuperarContraseña = new JButton("¿Has olvidado tu contraseña?");
 		btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
-		btnRecuperarContraseña.setBounds(425, 313, 184, 21);
+		btnRecuperarContraseña.setBounds(425, 279, 184, 21);
 		btnRecuperarContraseña.addActionListener(this);
 		passwordPanel.add(btnRecuperarContraseña);
 
@@ -587,14 +588,11 @@ public class PagInicio extends JFrame implements ActionListener {
 							} catch (LoginException e) {
 								JOptionPane.showMessageDialog(this, "No se pudo actualizar la tabla de cursos", "Error", JOptionPane.ERROR_MESSAGE);
 								e.printStackTrace();
-							}
-		                    
-		                    
+							} 
 		                    return; // Terminar después de actualizar
 		                }
 		            }
-		        }
-		                
+		        }        
 	    }
 	    
 	}
@@ -1195,10 +1193,12 @@ public class PagInicio extends JFrame implements ActionListener {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+
 					for (Curso curso : cursosProfesor) {
 						model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
 								curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
 					}
+
 
 					table.getSelectionModel().addListSelectionListener(e -> {
 					    if (!e.getValueIsAdjusting()) {
@@ -1308,10 +1308,6 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnConsultar.addActionListener(this);
 					panel4.add(btnConsultar);
 
-					btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
-					btnEliminarBailarin_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-					btnEliminarBailarin_1.setBounds(689, 398, 195, 21);
-					panel4.add(btnEliminarBailarin_1);
 
 					agregarBotonCerrarSesion(panel4);
 					tabbedPane.addTab("Información de Profesores", null, panel4, "Datos de los Profesores");
@@ -1337,13 +1333,7 @@ public class PagInicio extends JFrame implements ActionListener {
 						 btnAltaProfesor.addActionListener(this);
 						 panel4.add(btnAltaProfesor);
 					 }
-					if(p.isAdmin()) {
-						btnAltaProfesor = new JButton("Alta Profesor");
-						btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
-						btnAltaProfesor.setBounds(373, 173, 155, 21);
-						panel4.add(btnAltaProfesor);
-					}
-					
+
 				}
 				tabbedPane.setSelectedIndex(2);
 
@@ -1357,7 +1347,39 @@ public class PagInicio extends JFrame implements ActionListener {
 	        JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	public void agregarAnimacionHover(JButton boton, int originalX, int originalY, int originalWidth, int originalHeight) {
+	    boton.addMouseListener(new java.awt.event.MouseAdapter() {
+	        @Override
+	        public void mouseEntered(java.awt.event.MouseEvent evt) {
+	            new Thread(() -> {
+	                for (int i = 0; i <= 8; i++) {
+	                    int width = originalWidth + (i * 3);
+	                    int height = originalHeight + (i * 2);
+	                    int x = originalX - (width - originalWidth) / 2;
+	                    int y = originalY - (height - originalHeight) / 2;
 
+	                    boton.setBounds(x, y, width, height);
+	                    try { Thread.sleep(15); } catch (InterruptedException ex) {}
+	                }
+	            }).start();
+	        }
+
+	        @Override
+	        public void mouseExited(java.awt.event.MouseEvent evt) {
+	            new Thread(() -> {
+	                for (int i = 8; i >= 0; i--) {
+	                    int width = originalWidth + (i * 3);
+	                    int height = originalHeight + (i * 2);
+	                    int x = originalX - (width - originalWidth) / 2;
+	                    int y = originalY - (height - originalHeight) / 2;
+
+	                    boton.setBounds(x, y, width, height);
+	                    try { Thread.sleep(15); } catch (InterruptedException ex) {}
+	                }
+	            }).start();
+	        }
+	    });
+	}
 	private void modificar() {
 		ModificarCurso mod = new ModificarCurso(cursoSeleccionado, true);
 		mod.setVisible(true);
@@ -1383,5 +1405,3 @@ public class PagInicio extends JFrame implements ActionListener {
 
 	}
 }
-
-

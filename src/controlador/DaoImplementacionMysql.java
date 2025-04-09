@@ -378,7 +378,6 @@ public class DaoImplementacionMysql implements Dao {
 		}
 	}
 
-
 	@Override
 	public void darDeBajaCurso(int idCurso, String DniBailarin) throws LoginException {
 
@@ -598,7 +597,7 @@ public class DaoImplementacionMysql implements Dao {
 			rs=stmt.executeQuery();
 			if (rs.next()) {
 			    resultado = rs.getFloat("resultado");
-			    System.out.println("Resultado: " + resultado + "%");
+			    
 			}
 			return resultado;
 		} catch (SQLException e) {

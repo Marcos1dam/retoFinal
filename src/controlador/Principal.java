@@ -39,10 +39,12 @@ public class Principal {
 	}
 
 
+
 	public static ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso> cursosProfesor) throws LoginException {
 		
 		return dao.obtenerCursosPorProfesor(idProfesor, cursosProfesor);
 		
+
 	}
 
 
@@ -62,14 +64,19 @@ public class Principal {
 
 	}
 
-
-	public static void elimiinarCurso(int idCurso) throws LoginException {
-		dao.eliminarCurso(idCurso);
-	}
+	
 	public static ArrayList<Curso> obtenerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursosBailarin) throws LoginException{
 		
 		return dao.obtnerCursosPorBailarin(idBailarin, cursosBailarin);
 	}
+
+
+
+
+	public static void elimiinarCurso(int idCurso) throws LoginException {
+		dao.eliminarCurso(idCurso);
+	}
+
 
 
 

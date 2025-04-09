@@ -46,6 +46,8 @@ public class PagInicio extends JFrame implements ActionListener {
 	private JButton btnModificar_1;
 	private JButton btnEliminarCurso_1;
 	private JButton btnConsultar;
+
+
 	private Profesor p;
 
 	// Campos para curso
@@ -510,19 +512,24 @@ public class PagInicio extends JFrame implements ActionListener {
 		}else if(e.getSource().equals(btnConsultar)) {
 			consultar(cursoSeleccionado);
 		}else if(e.getSource().equals(btnAltaProfesor)) {
-			
+			altaProfesor();
 		}
 	}
 
 	private void consultar(Curso cursoSeleccionado2) {
 		if(cursoSeleccionado2!=null) {
-		ConsultarBailarinesCurso vent =  new ConsultarBailarinesCurso(this, true, cursoSeleccionado2);
-		vent.setVisible(true);
+			ConsultarBailarinesCurso vent =  new ConsultarBailarinesCurso(this, true, cursoSeleccionado2);
+			vent.setVisible(true);
 		}else {
 			 JOptionPane.showMessageDialog(this, "Selecciona un curso primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 		}
+		
+		
 	}
-
+	private void altaProfesor() {
+		AltaProfesor vent = new AltaProfesor();
+		vent.setVisible(true);
+	}
 	private void inscripcion() {
 		Inscripcion mod= new Inscripcion(true);
 		mod.setVisible(true);
@@ -1186,12 +1193,14 @@ public class PagInicio extends JFrame implements ActionListener {
 							model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
 									curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getFechaInicio(), curso.getFechaFin(), curso.getIdProfesor() });
 						}
-						
 					} catch (LoginException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
+					for (Curso curso : cursosProfesor) {
+						model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
+								curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
+					}
 
 					table.getSelectionModel().addListSelectionListener(e -> {
 					    if (!e.getValueIsAdjusting()) {
@@ -1306,6 +1315,8 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnConsultar.addActionListener(this);
 					panel4.add(btnConsultar);
 
+					
+
 					agregarBotonCerrarSesion(panel4);
 					tabbedPane.addTab("Información de Profesores", null, panel4, "Datos de los Profesores");
 					
@@ -1331,6 +1342,15 @@ public class PagInicio extends JFrame implements ActionListener {
 						 btnAltaProfesor.addActionListener(this);
 						 panel4.add(btnAltaProfesor);
 					 }
+
+					if(p.isAdmin()) {
+						btnAltaProfesor = new JButton("Alta Profesor");
+						btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
+						btnAltaProfesor.setBounds(373, 173, 155, 21);
+						panel4.add(btnAltaProfesor);
+					}
+					
+
 				}
 				tabbedPane.setSelectedIndex(2);
 

@@ -1048,10 +1048,10 @@ public class PagInicio extends JFrame implements ActionListener {
 					btnEliminarCurso_1.addActionListener(this);
 					panel4.add(btnEliminarCurso_1);
 
-					btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
-					btnEliminarBailarin_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-					btnEliminarBailarin_1.setBounds(689, 398, 195, 21);
-					panel4.add(btnEliminarBailarin_1);
+//					btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
+//					btnEliminarBailarin_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
+//					btnEliminarBailarin_1.setBounds(689, 398, 195, 21);
+//					panel4.add(btnEliminarBailarin_1);
 
 					agregarBotonCerrarSesion(panel4);
 					tabbedPane.addTab("Información de Profesores", null, panel4, "Datos de los Profesores");

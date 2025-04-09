@@ -21,6 +21,9 @@ public class Profesor {
 	}
 
 	public void setCorreo(String correo) throws EmailExecption {
+		if (correo == null || correo.trim().isEmpty()) {
+	        throw new EmailExecption("El correo no puede ser nulo o vacío");
+	    }
 		 if (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
 		        throw new EmailExecption("Email no válido. Ejemplo válido: usuario@dominio.com");
 		    }

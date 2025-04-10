@@ -25,6 +25,7 @@ import modelo.Nivel;
 import modelo.Participa;
 import modelo.Profesor;
 
+
 public class PagInicio extends JFrame implements ActionListener {
 	/**
 	 * 

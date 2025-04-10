@@ -30,6 +30,7 @@ import java.awt.Toolkit;
 
 public class CrearCurso extends JDialog implements ActionListener {
 
+	
 	private static final long serialVersionUID = 1L;
 	private JLabel lblPrecio;
 	private JTextField textFieldPrecio;

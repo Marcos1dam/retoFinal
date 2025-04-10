@@ -39,6 +39,7 @@ import java.awt.Color;
 
 public class AltaProfesor extends JDialog implements ActionListener{
 
+	
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textFieldIdProfesor;

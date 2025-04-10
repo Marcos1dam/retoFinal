@@ -362,6 +362,7 @@ public class Inscripcion extends JDialog implements ActionListener{
 	    });
 	}
 
+	
 	private void solicitudInscripcion(Curso cursoSeleccionado2) {
 	    // Validar que el curso seleccionado no sea nulo
 		if(textFieldNombre.getText().trim().isEmpty() ||

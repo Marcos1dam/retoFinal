@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import controlador.Principal;
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Nivel;
@@ -175,245 +176,7 @@ public class PagInicio extends JFrame implements ActionListener {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(356, 240, 253, 19);
 		passwordPanel.add(passwordField);
-		//////////////////////////////////////////////
-		/*JPanel panel4 = new JPanel() {
-			private Image backgroundImage = new ImageIcon(
-					getClass().getResource("/imagenes/CodeAndDance.png")).getImage();
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-			}
-		};
-		panel4.setLayout(null);
-
-		lbId = new JLabel("ID:");
-		lbId.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lbId.setBounds(103, 69, 87, 18);
-		panel4.add(lbId);
-
-		lblNombre_1 = new JLabel("Nombre:");
-		lblNombre_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblNombre_1.setBounds(103, 110, 87, 18);
-		panel4.add(lblNombre_1);
-
-		lblApellido = new JLabel("Apellido:");
-		lblApellido.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblApellido.setBounds(103, 148, 87, 18);
-		panel4.add(lblApellido);
-
-		lblSalario = new JLabel("Salario:");
-		lblSalario.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblSalario.setBounds(103, 188, 87, 18);
-		panel4.add(lblSalario);
-
-		lblEmail = new JLabel("Correo:");
-		lblEmail.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblEmail.setBounds(103, 228, 87, 18);
-		panel4.add(lblEmail);
-
-		lblFoto = new JLabel("");
-		lblFoto.setBounds(683, 69, 201, 177);
-		ImageIcon icon = new ImageIcon(getClass().getResource(p.getImagen()));
-		Image imagen = icon.getImage().getScaledInstance(lblFoto.getWidth(), lblFoto.getHeight(),
-				Image.SCALE_SMOOTH);
-		lblFoto.setIcon(new ImageIcon(imagen));
-		panel4.add(lblFoto);
-
-		textId = new JTextField();
-		textId.setEditable(false);
-		textId.setBounds(177, 71, 87, 19);
-		panel4.add(textId);
-		textId.setText(String.valueOf(p.getId()));
-		textId.setColumns(10);
-
-		textNombreProfesor = new JTextField();
-		textNombreProfesor.setEditable(false);
-		textNombreProfesor.setColumns(10);
-		textNombreProfesor.setBounds(177, 109, 87, 19);
-		textNombreProfesor.setText(p.getNombre());
-		panel4.add(textNombreProfesor);
-
-		textApellidoProfesor = new JTextField();
-		textApellidoProfesor.setEditable(false);
-		textApellidoProfesor.setColumns(10);
-		textApellidoProfesor.setBounds(177, 150, 87, 19);
-		textApellidoProfesor.setText(p.getApellido());
-		panel4.add(textApellidoProfesor);
-
-		textSalario = new JTextField();
-		textSalario.setEditable(false);
-		textSalario.setColumns(10);
-		textSalario.setBounds(177, 190, 87, 19);
-		textSalario.setText(String.valueOf(p.getSalario()));
-		panel4.add(textSalario);
-
-		textEmailProfesor = new JTextField();
-		textEmailProfesor.setEditable(false);
-		textEmailProfesor.setColumns(10);
-		textEmailProfesor.setBounds(177, 230, 224, 19);
-		textEmailProfesor.setText(p.getCorreo());
-		panel4.add(textEmailProfesor);
-
-		// En la creación de la pestaña de profesores
-		table = new JTable();
-		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(103, 305, 576, 161);
-		panel4.add(scrollPane);
-
-		// Configurar el modelo de tabla para cursos
-		String[] columnNames = { "ID ", "Tipo", "Horario", "Nivel", "Precio", "Plazas","Fecha Inicio","Fecha Fin", "Id Profesor" };
-		DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false; // Hacer que la tabla no sea editable directamente
-			}
-		};
-		table.setModel(model);
-		model.setRowCount(0);
-		// ArrayList<Curso>cursos = Principal.obtenerCursosPorProfesor(p.getId());
-	
-		try {
-			cursos = Principal.obtenerCursosPorProfesor(p.getId(), cursos);
-		} catch (LoginException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		for (Curso curso : cursos) {
-			model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
-					curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
-		}
-
-		table.getSelectionModel().addListSelectionListener(e -> {
-		    if (!e.getValueIsAdjusting()) {
-		        int selectedRow = table.getSelectedRow();
-		        if (selectedRow >= 0) {
-		            try {
-		                cursoSeleccionado = new Curso();
-		                
-		                // Configuración básica del curso
-		                cursoSeleccionado.setIdCurso(Integer.parseInt(table.getValueAt(selectedRow, 0).toString()));
-		                cursoSeleccionado.setTipo(table.getValueAt(selectedRow, 1).toString());
-		                
-		                // Horario
-		                cursoSeleccionado.setHorario(Time.valueOf(table.getValueAt(selectedRow, 2).toString()));
-		                
-		                // Nivel
-		                cursoSeleccionado.setNivel(Nivel.obtenerPorNombre(table.getValueAt(selectedRow, 3).toString()));
-		                
-		                // Precio y plazas
-		                cursoSeleccionado.setPrecio(Float.parseFloat(table.getValueAt(selectedRow, 4).toString()));
-		                cursoSeleccionado.setPlazas(Integer.parseInt(table.getValueAt(selectedRow, 5).toString()));
-		                
-		                // Conversión segura de fechas a java.sql.Date
-		                Object fechaInicioValue = table.getValueAt(selectedRow, 6);
-		                Object fechaFinValue = table.getValueAt(selectedRow, 7);
-		                
-		                // Manejo para FechaInicio
-		                if (fechaInicioValue instanceof java.util.Date) {
-		                    java.util.Date utilDate = (java.util.Date) fechaInicioValue;
-		                    cursoSeleccionado.setFechaInicio(new java.sql.Date(utilDate.getTime()));
-		                } else if (fechaInicioValue instanceof String) {
-		                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		                    java.util.Date parsedDate = sdf.parse((String) fechaInicioValue);
-		                    cursoSeleccionado.setFechaInicio(new java.sql.Date(parsedDate.getTime()));
-		                }
-		                
-		                // Manejo para FechaFin
-		                if (fechaFinValue instanceof java.util.Date) {
-		                    java.util.Date utilDate = (java.util.Date) fechaFinValue;
-		                    cursoSeleccionado.setFechaFin(new java.sql.Date(utilDate.getTime()));
-		                } else if (fechaFinValue instanceof String) {
-		                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		                    java.util.Date parsedDate = sdf.parse((String) fechaFinValue);
-		                    cursoSeleccionado.setFechaFin(new java.sql.Date(parsedDate.getTime()));
-		                }
-		                
-		                // ID Profesor
-		                cursoSeleccionado.setIdProfesor(Integer.parseInt(table.getValueAt(selectedRow, 8).toString()));
-		                
-		                // Habilitar botones
-		                btnModificar_1.setEnabled(true);
-		                btnEliminarCurso_1.setEnabled(true);
-		                btnEliminarBailarin_1.setEnabled(true);
-		                
-		            } catch (ParseException ex) {
-		                JOptionPane.showMessageDialog(null, 
-		                    "Formato de fecha inválido. Use yyyy-MM-dd", 
-		                    "Error", 
-		                    JOptionPane.ERROR_MESSAGE);
-		            } catch (IllegalArgumentException ex) {
-		                JOptionPane.showMessageDialog(null, 
-		                    "Formato de horario inválido. Use HH:mm:ss", 
-		                    "Error", 
-		                    JOptionPane.ERROR_MESSAGE);
-		            } catch (Exception ex) {
-		                JOptionPane.showMessageDialog(null, 
-		                    "Error al cargar los datos: " + ex.getMessage(), 
-		                    "Error", 
-		                    JOptionPane.ERROR_MESSAGE);
-		                ex.printStackTrace();
-		            }
-		        }
-		    }
-		});
-
-		JSeparator separator = new JSeparator();
-		separator.setBounds(10, 268, 902, 27);
-		panel4.add(separator);
-
-		JLabel lblTablaCursos = new JLabel("Cursos");
-		lblTablaCursos.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblTablaCursos.setBounds(314, 277, 87, 18);
-		panel4.add(lblTablaCursos);
-
-		btnCrearCurso_1 = new JButton("Crear");
-		btnCrearCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnCrearCurso_1.addActionListener(this);
-		btnCrearCurso_1.setBounds(689, 302, 195, 21);
-		panel4.add(btnCrearCurso_1);
-
-		btnModificar_1 = new JButton("Modificar");
-		btnModificar_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnModificar_1.addActionListener(this);
-		btnModificar_1.setBounds(689, 336, 195, 21);
-		panel4.add(btnModificar_1);
-
-		btnEliminarCurso_1 = new JButton("Eliminar");
-		btnEliminarCurso_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnEliminarCurso_1.setBounds(689, 367, 195, 21);
-		btnEliminarCurso_1.addActionListener(this);
-		panel4.add(btnEliminarCurso_1);
-
-		btnEliminarBailarin_1 = new JButton("Eliminar bailarín");
-		btnEliminarBailarin_1.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnEliminarBailarin_1.setBounds(689, 398, 195, 21);
-		panel4.add(btnEliminarBailarin_1);
-
-		agregarBotonCerrarSesion(panel4);
-		tabbedPane.addTab("Información de Profesores", null, panel4, "Datos de los Profesores");
 		
-		lblNumeroBailarines = new JLabel("Nº Bailarines:");
-		lblNumeroBailarines.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		lblNumeroBailarines.setBounds(373, 126, 118, 18);
-		panel4.add(lblNumeroBailarines);
-		
-		textField = new JTextField();
-		textField.setEditable(false);
-		textField.setBounds(491, 127, 37, 21);
-		panel4.add(textField);
-		textField.setColumns(10);
-		
-		btnAltaProfesor = new JButton("Alta Profesor");
-		btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnAltaProfesor.setBounds(373, 173, 155, 21);
-		panel4.add(btnAltaProfesor);
-	}
-		
-		//////////////////////////////////////////////*/
-	
-	///////////////////////////////////////////////////
 		contentPane.add(tabbedPane, BorderLayout.CENTER);
 	}
 
@@ -528,8 +291,11 @@ public class PagInicio extends JFrame implements ActionListener {
 	}
 
 	private void altaProfesor() {
-		AltaProfesor vent = new AltaProfesor();
-		vent.setVisible(true);
+
+		AltaProfesor mod= new AltaProfesor(true);
+		mod.setVisible(true);
+		
+
 	}
 
 	private void inscripcion() {
@@ -699,7 +465,7 @@ public class PagInicio extends JFrame implements ActionListener {
 	}
 
 	private void mostrar() {
-		JOptionPane.showMessageDialog(this, "Tu usuario es tu correo electrónico y la contraseña es tu DNI",
+		JOptionPane.showMessageDialog(this, "Se te ha enviada un correo con tu usuario y contraseña",
 				"Informacion de SingIN", JOptionPane.INFORMATION_MESSAGE);
 	}
 
@@ -1078,8 +844,10 @@ public class PagInicio extends JFrame implements ActionListener {
 			 try {
 				p = Principal.leerId(String.valueOf(passwordChars));
 			} catch (LoginException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
+			} catch (EmailExecption e) {
+				e.visualizarMensaje();
 			}
 
 			if (p != null && String.valueOf(passwordChars).equals(String.valueOf(p.getId()))
@@ -1186,22 +954,22 @@ public class PagInicio extends JFrame implements ActionListener {
 						}
 					};
 					table.setModel(model);
-					model.setRowCount(0);
 					
-				
+					model.setRowCount(0);
+
+									
 					try {
-						cursosProfesor = Principal.obtenerCursosPorProfesor(p.getId(), cursosProfesor);
-						
+						cursosProfesor = Principal.obtenerCursosPorProfesor(p.getId(), new ArrayList<>());
 						for (Curso curso : cursosProfesor) {
 							model.addRow(new Object[] { curso.getIdCurso(), curso.getTipo(), curso.getHorario(),
-									curso.getNivel(), curso.getPrecio(), curso.getPlazas(), curso.getFechaInicio(), curso.getFechaFin(), curso.getIdProfesor() });
-							System.out.println(curso);
+									curso.getNivel(), curso.getPrecio(), curso.getPlazas(),curso.getFechaInicio(),curso.getFechaFin(), curso.getIdProfesor() });
 						}
 
 					} catch (LoginException e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					}
+
 
 					table.getSelectionModel().addListSelectionListener(e -> {
 					    if (!e.getValueIsAdjusting()) {
@@ -1310,6 +1078,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel4.add(btnEliminarCurso_1);
 
 
+
 					btnConsultar = new JButton("Consultar bailarines");
 					btnConsultar.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					btnConsultar.setBounds(689, 398, 195, 21);
@@ -1318,11 +1087,10 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel4.add(btnConsultar);
 
 
-
 					agregarBotonCerrarSesion(panel4);
 					tabbedPane.addTab("Información de Profesores", null, panel4, "Datos de los Profesores");
 					
-					lblNumeroBailarines = new JLabel("Nº Bailarines:");
+					lblNumeroBailarines = new JLabel("% Ocupacion:");
 					lblNumeroBailarines.setFont(new Font("Arial Black", Font.PLAIN, 14));
 					lblNumeroBailarines.setBounds(373, 126, 118, 18);
 					panel4.add(lblNumeroBailarines);
@@ -1333,6 +1101,7 @@ public class PagInicio extends JFrame implements ActionListener {
 					panel4.add(textField);
 					textField.setColumns(10);
 					
+
 					float num = Principal.ocupacionDelProfesor(p);
 					String mensaje =String.format("%.1f", num) + "%";
 					textField.setText(mensaje);
@@ -1346,6 +1115,16 @@ public class PagInicio extends JFrame implements ActionListener {
 					 }
 
 
+
+					if(p.isAdmin()) {
+						btnAltaProfesor = new JButton("Alta Profesor");
+						btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
+						btnAltaProfesor.setBounds(373, 173, 155, 21);
+						btnAltaProfesor.addActionListener(this);
+						panel4.add(btnAltaProfesor);
+					}
+					
+
 				}
 				tabbedPane.setSelectedIndex(2);
 
@@ -1355,6 +1134,9 @@ public class PagInicio extends JFrame implements ActionListener {
 			}
 
 		}else {
+			if(textUsuario.getText().trim().isEmpty() || passwordField.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "introduzca usuario y contraseña", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 			// Longitud de contraseña inválida (ni 1 ni 9 caracteres)
 	        JOptionPane.showMessageDialog(this, "Credenciales inválidas", "Error", JOptionPane.ERROR_MESSAGE);
 		}

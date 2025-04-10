@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 
 import javax.security.auth.login.LoginException;
 
+import exceptions.DniExecption;
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Nivel;
@@ -36,7 +38,7 @@ public class DaoImplementacionMysql implements Dao {
     final String CREARCURSO = "INSERT INTO CURSO (IdCurso, Tipo, Horario, Nivel, Precio, Plaza, FInicio, FFin, IdProfesor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     final String CURSOPORBAILARIN = "SELECT * FROM Curso WHERE IdCurso IN(SELECT IdCurso FROM Participa WHERE DniBailarin = ?)";
     final String TODOSLOSCURSOS = "SELECT * FROM Curso";
-    final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?  WHERE IdCurso = ?";
+    final String MODIFICARCURSO = "UPDATE CURSO SET Tipo = ?, Horario = ?, Nivel = ?, Precio = ?, Plaza = ?, FInicio = ?, FFin = ?  WHERE IdCurso = ?";
 	final String ELIMINARCURSO = "DELETE FROM Curso WHERE IdCurso = ?";
 	final String PARTICIPA = "SELECT * FROM Participa WHERE IdCurso= ?";
 	final String INSCRIPCIONCURSO = "INSERT INTO Participa VALUES(?, ?) ";
@@ -45,7 +47,9 @@ public class DaoImplementacionMysql implements Dao {
 	final String ELIMINARBAILARIN = "DELETE from Participa where DniBailarin= ? and IdCurso= ?";
 	final String INSCRIPCION = "INSERT INTO Bailarin (DniBailarin, NombreB, ApellidoB, FechaNacimiento, Telefono, EmailB) VALUES (?, ?, ?, ?, ?, ?)";
 	final String TotalBailarinesCapacesDeInscritos = "SELECT TotalBailarinesCapacesDeInscritos(?) as resultado";
-	
+	final String TODOSLOSPROFESORES = "SELECT * FROM Profesor";
+	final String ALTAPROFESOR = "INSERT INTO Profesor (IdProfesor, NombreP, ApellidoP, Salario, EmailP, EsAdmin, Imagen) VALUES(?, ?, ?, ?, ?, ?, ?)";
+
 	
 	public DaoImplementacionMysql() {
 		this.configFile = ResourceBundle.getBundle("modelo.configClase");
@@ -87,7 +91,7 @@ public class DaoImplementacionMysql implements Dao {
 				ba.setTelefono(rs.getInt("Telefono"));
 				ba.setCorreo(rs.getString("EmailB"));
 
-				return ba;
+				
 			} else {
 				throw new LoginException("No se encontró ningún bailarín con el DNI proporcionado.");
 			}
@@ -95,6 +99,12 @@ public class DaoImplementacionMysql implements Dao {
 			String message = "Error al leer datos: ";
 			LoginException ex = new LoginException(message);
 			throw ex;
+		} catch (EmailExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DniExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			try {
 				if (rs != null) {
@@ -105,11 +115,12 @@ public class DaoImplementacionMysql implements Dao {
 				e.printStackTrace();
 			}
 		}
+		return ba;
 
 	}
 
 	@Override
-	public Profesor leerProfesor(String id) throws LoginException {
+	public Profesor leerProfesor(String id) throws LoginException, EmailExecption {
 		ResultSet rs = null;
 		Profesor p = null;
 
@@ -192,8 +203,10 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
+
 	public ArrayList<Curso> obtenerCursosPorProfesor(int idProfesor, ArrayList<Curso>cursos) throws LoginException {
 		
+
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -250,8 +263,7 @@ public class DaoImplementacionMysql implements Dao {
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
+			throw new LoginException("error en la base de datos");
 		} finally {
 			try {
 				closeConnection();
@@ -262,7 +274,8 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 
-	public ArrayList obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
+	public ArrayList<Curso> obtnerCursosPorBailarin(String idBailarin, ArrayList<Curso> cursos) {
+
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -303,7 +316,7 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList obtenerTodosLosCursos(ArrayList<Curso> cursos) {
+	public ArrayList<Curso> obtenerTodosLosCursos(ArrayList<Curso> cursos) {
 		ResultSet rs = null;
 		Curso cu = null;
 
@@ -462,7 +475,7 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso) {
+	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso) throws DniExecption, EmailExecption {
 		ArrayList<Bailarin> bailarines= new ArrayList<Bailarin>();
 		ResultSet rs=null;
 		Bailarin ba;
@@ -560,7 +573,6 @@ public class DaoImplementacionMysql implements Dao {
 			stmt = con.prepareStatement(INSCRIPCIONCURSO);
 			stmt.setInt(1, idCurso);
 			stmt.setString(2, DniBailarin);
-
 			int affectedRows = stmt.executeUpdate();
 
 			if (affectedRows == 0) {
@@ -578,8 +590,72 @@ public class DaoImplementacionMysql implements Dao {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+		
+			
 		}
+	}
+	@Override
+	public ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException, EmailExecption {
+		ResultSet rs = null;
+		Profesor p= null;
 
+		try {
+			openConnection();
+			stmt = con.prepareStatement(TODOSLOSPROFESORES);
+
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				p= new Profesor();
+				p.setId(rs.getInt("IdProfesor"));
+				p.setNombre(rs.getNString("NombreP"));
+				p.setApellido(rs.getNString("ApellidoP"));
+				p.setSalario(rs.getFloat("Salario"));
+				p.setCorreo(rs.getNString("EmailP"));
+				p.setAdmin(rs.getBoolean("EsAdmin"));
+				p.setImagen(rs.getNString("Imagen"));
+				profesores.add(p);
+			}
+			return profesores;
+		} catch (SQLException e) {
+			throw new LoginException("error en la base de datos");
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+	@Override
+	public void altaProfesor(Profesor p) throws LoginException {
+		try {
+			openConnection();
+			stmt = con.prepareStatement(ALTAPROFESOR);
+			
+			stmt.setInt(1, p.getId());
+			stmt.setString(2, p.getNombre());
+			stmt.setString(3, p.getApellido());
+			stmt.setFloat(4, p.getSalario());
+			stmt.setString(5, p.getCorreo());
+			stmt.setBoolean(6, p.isAdmin());
+			stmt.setString(7, p.getImagen());
+
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new LoginException("error en la base de datos");
+		} finally {
+			try {
+				closeConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	@Override

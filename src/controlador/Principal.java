@@ -9,6 +9,8 @@ import javax.security.auth.login.LoginException;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import exceptions.DniExecption;
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 import modelo.Participa;
@@ -34,6 +36,7 @@ public class Principal {
 	}
 
 	
+	
 	public static Curso obtenerCursoPorId(int idCurso) throws LoginException {
 		return dao.obtenerCurso(idCurso);
 	}
@@ -48,7 +51,7 @@ public class Principal {
 	}
 
 
-	public static Profesor leerId(String id) throws LoginException {
+	public static Profesor leerId(String id) throws LoginException, EmailExecption {
 
 		return dao.leerProfesor(id);
 
@@ -77,9 +80,6 @@ public class Principal {
 		dao.eliminarCurso(idCurso);
 	}
 
-
-
-
 	public static void modificarCurso(Curso curso) throws LoginException {
 
 		dao.modificarCurso(curso);
@@ -97,14 +97,12 @@ public class Principal {
 		dao.inscripcionCurso(idCurso, dniBailarin);
 	}
 
-	public static void darDeBajaCurso(int idCurso, String dniBailarin) throws LoginException {
-
-	}
+	
 	public static void inscribirse(Bailarin b) throws LoginException {
 		dao.inscribirse(b);
 	}
 
-	public static ArrayList<Bailarin> obtenerBailarinsDelCurso(int idCurso) {
+	public static ArrayList<Bailarin> obtenerBailarinsDelCurso(int idCurso) throws DniExecption, EmailExecption {
 
 		return dao.obtenerTodosBailarines(idCurso);
 	}
@@ -116,6 +114,28 @@ public class Principal {
 
 	public static float ocupacionDelProfesor(Profesor p) {
 		
+
 		return dao.ocupacionDelProfesor(p);
 	}
+
+    
+    
+   
+    public static void darDeBajaCurso(int idCurso, String dniBailarin) throws LoginException{
+    	
+		dao.darDeBajaCurso(idCurso, dniBailarin);
+	
+    }
+    
+    
+    
+    public static ArrayList<Profesor> obtenerTodosLosProfesores(ArrayList<Profesor> profesores) throws LoginException, EmailExecption{
+		return dao.obtenerTodosLosProfesores(profesores);
+    	
+    }
+    
+    public static void altaProfesor(Profesor p) throws LoginException{
+    	dao.altaProfesor(p);
+    }
+
 }

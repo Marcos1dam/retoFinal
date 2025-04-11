@@ -38,7 +38,7 @@ public interface Dao {
 	
 	public void eliminarCurso(int idCurso) throws LoginException;
 
-	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso) throws DniExecption, EmailExecption;
+	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso) throws DniExecption, EmailExecption, LoginException;
 
 	public void eliminarBailarin(Bailarin bailarin, int i);
 	

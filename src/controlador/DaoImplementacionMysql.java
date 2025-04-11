@@ -475,7 +475,7 @@ public class DaoImplementacionMysql implements Dao {
 	}
 
 	@Override
-	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso) throws DniExecption, EmailExecption {
+	public ArrayList<Bailarin> obtenerTodosBailarines(int idCurso) throws DniExecption, EmailExecption, LoginException {
 		ArrayList<Bailarin> bailarines= new ArrayList<Bailarin>();
 		ResultSet rs=null;
 		Bailarin ba;
@@ -498,9 +498,12 @@ public class DaoImplementacionMysql implements Dao {
 			}
 			return bailarines;
 		} catch (SQLException e) {
-			String message = "Error al leer datos: ";
-			LoginException ex = new LoginException(message);
-		} finally {
+			throw new LoginException("error en la base de datos");
+		}catch(DniExecption e) {
+			e.visualizarMensaje();
+		}catch(EmailExecption e){
+			e.visualizarMensaje();
+		}finally {
 			try {
 				if (rs != null) {
 					rs.close();

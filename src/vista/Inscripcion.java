@@ -253,12 +253,9 @@ public class Inscripcion extends JDialog implements ActionListener{
 		
 		btnInscribirse = new JButton("Inscribirse");
 		btnInscribirse.setFont(new Font("Arial Black", Font.PLAIN, 16));
-<<<<<<< HEAD
-		btnInscribirse.setBounds(247, 439, 129, 28);
-		agregarAnimacionHover(btnInscribirse, 247, 439, 129, 28);
-=======
+
 		btnInscribirse.setBounds(247, 458, 129, 28);
->>>>>>> newrama
+
 		btnInscribirse.addActionListener(this);
 		contentPanel.add(btnInscribirse);
 		

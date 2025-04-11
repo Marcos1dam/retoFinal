@@ -7,10 +7,14 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+
+import javax.security.auth.login.LoginException;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import controlador.Principal;
+import exceptions.DniExecption;
+import exceptions.EmailExecption;
 import modelo.Bailarin;
 import modelo.Curso;
 
@@ -77,7 +81,18 @@ public class ConsultarBailarinesCurso extends JDialog implements ActionListener 
 
     private void cargarTablaBailarines() {
         tableModel.setRowCount(0);
-        bailarines = Principal.obtenerBailarinsDelCurso(curso.getIdCurso());
+        try {
+			bailarines = Principal.obtenerBailarinsDelCurso(curso.getIdCurso());
+		} catch (DniExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (EmailExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (LoginException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         for (Bailarin bai : bailarines) {
             tableModel.addRow(new Object[]{bai.getDni(), bai.getNombre(), bai.getApellido(),
                     bai.getFechaNacimiento(), bai.getTelefono(), bai.getCorreo()});
@@ -86,7 +101,12 @@ public class ConsultarBailarinesCurso extends JDialog implements ActionListener 
 
     private void seleccionarBailarin(int selectedRow) {
         bailarinSeleccionado = new Bailarin();
-        bailarinSeleccionado.setDni(tableBailarines.getValueAt(selectedRow, 0).toString());
+        try {
+			bailarinSeleccionado.setDni(tableBailarines.getValueAt(selectedRow, 0).toString());
+		} catch (DniExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         bailarinSeleccionado.setNombre(tableBailarines.getValueAt(selectedRow, 1).toString());
         bailarinSeleccionado.setApellido(tableBailarines.getValueAt(selectedRow, 2).toString());
         
@@ -99,7 +119,12 @@ public class ConsultarBailarinesCurso extends JDialog implements ActionListener 
         }
         
         bailarinSeleccionado.setTelefono(Integer.parseInt(tableBailarines.getValueAt(selectedRow, 4).toString()));
-        bailarinSeleccionado.setCorreo(tableBailarines.getValueAt(selectedRow, 5).toString());
+        try {
+			bailarinSeleccionado.setCorreo(tableBailarines.getValueAt(selectedRow, 5).toString());
+		} catch (EmailExecption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         btnEliminar.setVisible(true);
     }
 

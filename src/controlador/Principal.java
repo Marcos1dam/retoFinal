@@ -102,7 +102,7 @@ public class Principal {
 		dao.inscribirse(b);
 	}
 
-	public static ArrayList<Bailarin> obtenerBailarinsDelCurso(int idCurso) throws DniExecption, EmailExecption {
+	public static ArrayList<Bailarin> obtenerBailarinsDelCurso(int idCurso) throws DniExecption, EmailExecption, LoginException {
 
 		return dao.obtenerTodosBailarines(idCurso);
 	}

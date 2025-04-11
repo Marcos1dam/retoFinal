@@ -41,13 +41,11 @@ public class ModificarCurso extends JDialog implements ActionListener {
 	private JTextField textoIDProfesor;
 	private JComboBox comboBox;
 	private JButton btnModificarCurso;
-<<<<<<< HEAD
-	private Curso cu = null;
-=======
+
 	private Curso cu;
 	private JTextField textFechaInicio;
 	private JTextField textFechaFin;
->>>>>>> newrama
+
 
 	/**
 	 * Create the dialog.
@@ -177,9 +175,7 @@ public class ModificarCurso extends JDialog implements ActionListener {
 		comboBox.setModel(new DefaultComboBoxModel(new String[] { "PRINCIPIANTE", "MEDIO", "AVANZADO" }));
 		comboBox.setBounds(202, 209, 112, 27);
 		contentPanel.add(comboBox);
-<<<<<<< HEAD
 
-=======
 		
 		textFechaInicio = new JTextField();
 		textFechaInicio.setBounds(202, 343, 108, 19);
@@ -211,7 +207,7 @@ public class ModificarCurso extends JDialog implements ActionListener {
 		lblFormatoFecha_1.setBounds(212, 400, 75, 13);
 		contentPanel.add(lblFormatoFecha_1);
 		
->>>>>>> newrama
+
 		cargaDatos(cu);
 	}
 

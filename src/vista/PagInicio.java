@@ -155,22 +155,22 @@ public class PagInicio extends JFrame implements ActionListener {
 
 		btnAcceder = new JButton("Acceder");
 		btnAcceder.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnAcceder.setBounds(282, 343, 102, 21);
-		agregarAnimacionHover(btnAcceder,282, 343, 102, 21);
+		btnAcceder.setBounds(263, 390, 102, 21);
+		agregarAnimacionHover(btnAcceder,263, 390, 102, 21);
 		btnAcceder.addActionListener(this);
 		passwordPanel.add(btnAcceder);
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setFont(new Font("Arial Black", Font.PLAIN, 14));
-		btnCancelar.setBounds(472, 343, 116, 21);
-		agregarAnimacionHover(btnCancelar,472, 343, 116, 21);
+		btnCancelar.setBounds(523, 390, 116, 21);
+		agregarAnimacionHover(btnCancelar,523, 390, 116, 21);
 		btnCancelar.addActionListener(this);
 		passwordPanel.add(btnCancelar);
 
 		btnRecuperarContraseña = new JButton("¿Has olvidado tu contraseña?");
 		btnRecuperarContraseña.setFont(new Font("Arial Black", Font.PLAIN, 8));
-		btnRecuperarContraseña.setBounds(425, 279, 184, 21);
-		agregarAnimacionHover(btnRecuperarContraseña,425, 279, 184, 21);
+		btnRecuperarContraseña.setBounds(425, 320, 184, 21);
+		agregarAnimacionHover(btnRecuperarContraseña,425, 320, 184, 21);
 		btnRecuperarContraseña.addActionListener(this);
 		passwordPanel.add(btnRecuperarContraseña);
 
@@ -1104,8 +1104,10 @@ public class PagInicio extends JFrame implements ActionListener {
 					
 
 					float num = Principal.ocupacionDelProfesor(p);
+					System.out.println(num);
 					String mensaje =String.format("%.1f", num) + "%";
 					textField.setText(mensaje);
+					
 					 if(p.isAdmin()) {
 						 btnAltaProfesor = new JButton("Alta Profesor");
 						 btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));

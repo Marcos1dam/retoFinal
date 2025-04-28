@@ -1118,14 +1118,6 @@ public class PagInicio extends JFrame implements ActionListener {
 					 }
 
 
-
-					if(p.isAdmin()) {
-						btnAltaProfesor = new JButton("Alta Profesor");
-						btnAltaProfesor.setFont(new Font("Arial Black", Font.PLAIN, 14));
-						btnAltaProfesor.setBounds(373, 173, 155, 21);
-						btnAltaProfesor.addActionListener(this);
-						panel4.add(btnAltaProfesor);
-					}
 					
 
 				}

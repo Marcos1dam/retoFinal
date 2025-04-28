@@ -61,10 +61,7 @@ public class AltaProfesor extends JDialog implements ActionListener{
 	private int idProfesor;
 	private JComboBox comboBoxEsAdmin;
 	private JTextField textFieldRutaImagen;
-	/**
-	 * Launch the application.
-	 * @param b 
-	 */
+	
 	
 	public AltaProfesor(boolean b) {
 		setModal(b);

@@ -24,6 +24,7 @@ public enum Nivel {
 				return n;
 			}
 		}
+		
 		throw new IllegalArgumentException("Nivel no válido: " + nombre);
 
 	}

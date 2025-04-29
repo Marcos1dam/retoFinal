@@ -5,6 +5,12 @@ import javax.swing.JOptionPane;
 public class LoginExecption extends Exception{
 private String mensaje;
 	
+	/**
+	 * @author Marcos
+	 * 
+	 * @param mensaje
+	 */
+
 	public LoginExecption (String mensaje) {
 		this.mensaje=mensaje;
 	}

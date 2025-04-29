@@ -3,6 +3,9 @@ package exceptions;
 import javax.swing.JOptionPane;
 
 public class DniExecption extends Exception{
+	/**
+	 * @author Marcos
+	 */
 private String mensaje;
 	
 	public DniExecption (String mensaje) {
